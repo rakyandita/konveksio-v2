@@ -1,9 +1,9 @@
-# SoT #2: Information Architecture (IA)
+# [Fase 2 | SoT #2] Information Architecture (IA)
 
 **Project:** Konveksio
 **Role:** Owner, Boss Cabang / Admin, Karyawan Produksi
 **Last Updated:** 2026-07-16
-**Status:** ✅ Audited (Recovery v1) — cross-checked vs `srs.md` v3.0
+**Status:** ✅ FINAL (SoT #2 Approved)
 **Traceability:** Turunan dari [SRS v3.0](./srs.md)
 
 ## 1. Overview

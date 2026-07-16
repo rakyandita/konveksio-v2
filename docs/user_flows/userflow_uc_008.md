@@ -1,4 +1,4 @@
-# UC-008: Manajemen Vendor Eksternal
+# [Fase 2 | SoT #4] UC-008: Manajemen Vendor Eksternal
 
 ## 1. Metadata
 - **ID:** UC-008

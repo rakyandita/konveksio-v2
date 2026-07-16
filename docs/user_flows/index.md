@@ -1,8 +1,8 @@
-# User Flows Registry (SoT #4)
+# [Fase 2 | SoT #4] User Flows Registry
 
 **Project:** Konveksio
 **Last Updated:** 2026-07-16
-**Status:** ✅ Final
+**Status:** ✅ FINAL (SoT #4 Approved)
 
 ## 1. Purpose
 Direktori ini berisi seluruh dokumen *User Flows* (Aliran Pengguna) untuk aplikasi Konveksio. *User Flow* mendokumentasikan langkah demi langkah interaksi pengguna dengan sistem untuk mencapai tujuan bisnis tertentu, termasuk *main flow*, *alternative flow*, dan *exception flow*. Dokumen ini menjadi acuan utama untuk pembuatan purwarupa (*Prototype*, SoT #5) dan *Data Model* (SoT #6).

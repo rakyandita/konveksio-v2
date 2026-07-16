@@ -1,4 +1,4 @@
-# UC-003: Handover & Auto-Task
+# [Fase 2 | SoT #4] UC-003: Handover & Auto-Task
 
 ## 1. Metadata
 - **ID:** UC-003
@@ -12,7 +12,7 @@
 2. Pengirim memilih Penerima Spesifik dari daftar nama Karyawan aktif (misal: Siti).
 3. Pengirim menginput jumlah Qty per Size yang diserahkan secara fisik (misal S=10, M=15).
 4. Pengirim menekan `[Kirim Handover]`.
-5. Sistem mengubah status barang menjadi "Menunggu Konfirmasi" dan mengirim *push notification* (FCM) ke HP Siti.
+5. Sistem mengubah status barang menjadi "Menunggu Konfirmasi" (`pending`) dan mengirim *push notification* (FCM) ke HP Siti.
 6. Penerima (Siti) membuka menu **Kotak Masuk (Inbox)**.
 7. Siti menekan item Handover dari Budi.
 8. Siti menghitung fisik barang dan menginput Qty Aktual per Size yang diterimanya (misal S=10, M=15).
@@ -33,7 +33,7 @@
 - Pada langkah 5, Handover berstatus "Menunggu Konfirmasi" (`pending`).
 - Budi menyadari ada salah hitung. Siti belum membuka aplikasinya.
 - Budi masuk ke menu Riwayat Handover dan menekan tombol `[Tarik Kembali / Batal]`.
-- Sistem membatalkan Handover dengan menghapus record tersebut (Hard Delete diperbolehkan untuk status `pending`). Barang kembali ke tanggung jawab Budi. Notifikasi di HP Siti ditarik/di-update jika memungkinkan.
+- Sistem membatalkan Handover dengan menghapus record tersebut (Hard Delete diperbolehkan untuk status `pending`). Barang kembali ke tanggung jawab Budi. Notifikasi di HP Siti ditarik/dihapus otomatis oleh sistem via FCM data message.
 
 **3.3. Boss Cabang Re-route (Admin Intervention)**
 - Siti mendadak izin 3 hari dan tidak merespon Kotak Masuknya.

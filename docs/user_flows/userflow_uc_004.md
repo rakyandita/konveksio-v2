@@ -1,4 +1,4 @@
-# UC-004: Pengajuan Kasbon
+# [Fase 2 | SoT #4] UC-004: Pengajuan Kasbon
 
 ## 1. Metadata
 - **ID:** UC-004
@@ -14,7 +14,7 @@
 4. Karyawan menginput nominal pengajuan (misal: Rp 100.000) dan memilih **Alasan** (pilihan: Kebutuhan Harian, Sekolah Anak, Listrik/Air, Kesehatan, Lainnya — sesuai SRS FR-08.1).
 5. Sistem memvalidasi bahwa nominal input tidak melebihi sisa Limit Kasbon.
 6. Karyawan menekan `[Kirim Pengajuan]`.
-7. Status entitas kasbon menjadi "Menunggu Persetujuan". Sistem mengirim notifikasi *push* ke aplikasi Boss Cabang.
+7. Status entitas kasbon menjadi "Menunggu Persetujuan" (`pending`). Sistem mengirim notifikasi *push* ke aplikasi Boss Cabang.
 8. Boss Cabang membuka menu **Keuangan & SDM > Approval Kasbon**.
 9. Boss melihat rincian pengajuan karyawan beserta catatan performa dan sisa limitnya.
 10. Boss menekan `[SETUJUI]`.
@@ -31,7 +31,7 @@
 - Karyawan tidak membawa HP dan meminta kasbon secara lisan langsung di ruang admin/kasir.
 - Admin menavigasi ke menu **Keuangan > Detail Karyawan > Tambah Kasbon Manual**.
 - Admin menginput nominal dan menekan `[Simpan]`.
-- Kasbon langsung berstatus "Disetujui" tanpa perlu melewati proses status "Menunggu Persetujuan". Limit tetap dipotong.
+- Kasbon langsung berstatus "Disetujui" (`approved`) tanpa perlu melewati proses status "Menunggu Persetujuan" (`pending`). Limit tetap dipotong.
 
 ## 4. Exception Flows
 **4.1. Input Melebihi Limit**
@@ -50,7 +50,7 @@
 
 ## 7. Acceptance Criteria
 - [ ] Sistem tidak mengizinkan (*disable submit*) jika nominal pengajuan > sisa limit.
-- [ ] Pengajuan yang sedang dalam status "Menunggu Persetujuan" harus langsung mengunci (*reserve*) saldo limit tersebut sementara agar karyawan tidak melakukan spam pengajuan berulang.
+- [ ] Pengajuan yang sedang dalam status "Menunggu Persetujuan" (`pending`) harus langsung mengunci (*reserve*) saldo limit tersebut sementara agar karyawan tidak melakukan spam pengajuan berulang.
 - [ ] Kasbon yang disetujui secara otomatis menjadi komponen pemotong di slip gaji minggu tersebut (terintegrasi ke UC-005).
 
 ## 8. Data Used

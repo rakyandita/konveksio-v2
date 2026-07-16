@@ -1,4 +1,4 @@
-# UC-006: Update Progres Mandiri (Karyawan)
+# [Fase 2 | SoT #4] UC-006: Update Progres Mandiri (Karyawan)
 
 ## 1. Metadata
 - **ID:** UC-006
@@ -22,7 +22,7 @@
 ## 3. Alternative Flows
 **3.1. Progres Penuh (Selesai)**
 - Pada langkah 6, Actor memasukkan angka Qty yang persis sama dengan sisa target.
-- Pada langkah 9, sistem menandai Tugas tersebut berstatus "Selesai", dan menginstruksikan Actor untuk melakukan *Handover* (UC-003) agar barang berpindah.
+- Pada langkah 9, sistem menandai Tugas tersebut berstatus "Selesai" (`completed`), dan menginstruksikan Actor untuk melakukan *Handover* (UC-003) agar barang berpindah.
 
 ## 4. Exception Flows
 **4.1. Input Melebihi Sisa Target**

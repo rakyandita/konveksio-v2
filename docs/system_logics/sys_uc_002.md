@@ -1,4 +1,4 @@
-# UCIC: UC-002 Smart Bulk Assign
+# [Fase 5 | SoT #7] UC-002 Smart Bulk Assign
 
 ## 1. Use Case Reference
 - **ID:** UC-002

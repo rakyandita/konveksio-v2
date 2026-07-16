@@ -1,6 +1,6 @@
-# SRS: Konveksio
+# [Fase 1 | SoT #1] SRS: Konveksio
 
-**Document Version:** v3.0 | **Status:** ✅ FINAL (SoT #1 Approved) | **Last Updated:** 2026-07-16 | **Author:** Antigravity AI (Chain of Truth)
+**Document Version:** v3.1 | **Status:** ✅ FINAL (SoT #1 Approved) | **Last Updated:** 2026-07-16 | **Author:** Antigravity AI (Chain of Truth)
 
 ---
 

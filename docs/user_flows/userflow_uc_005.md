@@ -1,4 +1,4 @@
-# UC-005: Generate Gaji Mingguan
+# [Fase 2 | SoT #4] UC-005: Generate Gaji Mingguan
 
 ## 1. Metadata
 - **ID:** UC-005
@@ -42,7 +42,7 @@
 **3.3. Penggajian Sistem Vendor (Vendor Lump Sum)**
 - Sebelum masuk ke langkah 1, sistem mengecek `branch_settings.payment_system` milik cabang tersebut.
 - Jika nilainya adalah `vendor_lump_sum`, maka konteks halaman berubah dari "Generate Gaji Karyawan" menjadi **"Generate Tagihan Vendor"**.
-- Pada langkah 4, alih-alih mengagregasi data karyawan internal, sistem mengagregasi *Task* yang di-*assign* kepada entitas **Vendor** yang telah berstatus "Selesai" (karena vendor tidak menggunakan progress log harian).
+- Pada langkah 4, alih-alih mengagregasi data karyawan internal, sistem mengagregasi *Task* yang di-*assign* kepada entitas **Vendor** yang telah berstatus "Selesai" (`completed`) (karena vendor tidak menggunakan progress log harian).
 - Langkah 5, 6, dan 7 berubah menjadi *Review Tagihan Vendor*, di mana yang dipotong bukan Kasbon Karyawan, melainkan uang DP (Down Payment) jika pernah diberikan kepada Vendor tersebut.
 - Hasil cetak (Langkah 9) bukan Slip Gaji, melainkan **Bukti Pencairan Tagihan Vendor**.
 

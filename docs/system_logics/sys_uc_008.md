@@ -1,4 +1,4 @@
-# UCIC: UC-008 Manajemen Vendor Eksternal
+# [Fase 5 | SoT #7] UC-008 Manajemen Vendor Eksternal
 
 ## 1. Use Case Reference
 - **ID:** UC-008

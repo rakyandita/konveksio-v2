@@ -1,8 +1,8 @@
-# Data Model Registry (SoT #6)
+# [Fase 4 | SoT #6] Data Model Registry
 
-**Project:** Konveksio V2
+**Project:** Konveksio
 **Last Updated:** 2026-07-16
-**Status:** ✅ Audited (Recovery v1) — cross-checked vs `initial_schema.sql` & `srs.md` v3.0
+**Status:** ✅ FINAL (SoT #6 Approved)
 
 ---
 

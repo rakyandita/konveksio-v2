@@ -1,4 +1,4 @@
-# UC-002: Smart Bulk Assign
+# [Fase 2 | SoT #4] UC-002: Smart Bulk Assign
 
 ## 1. Metadata
 - **ID:** UC-002
