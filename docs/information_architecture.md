@@ -3,7 +3,7 @@
 **Project:** Konveksio
 **Role:** Owner, Boss Cabang / Admin, Karyawan Produksi
 **Last Updated:** 2026-07-16
-**Status:** ✅ Final (v1.2)
+**Status:** ✅ Audited (Recovery v1) — cross-checked vs `srs.md` v3.0
 **Traceability:** Turunan dari [SRS v3.0](./srs.md)
 
 ## 1. Overview
@@ -55,8 +55,8 @@ Dokumen ini mendefinisikan struktur navigasi, hierarki halaman, dan arsitektur i
 │
 ├── Order (Pesanan)
 │   ├── Daftar Order
-│   │   └── Tab filter: Draft | Konfirmasi | Produksi | Selesai | Diambil
-│   │       > (Label UI Bahasa Indonesia. Nilai enum database: draft | confirmation | running | completed | shipped/done | cancelled)
+│   │   └── Tab filter: Draft | Konfirmasi | Produksi | Selesai | Dikirim | Selesai(done) | Batal
+│   │       > (Label UI Bahasa Indonesia. Nilai enum database: draft | confirmation | running | completed | shipped | done | cancelled)
 │   ├── Form Tambah/Edit Order
 │   └── Detail Order
 │       ├── Info Pemesan & Item
@@ -149,6 +149,10 @@ Setiap layar krusial dipetakan dengan Identifier ID (Route Name). Mapping ini ak
 | PAGE-021 | `/boss/master/customers` | Daftar Customer | - | Boss, Owner* | PAGE-002, PAGE-015 |
 | PAGE-022 | `/boss/settings/branch` | Pengaturan Cabang (Limit, Sistem) | - | Boss, Owner* | PAGE-014 |
 | PAGE-023 | `/boss/settings/admin` | Pengaturan Admin (Akses) | - | Boss, Owner* | PAGE-014 |
+| PAGE-024 | `/boss/finance/kasbon` | Approval Kasbon Karyawan | - | Boss, Owner* | PAGE-002, PAGE-015 |
+| PAGE-025 | `/boss/finance/salary` | Generate Gaji & Slip Mingguan | - | Boss, Owner* | PAGE-002, PAGE-015 |
+| PAGE-026 | `/karyawan/kasbon` | Pengajuan & Riwayat Kasbon | - | Karyawan | PAGE-008 (Tab 4) |
+| PAGE-027 | `/karyawan/salary` | Riwayat Slip Gaji Mingguan | - | Karyawan | PAGE-008 (Tab 4) |
 
 *Owner\*: Hanya dapat mengakses rute ini ketika aktif dalam **Branch Context Mode** (telah melewati PAGE-015). Di luar konteks tersebut, Owner akan di-redirect kembali ke PAGE-001.
 
@@ -157,3 +161,4 @@ Setiap layar krusial dipetakan dengan Identifier ID (Route Name). Mapping ini ak
 - Perubahan v1.1: Penambahan *Branch Context Mode* (PAGE-015) untuk menyelaraskan klausul **BR-01.2** (Owner full access) dari SRS yang sebelumnya tidak terakomodasi di IA.
 - Perubahan v1.2: Update traceability ke SRS v3.0. Tambah catatan i18n di Tab Order (Section 3.2) — label UI Bahasa Indonesia tetap dipertahankan di IA (presentation layer), sementara nilai enum database Bahasa Inggris didokumentasikan sebagai komentar referensi. Perubahan ini selaras dengan prinsip *Separation of Concerns*: database layer (Bahasa Inggris) vs. presentation layer (Bahasa Indonesia).
 - Dokumen ini menjadi pedoman pemetaan layar bagi pembuatan **User Flows** (SoT #4) dan komponen layar pada **HiFi Prototype** (SoT #5).
+- Perubahan v1.3 (Recovery Audit): (1) Tab filter order diperbaiki — pisahkan `shipped` dan `done` yang sebelumnya digabung (`shipped/done`). (2) Tambah 4 rute yang hilang: PAGE-024 (`/boss/finance/kasbon`), PAGE-025 (`/boss/finance/salary`), PAGE-026 (`/karyawan/kasbon`), PAGE-027 (`/karyawan/salary`) — semua ada di sitemap Section 3.2 & 3.3 namun tidak ada di Route Mapping table. (3) Update status dokumen ke Audited (Recovery v1).
