@@ -7,7 +7,8 @@
 - **Related User Flow:** `../user_flows/userflow_uc_005.md`
 
 ## 2. Related Screens
-- `/boss/home` (Tab Gaji)
+- `/boss/finance/salary` (`PAGE-025`)
+- `/karyawan/salary` (`PAGE-027`)
 
 ## 3. Sequence Diagram
 ```mermaid

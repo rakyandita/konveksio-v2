@@ -26,10 +26,11 @@ sequenceDiagram
 ## 4. API Contract (Supabase SDK)
 
 **Action 1: Mencatat Progres Harian**
-- **Method:** `supabase.from('progress_logs').insert({ task_id, size, qty_completed, notes })`
+- **Method:** `supabase.from('progress_logs').insert({ task_id, size, qty_completed })`
 - **Security:** 
   - Hanya bisa insert untuk `task_id` yang `assignee_id`-nya adalah diri sendiri.
   - Sifat tabel adalah Append-only (Tidak ada DELETE/UPDATE via RLS).
+- **Backend Trigger:** Database PostgreSQL akan menjalankan *trigger function* saat insert ke `progress_logs` untuk melakukan update akumulasi nilai `completed_qty` pada tabel `task_sizes` terkait. Frontend tidak perlu update `task_sizes` secara manual.
 
 ## 5. Error Handling
 | Code | Condition | Behavior |

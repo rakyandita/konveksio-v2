@@ -31,16 +31,25 @@ sequenceDiagram
 
 ## 4. API Contract (Postgres RPC)
 
-- **Method:** `supabase.rpc('bulk_assign_tasks', { payload })`
+- **Method:** `supabase.rpc('bulk_insert_tasks', { p_tasks: [...] })`
 - **Request Payload:**
 ```json
 {
-  "p_order_item_ids": ["uuid-1", "uuid-2"],
-  "p_division": "jahit",
-  "p_assignee_ids": ["emp-uuid-1", "emp-uuid-2"],
-  "p_split_strategy": "even" 
+  "p_tasks": [
+    {
+      "order_item_id": "uuid-1",
+      "employee_id": "emp-uuid-1",
+      "sizes": { "S": 10, "M": 15 }
+    },
+    {
+      "order_item_id": "uuid-1",
+      "employee_id": "emp-uuid-2",
+      "sizes": { "S": 10, "M": 15 }
+    }
+  ]
 }
 ```
+- **Catatan:** Kalkulasi pembagian rata (Smart Assign) dan penyesuaian manual dilakukan sepenuhnya di **Flutter (Client-Side)**. Backend RPC hanya menerima hasil final untuk di-insert dalam satu transaksi dan memastikan totalnya valid.
 - **Response Success (200):**
 ```json
 { "assigned_tasks_count": 10 }

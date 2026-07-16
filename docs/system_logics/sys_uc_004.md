@@ -7,8 +7,8 @@
 - **Related User Flow:** `../user_flows/userflow_uc_004.md`
 
 ## 2. Related Screens
-- `/karyawan/home` (Tab Kasbon)
-- `/boss/home` (Persetujuan Kasbon)
+- `/karyawan/kasbon` (`PAGE-026`)
+- `/boss/finance/kasbon` (`PAGE-024`)
 
 ## 3. Sequence Diagram
 ```mermaid
@@ -33,7 +33,7 @@ sequenceDiagram
 - **Logic:** RPC menghitung estimasi upah kotor minggu ini, lalu dikalikan dengan `max_kasbon_percentage` dari tabel `branch_settings`. Mengembalikan sisa limit kasbon yang diizinkan.
 
 **Action 1: Mengajukan Kasbon (Karyawan)**
-- **Method:** `supabase.from('cash_advances').insert({ employee_id, amount, notes, branch_id })`
+- **Method:** `supabase.from('cash_advances').insert({ employee_id, amount, reason, branch_id })`
 - **Security:** RLS mengecek bahwa `employee_id` adalah `auth.uid()` itu sendiri.
 
 **Action 2: Menyetujui Kasbon (Boss)**
