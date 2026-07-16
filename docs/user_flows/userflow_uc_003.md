@@ -30,10 +30,10 @@
 - Sistem membuat *Vendor Task* (bukan *Task* biasa) yang biayanya lump-sum.
 
 **3.2. Tarik Kembali / Batal (Sender Cancel Flow)**
-- Pada langkah 5, Handover berstatus "Menunggu Konfirmasi".
+- Pada langkah 5, Handover berstatus "Menunggu Konfirmasi" (`pending`).
 - Budi menyadari ada salah hitung. Siti belum membuka aplikasinya.
 - Budi masuk ke menu Riwayat Handover dan menekan tombol `[Tarik Kembali / Batal]`.
-- Sistem membatalkan Handover (status: *Cancelled*). Barang kembali ke tanggung jawab Budi. Notifikasi di HP Siti (jika memungkinkan) ditarik.
+- Sistem membatalkan Handover dengan menghapus record tersebut (Hard Delete diperbolehkan untuk status `pending`). Barang kembali ke tanggung jawab Budi. Notifikasi di HP Siti ditarik/di-update jika memungkinkan.
 
 **3.3. Boss Cabang Re-route (Admin Intervention)**
 - Siti mendadak izin 3 hari dan tidak merespon Kotak Masuknya.
@@ -80,7 +80,7 @@
 |-----------|--------|------------|------|------|
 | ENT-008 | Handover | SenderID, ReceiverID, VendorID | UUID | Penerima bisa NULL jika ke vendor |
 | ENT-009 | HandoverSize| Size Label, QtySent, QtyReceived| Str, Num | Pemecahan qty per size dari handover |
-| ENT-008 | Handover | Status, RejectReason | String | Pending, Accepted, Rejected, Cancelled |
+| ENT-008 | Handover | Status, RejectReason | String | pending, accepted, rejected |
 | ENT-007 | Task | QtyPerSize, RateSnapshot | JSON, Num | Dibuat saat Accepted (Model C) |
 
 ## 9. Traceability

@@ -16,7 +16,7 @@
 6. Actor memasukkan angka Qty yang telah selesai (misal S=5, M=5).
 7. Actor menekan tombol `[Simpan Progres]`.
 8. Sistem memvalidasi bahwa Qty input ≤ sisa target.
-9. Sistem menyimpan progres dan mengurangi sisa target tugas.
+9. Sistem menyimpan entitas *Progress Log* (append-only) dan memperbarui field `completed_qty` pada *Task Size*. Sisa target berkurang.
 10. Sistem menampilkan *snackbar* sukses.
 
 ## 3. Alternative Flows
@@ -46,8 +46,8 @@
 ## 8. Data Used
 | Entity ID | Entity | Attributes | Type | Note |
 |-----------|--------|------------|------|------|
-| ENT-003 | Task | RemainingQty, CompletedQty | JSON | - |
-| ENT-004 | TaskProgress | QtyInput | JSON | Riwayat update |
+| ENT-007 | TaskSize | TargetQty, CompletedQty | Num, Num | Melacak sisa target |
+| ENT-011 | ProgressLog | QtyCompleted | Num | Riwayat update append-only |
 
 ## 9. Traceability
 - **SRS Reference:** FR-07.2 (Pencatatan progres oleh pekerja).

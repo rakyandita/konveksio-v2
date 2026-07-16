@@ -9,18 +9,18 @@
 
 ## 2. Main Flow (Skenario Utama)
 1. Actor menavigasi ke halaman **Order** atau tap tombol `[Tambah Order]` dari Dashboard.
-2. Actor memilih tipe pembuatan order (Pelanggan Baru atau Pelanggan Lama).
-3. Jika Pelanggan Baru, Actor menginput nama dan nomor WhatsApp.
-4. Actor memasukkan detail **Order Item** (Nama produk, target deadline).
-5. Actor memasukkan distribusi **Qty per Size** (misal S: 10, M: 20).
-6. Actor memasukkan detail pembayaran awal (Nominal DP atau Lunas).
+2. Actor memilih atau membuat **Customer** (Pelanggan Baru atau Pelanggan Lama).
+3. Jika Pelanggan Baru, Actor menginput nama dan nomor WhatsApp (validasi format: diawali 08/628, 10-15 digit).
+4. Actor memasukkan detail **Order Item**: pilih produk dari katalog, harga final per pcs, dan target deadline.
+5. Actor memasukkan distribusi **Qty per Size** berdasarkan Size Group produk yang dipilih (misal S: 10, M: 20).
+6. **(Opsional)** Actor mencatat pembayaran awal (DP) jika ada — ini dicatat di tabel `payments` terpisah, bukan bagian dari data Order utama.
 7. Actor menekan tombol `[Buat Order]`.
-8. Sistem memvalidasi input dan menyimpan data Order (State: *Draft*).
-9. Sistem mengarahkan Actor ke halaman **Detail Order**.
-10. Di halaman Detail Order, Actor memilih item dan menekan `[Buat SPK]`.
-11. Actor menginput spesifikasi (Bahan, Warna, Model) dan mengunggah gambar desain (opsional).
-12. Jika ada gambar, sistem melakukan kompresi gambar secara lokal (*client-side*) hingga ≤ 1 MB, lalu mengunggahnya ke Supabase Storage.
-13. Sistem menyimpan data SPK. Order siap dilanjutkan ke tahap "Antrian" produksi.
+8. Sistem memvalidasi input (total qty > 0, harga > 0, deadline tidak di masa lalu) dan menyimpan Order ke database (Status: `draft`) dan antrian lokal (offline-first).
+9. Sistem mengarahkan Actor ke halaman **Detail Order** (`PAGE-004`).
+10. Di halaman Detail Order, Actor dapat memilih item dan menekan `[Buat/Edit SPK]`.
+11. Actor menginput spesifikasi SPK (Bahan, Warna, Model, Catatan) dan mengunggah gambar desain (opsional).
+12. Jika ada gambar, sistem melakukan kompresi client-side (Flutter) ke format WEBP, dimensi maks 1920px, ukuran ≤ 1 MB, lalu mengunggah ke Supabase Storage.
+13. Sistem menyimpan data SPK yang terikat ke order_item tersebut.
 
 ## 3. Alternative Flows
 **3.1. Pembuatan Order Tanpa SPK**
@@ -44,8 +44,8 @@
 - Input teks SPK (Bahan, Warna) tersimpan di form *state* hingga unggahan gambar berhasil.
 
 ## 5. Postconditions
-- Entitas Order baru tersimpan di *database* dengan status "Draft" atau "Antrian".
-- Jika SPK menyertakan gambar, gambar tersimpan di *cloud storage*.
+- Entitas Order baru tersimpan di database dengan status `draft`.
+- Jika SPK dibuat dan menyertakan gambar, URL gambar tersimpan di Supabase Storage dan referensinya ada di tabel `spks`.
 
 ## 6. Related Pages
 - `PAGE-003`: `/boss/orders`

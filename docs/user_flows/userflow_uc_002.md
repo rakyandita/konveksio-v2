@@ -3,9 +3,9 @@
 ## 1. Metadata
 - **ID:** UC-002
 - **Name:** Smart Bulk Assign
-- **Actor:** Boss Cabang, Admin
-- **Trigger:** Boss memutuskan untuk memulai produksi order yang berstatus "Antrian" di divisi pertama, atau membagi ulang (redistribusi) tugas yang mengalami hambatan di divisi tengah.
-- **Pre-conditions:** Terdapat Order Item dengan sisa Qty yang belum di-assign.
+- **Actor:** Boss Cabang, Admin, Owner (dalam Branch Context Mode)
+- **Trigger:** Boss/Admin memutuskan untuk memulai produksi pada Order yang siap, atau mendistribusi ulang tugas di divisi tengah yang mengalami bottleneck.
+- **Pre-conditions:** Terdapat Order Item dengan sisa Qty yang belum di-assign. **Wajib online** (SRS BR-07.5).
 
 ## 2. Main Flow (Skenario Utama)
 1. Actor membuka halaman **Order** atau **Produksi (Kanban)**.
@@ -19,7 +19,7 @@
 9. Sistem memvalidasi total Qty yang dialokasikan (tidak melebihi sisa target Order).
 10. Sistem membuat entitas **Task** (Tugas) untuk masing-masing karyawan terpilih dengan menyimpan *snapshot* tarif (ongkos) dari master data pada saat itu.
 11. Sistem mengirim notifikasi *push* (FCM) ke aplikasi Budi dan Joko ("Anda mendapat tugas baru...").
-12. Jika ini adalah alokasi pertama, status Order Item berubah menjadi "Produksi Berjalan".
+12. Jika ini adalah alokasi pertama untuk Order ini, status Order berubah dari `draft`/`confirmation` menjadi `running`.
 
 ## 3. Alternative Flows
 **3.1. Assign Parsial (Sebagian Saja)**

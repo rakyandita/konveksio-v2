@@ -11,7 +11,7 @@
 1. Karyawan menavigasi ke halaman **Akun & Gaji** (Tab 4) di aplikasi mereka dan memilih menu "Kasbon".
 2. Sistem menampilkan sisa Limit Kasbon Karyawan saat ini secara *real-time*.
 3. Karyawan menekan tombol `[Ajukan Kasbon Baru]`.
-4. Karyawan menginput nominal pengajuan (misal: Rp 100.000).
+4. Karyawan menginput nominal pengajuan (misal: Rp 100.000) dan memilih **Alasan** (pilihan: Kebutuhan Harian, Sekolah Anak, Listrik/Air, Kesehatan, Lainnya — sesuai SRS FR-08.1).
 5. Sistem memvalidasi bahwa nominal input tidak melebihi sisa Limit Kasbon.
 6. Karyawan menekan `[Kirim Pengajuan]`.
 7. Status entitas kasbon menjadi "Menunggu Persetujuan". Sistem mengirim notifikasi *push* ke aplikasi Boss Cabang.
@@ -45,8 +45,8 @@
 - Saldo dompet limit karyawan terpotong jika disetujui.
 
 ## 6. Related Pages
-- `PAGE-008`: `/karyawan/home` (Tab Kasbon)
-- Halaman internal Boss (belum masuk spesifik ke route map, bagian dari Keuangan)
+- `PAGE-026`: `/karyawan/kasbon` (Pengajuan & Riwayat Karyawan)
+- `PAGE-024`: `/boss/finance/kasbon` (Approval Boss Cabang)
 
 ## 7. Acceptance Criteria
 - [ ] Sistem tidak mengizinkan (*disable submit*) jika nominal pengajuan > sisa limit.
@@ -56,8 +56,8 @@
 ## 8. Data Used
 | Entity ID | Entity | Attributes | Type | Note |
 |-----------|--------|------------|------|------|
-| ENT-006 | Employee | KasbonLimit, ReservedKasbon | Num, Num | Limit maksimal yang diatur oleh Boss |
-| ENT-010 | CashAdvance | EmployeeID, Amount, Status | Rel, Num, Str | Status: Pending, Approved, Rejected |
+| ENT-000 | BranchSetting | max_kasbon_percentage | Num | Limit maksimal yang diatur oleh Boss |
+| ENT-010 | CashAdvance | EmployeeID, Amount, Reason, Status | Rel, Num, Str, Str | Status: pending, approved, rejected |
 
 ## 9. Traceability
 - **SRS Reference:** FR-08.1 (Manajemen Kasbon & Pengajuan), FR-08.2 (Approval & Restriksi Limit).
