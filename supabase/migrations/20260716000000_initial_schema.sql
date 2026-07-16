@@ -277,8 +277,7 @@ CREATE TABLE public.cash_advances (
     amount_approved  DECIMAL(12,2),
     reason           TEXT          NOT NULL,
     status           approval_status NOT NULL DEFAULT 'pending',
-    is_deducted      BOOLEAN         DEFAULT false,
-    created_at       TIMESTAMPTZ     DEFAULT now(),
+    created_at       TIMESTAMPTZ   DEFAULT now(),
     updated_at       TIMESTAMPTZ   DEFAULT now()
 );
 
