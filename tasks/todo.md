@@ -1,0 +1,8 @@
+- [x] Task 1: Generate `docs/information_architecture.md`
+- [x] Task 2: Generate `docs/design_system.md`
+- [x] Task 3: Setup `docs/user_flows/index.md`
+- [x] Task 4: Generate `userflow_uc_001.md` (Order & SPK)
+- [x] Task 5: Generate `userflow_uc_002.md` (Smart Bulk Assign)
+- [x] Task 6: Generate `userflow_uc_003.md` (Handover & Auto-Task)
+- [x] Task 7: Generate `userflow_uc_004.md` (Kasbon)
+- [x] Task 8: Generate `userflow_uc_005.md` (Generate Gaji)

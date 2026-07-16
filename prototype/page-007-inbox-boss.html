@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inbox Boss - Konveksio</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--color-border);
+      margin-inline: calc(var(--space-md) * -1);
+      padding-inline: var(--space-md);
+      background-color: var(--color-surface);
+    }
+    .tab {
+      padding: var(--space-md);
+      font-size: var(--font-size-body2);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-muted);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+    .tab-badge {
+      background-color: var(--color-destructive);
+      color: white;
+      border-radius: var(--radius-full);
+      padding: 2px 6px;
+      font-size: 10px;
+    }
+
+    /* Vendor Row Styling */
+    .vendor-row {
+      background-color: var(--color-branch-surface); /* Amber muda */
+      border: 1px solid var(--color-branch-context);
+      border-radius: var(--radius-md);
+    }
+
+    /* Action Buttons in List */
+    .action-row {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-sm);
+      padding-top: var(--space-sm);
+      border-top: 1px dashed var(--color-border);
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-container">
+    
+    <!-- App Header -->
+    <header class="app-header">
+      <button class="btn-icon-only" style="color: var(--color-on-primary);">
+        <i class="ph-bold ph-arrow-left" style="font-size: 24px;"></i>
+      </button>
+      <span class="app-header-title text-center">Kotak Masuk</span>
+      <button class="btn-icon-only" style="color: var(--color-on-primary);">
+        <i class="ph-bold ph-check-square-offset" style="font-size: 24px;"></i>
+      </button>
+    </header>
+
+    <!-- Tabs (RISK-02 Mitigation) -->
+    <div class="tabs">
+      <div class="tab">Semua <span class="tab-badge">3</span></div>
+      <div class="tab">Internal <span class="tab-badge">2</span></div>
+      <div class="tab active">Vendor <span class="tab-badge">1</span></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="content" style="padding-top: var(--space-md);">
+      
+      <!-- List Items -->
+      <div class="flex-col gap-md">
+        
+        <!-- Vendor Handover (Amber Tint) -->
+        <div class="card vendor-row" style="padding: var(--space-md);">
+          <div class="flex items-start gap-md mb-xs">
+            <div class="list-item-icon" style="background-color: #FEF3C7; color: var(--color-branch-context);">
+              <i class="ph-fill ph-buildings" style="font-size: 20px;"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-xs">
+                <span class="text-caption font-bold text-branch-text" style="color: var(--color-branch-context);">Makloon Sablon Jaya</span>
+                <span class="text-caption text-muted">10:30 WIB</span>
+              </div>
+              <h3 class="text-body1 font-semibold truncate">Kaos Korsa BEM UGM 2026</h3>
+              <p class="text-body2 text-muted truncate">Penyelesaian tahap Sablon (150 pcs).</p>
+            </div>
+          </div>
+          
+          <div class="flex justify-between items-center mt-sm pt-sm" style="border-top: 1px dashed rgba(217, 119, 6, 0.3);">
+            <div>
+              <div class="text-caption text-muted">Biaya Borongan</div>
+              <div class="text-body2 font-semibold text-foreground">Rp 750.000</div>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button class="btn btn-secondary flex-1" style="border-color: var(--color-destructive); color: var(--color-destructive); padding: 8px;">Tolak</button>
+            <button class="btn flex-1" style="background-color: var(--color-branch-context); color: white; padding: 8px;">Terima & Bayar</button>
+          </div>
+        </div>
+
+        <!-- Internal Handover 1 -->
+        <div class="card" style="padding: var(--space-md);">
+          <div class="flex items-start gap-md mb-xs">
+            <div class="list-item-icon" style="background-color: #E2E8F0; color: var(--color-secondary);">
+              <img src="https://i.pravatar.cc/100?img=11" alt="Budi" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-xs">
+                <span class="text-caption font-bold">Budi Sulistyo (Cutting)</span>
+                <span class="text-caption text-muted">Kemarin</span>
+              </div>
+              <h3 class="text-body1 font-semibold truncate">Jaket Komunitas Motor JKT</h3>
+              <p class="text-body2 text-muted truncate">Menyerahkan 50 pcs potongan kain.</p>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button class="btn btn-secondary flex-1" style="color: var(--color-destructive); padding: 8px;">Tolak</button>
+            <button class="btn btn-primary flex-1" style="padding: 8px;">Terima</button>
+          </div>
+        </div>
+
+        <!-- Internal Kasbon Request -->
+        <div class="card" style="padding: var(--space-md);">
+          <div class="flex items-start gap-md mb-xs">
+            <div class="list-item-icon" style="background-color: #FEF9C3; color: #A16207;">
+              <i class="ph-fill ph-money" style="font-size: 20px;"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-xs">
+                <span class="text-caption font-bold">Pengajuan Kasbon</span>
+                <span class="text-caption text-muted">Kemarin</span>
+              </div>
+              <h3 class="text-body1 font-semibold truncate">Rp 200.000</h3>
+              <p class="text-body2 text-muted truncate">Oleh: Siti (Jahit) - Sisa limit: Rp 300.000</p>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button class="btn btn-secondary flex-1" style="color: var(--color-destructive); padding: 8px;">Tolak</button>
+            <button class="btn btn-primary flex-1" style="padding: 8px;">Setujui</button>
+          </div>
+        </div>
+
+      </div>
+      
+    </main>
+
+  </div>
+</body>
+</html>

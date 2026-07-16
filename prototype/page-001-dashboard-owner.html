@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Owner - Konveksio</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="mobile-container">
+    
+    <!-- Fixed Background (KAI Style) -->
+    <div class="fixed-background fixed-background-owner"></div>
+
+    <!-- Dynamic App Header -->
+    <header class="app-header-dynamic" id="mainHeader">
+      <div class="flex items-center gap-sm flex-1">
+        <i class="ph-fill ph-buildings" style="font-size: 24px;"></i>
+        <span class="app-header-title-dynamic">Cabang Jakarta</span>
+      </div>
+      <button class="btn-icon-only" style="color: inherit; width: auto; padding: 0 8px; font-size: 14px; font-weight: 600;">
+        <i class="ph ph-sign-out" style="font-size: 20px; margin-right: 4px;"></i>Keluar
+      </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content" id="mainContent">
+      
+      <!-- Background Text Reveal -->
+      <div style="padding: 0 var(--space-md); color: #FFF; margin-bottom: 24px;">
+        <h1 class="text-h2 mb-xs" style="color: #FFF;">Halo, Bos Besar 👋</h1>
+        <p class="text-body2" style="color: rgba(255,255,255,0.9);">Owner • Memantau Cabang Jakarta</p>
+      </div>
+      
+      <!-- White Sheet Overlay (KAI Style) -->
+      <div class="bottom-sheet-content">
+
+        <!-- Overlapping Card -->
+        <div class="hero-balance-card-overlap">
+          <div class="text-body2 text-muted mb-xs">Omset Aktif Bulan Ini</div>
+          <div class="flex items-center justify-between">
+            <div class="text-h1 font-bold text-primary">Rp 45.250.000</div>
+            <i class="ph-fill ph-trend-up text-success" style="font-size: 28px;"></i>
+          </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <section class="section-padded mb-md">
+          <div class="menu-grid-container" id="menuScroll">
+            <!-- Page 1 -->
+            <div class="menu-page">
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-shopping-cart"></i></div>
+                <span class="menu-item-text">Order Baru</span>
+              </a>
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-t-shirt"></i></div>
+                <span class="menu-item-text">Produksi</span>
+              </a>
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-package"></i></div>
+                <span class="menu-item-text">Pengiriman</span>
+              </a>
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-users"></i></div>
+                <span class="menu-item-text">Pelanggan</span>
+              </a>
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-money"></i></div>
+                <span class="menu-item-text">Kas & Bank</span>
+              </a>
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-box-box"></i></div>
+                <span class="menu-item-text">Inventori</span>
+              </a>
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-chart-line-up"></i></div>
+                <span class="menu-item-text">Laporan</span>
+              </a>
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper" style="background-color: #F1F5F9;"><i class="ph-bold ph-dots-three"></i></div>
+                <span class="menu-item-text">Lainnya</span>
+              </a>
+            </div>
+            
+            <!-- Page 2 (Simulation) -->
+            <div class="menu-page">
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-identification-card"></i></div>
+                <span class="menu-item-text">Karyawan</span>
+              </a>
+              <a href="#" class="menu-item">
+                <div class="menu-icon-wrapper"><i class="ph-fill ph-gear"></i></div>
+                <span class="menu-item-text">Pengaturan</span>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Indicator (myBCA style) -->
+          <div class="scroll-indicator-wrapper">
+             <i class="ph-bold ph-caret-left scroll-indicator-arrow" id="arrowLeft" style="color: var(--color-border);"></i>
+             <div class="scroll-indicator-container">
+               <div class="scroll-dot active" id="dot1"></div>
+               <div class="scroll-dot" id="dot2"></div>
+             </div>
+             <i class="ph-bold ph-caret-right scroll-indicator-arrow" id="arrowRight"></i>
+          </div>
+        </section>
+
+        <!-- Danger Zone / Destructive Action Simulation -->
+        <section class="section-padded mb-lg">
+          <h2 class="text-body2 text-muted mb-sm">Tindakan Eksekutif</h2>
+          
+          <div class="card" style="border-color: var(--color-destructive); background-color: #FEF2F2;">
+            <div class="flex items-start gap-md">
+              <div class="list-item-icon" style="background-color: #FEE2E2; color: var(--color-destructive);">
+                <i class="ph-fill ph-warning-circle" style="font-size: 24px;"></i>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-body1 font-semibold mb-xs" style="color: var(--color-destructive);">Generate Gaji Karyawan</h3>
+                <p class="text-body2 text-muted mb-md">Hitung total gaji dan kasbon semua karyawan Cabang Jakarta bulan ini.</p>
+                <button class="btn btn-destructive" onclick="showDialog()">
+                  Mulai Kalkulasi Gaji
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <div style="height: 40px;"></div>
+
+      </div>
+    </main>
+
+    <!-- Modal Dialog Simulation -->
+    <div id="dangerModal" style="display: none; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 200; align-items: center; justify-content: center; padding: var(--space-md); backdrop-filter: blur(4px);">
+      <div class="card" style="width: 100%; border: none; box-shadow: var(--shadow-lg);">
+        <i class="ph-fill ph-warning-circle text-destructive mb-sm" style="font-size: 48px;"></i>
+        <h3 class="text-h2 mb-xs">Konfirmasi Eksekutif</h3>
+        <p class="text-body2 text-muted mb-md">
+          ⚠️ Anda mengeksekusi tindakan ini sebagai <b>Owner</b> dalam Branch Context Mode. Tindakan ini akan tercatat dalam audit log dengan identitas Anda.
+        </p>
+        <div class="flex-col gap-sm">
+          <button class="btn btn-destructive" onclick="hideDialog()">Ya, Lanjutkan Kalkulasi</button>
+          <button class="btn btn-secondary" onclick="hideDialog()">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="#" class="nav-item">
+        <i class="ph-fill ph-house" style="font-size: 24px; color: var(--color-primary);"></i>
+        <span style="color: var(--color-primary);">Beranda</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="ph-fill ph-clipboard-text" style="font-size: 24px;"></i>
+        <span>Pesanan</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="ph-fill ph-bell" style="font-size: 24px;"></i>
+        <span>Notifikasi</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="ph-fill ph-user" style="font-size: 24px;"></i>
+        <span>Akun</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    // Header Scroll Effect (KAI Style)
+    const content = document.getElementById('mainContent');
+    const header = document.getElementById('mainHeader');
+    
+    content.addEventListener('scroll', () => {
+      // Trigger header color change when the white sheet starts touching the header
+      if (content.scrollTop > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Horizontal Menu Scroll Indicator Effect (myBCA Style)
+    const menuScroll = document.getElementById('menuScroll');
+    const dot1 = document.getElementById('dot1');
+    const dot2 = document.getElementById('dot2');
+    const arrowLeft = document.getElementById('arrowLeft');
+    const arrowRight = document.getElementById('arrowRight');
+
+    menuScroll.addEventListener('scroll', () => {
+      if (menuScroll.scrollLeft > 50) {
+        dot1.classList.remove('active');
+        dot2.classList.add('active');
+        arrowLeft.style.color = 'var(--color-primary)';
+        arrowRight.style.color = 'var(--color-border)';
+      } else {
+        dot1.classList.add('active');
+        dot2.classList.remove('active');
+        arrowLeft.style.color = 'var(--color-border)';
+        arrowRight.style.color = 'var(--color-primary)';
+      }
+    });
+
+    function showDialog() {
+      document.getElementById('dangerModal').style.display = 'flex';
+    }
+    function hideDialog() {
+      document.getElementById('dangerModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

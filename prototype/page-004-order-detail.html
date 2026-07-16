@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Order - Konveksio</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .size-chip {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 60px;
+      padding: var(--space-sm);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-surface);
+    }
+    .size-chip .size-label {
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary);
+    }
+    
+    .pipeline-step {
+      display: flex;
+      gap: var(--space-md);
+      position: relative;
+      padding-bottom: var(--space-lg);
+    }
+    .pipeline-step:last-child {
+      padding-bottom: 0;
+    }
+    .pipeline-step::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 24px;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--color-border);
+      z-index: 1;
+    }
+    .pipeline-step:last-child::before {
+      display: none;
+    }
+    
+    .step-indicator {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      flex-shrink: 0;
+      color: white;
+    }
+    .step-active .step-indicator {
+      background-color: var(--color-primary);
+    }
+    .step-done .step-indicator {
+      background-color: var(--color-success);
+    }
+    .step-done::before {
+      background-color: var(--color-success);
+    }
+
+    .sticky-footer {
+      position: sticky;
+      bottom: 0;
+      background-color: var(--color-surface);
+      padding: var(--space-md);
+      border-top: 1px solid var(--color-border);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-container">
+    
+    <!-- App Header -->
+    <header class="app-header">
+      <button class="btn-icon-only" style="color: var(--color-on-primary);">
+        <i class="ph-bold ph-arrow-left" style="font-size: 24px;"></i>
+      </button>
+      <span class="app-header-title text-center">Detail Order</span>
+      <button class="btn-icon-only" style="color: var(--color-on-primary);">
+        <i class="ph-bold ph-dots-three-vertical" style="font-size: 24px;"></i>
+      </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content" style="padding-bottom: 0;">
+      
+      <!-- General Info -->
+      <section class="mb-lg">
+        <div class="flex items-center justify-between mb-sm">
+          <span class="badge badge-produksi-berjalan">Produksi Berjalan</span>
+          <span class="text-caption text-muted">ID: ORD-0024</span>
+        </div>
+        <h1 class="mb-xs">Kaos Korsa BEM UGM 2026</h1>
+        <div class="flex items-center gap-xs text-body2 text-muted mb-md">
+          <i class="ph-fill ph-user"></i>
+          <span>PT. Cipta Karya Mahasiswa</span>
+        </div>
+        
+        <p class="text-body2 mb-md">
+          Kaos korsa lengan panjang. Bahan Lacoste CVC. Bordir logo BEM di dada kiri, nama di dada kanan. Warna dasar navy blue.
+        </p>
+
+        <div class="flex gap-md" style="overflow-x: auto; padding-bottom: var(--space-sm); scroll-snap-type: x mandatory;">
+          <div class="size-chip shrink-0" style="scroll-snap-align: start;">
+            <div class="size-label">S</div>
+            <div class="text-caption text-muted">20 pcs</div>
+          </div>
+          <div class="size-chip shrink-0" style="scroll-snap-align: start;">
+            <div class="size-label">M</div>
+            <div class="text-caption text-muted">50 pcs</div>
+          </div>
+          <div class="size-chip shrink-0" style="scroll-snap-align: start;">
+            <div class="size-label">L</div>
+            <div class="text-caption text-muted">60 pcs</div>
+          </div>
+          <div class="size-chip shrink-0" style="scroll-snap-align: start;">
+            <div class="size-label">XL</div>
+            <div class="text-caption text-muted">15 pcs</div>
+          </div>
+          <div class="size-chip shrink-0" style="scroll-snap-align: start;">
+            <div class="size-label">XXL</div>
+            <div class="text-caption text-muted">5 pcs</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pipeline Status -->
+      <section class="mb-xl">
+        <h2 class="text-body2 text-muted mb-md">Pipeline Produksi</h2>
+        
+        <div class="pipeline">
+          
+          <!-- Step 1 -->
+          <div class="pipeline-step step-done">
+            <div class="step-indicator">
+              <i class="ph-bold ph-check" style="font-size: 14px;"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-xs">
+                <h3 class="text-body1 font-semibold">Beli Bahan</h3>
+                <span class="text-caption text-success">Selesai</span>
+              </div>
+              <p class="text-caption text-muted">16 Jul 2026, oleh Admin</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="pipeline-step step-active">
+            <div class="step-indicator"></div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-xs">
+                <h3 class="text-body1 font-semibold text-primary">Cutting (Potong)</h3>
+                <span class="text-caption text-primary font-medium">Berjalan</span>
+              </div>
+              <p class="text-caption text-muted mb-xs">Progres: 100 / 150 pcs</p>
+              <!-- Info Assignee -->
+              <div class="flex items-center gap-sm mt-sm bg-background p-sm rounded-sm" style="background-color: #F1F5F9; padding: var(--space-sm); border-radius: var(--radius-sm);">
+                <i class="ph-fill ph-user-circle text-muted" style="font-size: 24px;"></i>
+                <div class="flex-1 min-w-0">
+                  <div class="text-caption font-semibold truncate">Budi Sulistyo</div>
+                  <div class="text-caption text-muted truncate">Tugas Internal</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="pipeline-step">
+            <div class="step-indicator"></div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-xs">
+                <h3 class="text-body1 font-semibold text-muted">Jahit</h3>
+                <span class="text-caption text-muted">Menunggu</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="pipeline-step">
+            <div class="step-indicator"></div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-xs">
+                <h3 class="text-body1 font-semibold text-muted">Packing</h3>
+                <span class="text-caption text-muted">Menunggu</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Sticky Footer CTA -->
+    <div class="sticky-footer">
+      <button class="btn btn-primary">
+        Kelola Pipeline <i class="ph-bold ph-caret-right"></i>
+      </button>
+    </div>
+
+  </div>
+</body>
+</html>

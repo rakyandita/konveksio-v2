@@ -1,0 +1,66 @@
+# ===========================
+# Flutter / Dart
+# ===========================
+# Chain-of-truth skill has its own git repo, exclude from outer repo
+.agents/skills/chain-of-truth/
+
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+.pub-cache/
+.pub/
+
+# Android
+app/android/local.properties
+app/android/.gradle
+app/android/captures/
+app/android/key.properties
+
+# iOS
+app/ios/Flutter/flutter_export_environment.sh
+app/ios/.generated/
+app/ios/Runner/GeneratedPluginRegistrant.*
+app/ios/Flutter/ephemeral/
+
+# macOS
+app/macos/Flutter/GeneratedPluginRegistrant.swift
+app/macos/Flutter/ephemeral/
+
+# ===========================
+# Environment & Secrets
+# ===========================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+supabase/.env
+
+# ===========================
+# IDEs
+# ===========================
+.vscode/
+.idea/
+*.iml
+
+# ===========================
+# OS
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Supabase
+# ===========================
+supabase/.branches/
+supabase/.temp/
+
+# ===========================
+# Node (jika ada tooling)
+# ===========================
+node_modules/
+dist/
+.next/
