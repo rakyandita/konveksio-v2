@@ -1,307 +1,300 @@
--- 20260717000000_rpcs.sql
+-- ========================================================================================
+-- Kumpulan RPC dan Trigger untuk Konveksio v2 (Sesuai Audit Fase 4 System Logics)
+-- ========================================================================================
 
--- ==========================================
--- FUNCTION: create_order_transaction
--- UC-001: Membuat Order beserta Items, Sizes, dan draft SPK secara atomik.
--- ==========================================
-CREATE OR REPLACE FUNCTION public.create_order_transaction(
-    p_branch_id UUID,
-    p_customer_id UUID,
-    p_deadline_date TIMESTAMPTZ,
-    p_notes TEXT,
-    p_items JSONB
-) RETURNS UUID AS $$
+-- ----------------------------------------------------------------------------------------
+-- 1. UC-001: Create Order Transaction
+-- ----------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION create_order_transaction(payload jsonb)
+RETURNS uuid
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 DECLARE
-    v_order_id UUID;
-    v_item JSONB;
-    v_order_item_id UUID;
-    v_size JSONB;
+    v_branch_id uuid;
+    v_order_id uuid;
+    v_item jsonb;
+    v_item_id uuid;
+    v_size_key text;
+    v_size_qty int;
 BEGIN
-    -- 1. Insert Order
-    INSERT INTO public.orders (branch_id, customer_id, deadline_date, notes, status)
-    VALUES (p_branch_id, p_customer_id, p_deadline_date, p_notes, 'draft')
-    RETURNING id INTO v_order_id;
+    -- Validasi branch
+    v_branch_id := auth_branch_id();
+    IF v_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Not authorized or no branch context.';
+    END IF;
 
-    -- 2. Loop through items
-    FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)
+    -- Insert Order
+    INSERT INTO orders (branch_id, customer_id, deadline, notes, status)
+    VALUES (
+        v_branch_id,
+        (payload->>'p_customer_id')::uuid,
+        (payload->>'p_deadline')::date,
+        payload->>'p_notes',
+        'draft'
+    ) RETURNING id INTO v_order_id;
+
+    -- Loop per item (diasumsikan tidak lebih dari puluhan item, aman tanpa unnest ekstrim)
+    FOR v_item IN SELECT * FROM jsonb_array_elements(payload->'p_items')
     LOOP
-        -- Insert order_item
-        INSERT INTO public.order_items (order_id, product_id, price_per_pcs)
-        VALUES (v_order_id, (v_item->>'product_id')::UUID, (v_item->>'price_per_pcs')::DECIMAL)
-        RETURNING id INTO v_order_item_id;
+        INSERT INTO order_items (order_id, product_id, quantity, price)
+        VALUES (
+            v_order_id,
+            (v_item->>'product_id')::uuid,
+            (v_item->>'quantity')::int,
+            (v_item->>'price')::numeric
+        ) RETURNING id INTO v_item_id;
 
-        -- Create blank SPK for this item
-        INSERT INTO public.spks (order_item_id, client_name)
-        VALUES (v_order_item_id, v_item->>'client_name');
-
-        -- Loop through sizes
-        FOR v_size IN SELECT * FROM jsonb_array_elements(v_item->'sizes')
+        -- Loop sizes (JSON object to key-value)
+        FOR v_size_key, v_size_qty IN SELECT * FROM jsonb_each_text(v_item->'sizes')
         LOOP
-            INSERT INTO public.order_item_sizes (order_item_id, size, qty)
-            VALUES (v_order_item_id, v_size->>'size', (v_size->>'qty')::INTEGER);
+            INSERT INTO order_item_sizes (order_item_id, size_label, qty)
+            VALUES (v_item_id, v_size_key, v_size_qty::int);
         END LOOP;
+
+        -- Create draft SPK
+        INSERT INTO spks (order_item_id) VALUES (v_item_id);
     END LOOP;
 
     RETURN v_order_id;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
-
--- ==========================================
--- FUNCTION: bulk_assign_tasks
--- UC-002: Membagikan item order menjadi tasks.
--- ==========================================
-CREATE OR REPLACE FUNCTION public.bulk_assign_tasks(
-    p_order_item_ids UUID[],
-    p_division VARCHAR,
-    p_assignee_ids UUID[]
-) RETURNS INTEGER AS $$
+-- ----------------------------------------------------------------------------------------
+-- 2. UC-002: Bulk Insert Tasks (Smart Assign)
+-- ----------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION bulk_insert_tasks(p_tasks jsonb)
+RETURNS int
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 DECLARE
-    v_order_item_id UUID;
-    v_assignee_id UUID;
-    v_size_row RECORD;
-    v_task_id UUID;
-    v_total_assignees INTEGER;
-    v_base_qty INTEGER;
-    v_remainder INTEGER;
-    v_assigned_qty INTEGER;
-    v_assignee_index INTEGER;
-    v_task_count INTEGER := 0;
+    v_branch_id uuid;
+    v_task jsonb;
+    v_task_id uuid;
+    v_size_key text;
+    v_size_qty int;
+    v_count int := 0;
+    v_rate numeric;
 BEGIN
-    v_total_assignees := array_length(p_assignee_ids, 1);
-    IF v_total_assignees IS NULL OR v_total_assignees = 0 THEN
-        RAISE EXCEPTION 'Assignees cannot be empty';
-    END IF;
-
-    FOR i IN 1 .. array_length(p_order_item_ids, 1)
+    v_branch_id := auth_branch_id();
+    
+    FOR v_task IN SELECT * FROM jsonb_array_elements(p_tasks)
     LOOP
-        v_order_item_id := p_order_item_ids[i];
-        
-        -- Loop setiap assignee
-        FOR v_assignee_index IN 1 .. v_total_assignees
-        LOOP
-            v_assignee_id := p_assignee_ids[v_assignee_index];
-            
-            -- Buat task baru untuk user ini
-            INSERT INTO public.tasks (order_item_id, assigned_to_user, division, status)
-            VALUES (v_order_item_id, v_assignee_id, p_division, 'running')
-            RETURNING id INTO v_task_id;
-            
-            v_task_count := v_task_count + 1;
-            
-            -- Bagi per size
-            FOR v_size_row IN SELECT * FROM public.order_item_sizes WHERE order_item_id = v_order_item_id
-            LOOP
-                v_base_qty := v_size_row.qty / v_total_assignees;
-                v_remainder := v_size_row.qty % v_total_assignees;
-                
-                -- Berikan sisa (remainder) ke orang-orang pertama
-                IF v_assignee_index <= v_remainder THEN
-                    v_assigned_qty := v_base_qty + 1;
-                ELSE
-                    v_assigned_qty := v_base_qty;
-                END IF;
-                
-                IF v_assigned_qty > 0 THEN
-                    INSERT INTO public.task_sizes (task_id, size, qty)
-                    VALUES (v_task_id, v_size_row.size, v_assigned_qty);
-                END IF;
-            END LOOP;
-        END LOOP;
+        -- Ambil rate snapshot dari master data karyawan
+        SELECT rate INTO v_rate 
+        FROM employee_rates 
+        WHERE user_id = (v_task->>'employee_id')::uuid
+        LIMIT 1;
 
-        -- Update order status to running (via the order_item_id)
-        UPDATE public.orders 
+        INSERT INTO tasks (order_item_id, assignee_id, ongkos_per_pcs_snapshot, status)
+        VALUES (
+            (v_task->>'order_item_id')::uuid,
+            (v_task->>'employee_id')::uuid,
+            COALESCE(v_rate, 0),
+            'pending'
+        ) RETURNING id INTO v_task_id;
+
+        FOR v_size_key, v_size_qty IN SELECT * FROM jsonb_each_text(v_task->'sizes')
+        LOOP
+            INSERT INTO task_sizes (task_id, size_label, target_qty, completed_qty)
+            VALUES (v_task_id, v_size_key, v_size_qty::int, 0);
+        END LOOP;
+        
+        -- Update order status to running (aman dipanggil berkali-kali)
+        UPDATE orders 
         SET status = 'running' 
-        WHERE id = (SELECT order_id FROM public.order_items WHERE id = v_order_item_id);
+        WHERE id = (SELECT order_id FROM order_items WHERE id = (v_task->>'order_item_id')::uuid)
+        AND status IN ('draft', 'confirmation');
+
+        v_count := v_count + 1;
     END LOOP;
 
-    RETURN v_task_count;
+    RETURN v_count;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
-
--- ==========================================
--- FUNCTION: submit_handover
--- UC-003: Kirim Handover
--- ==========================================
-CREATE OR REPLACE FUNCTION public.submit_handover(
-    p_from_task_id UUID,
-    p_to_user_id UUID,
-    p_to_vendor_id UUID,
-    p_sizes JSONB
-) RETURNS UUID AS $$
+-- ----------------------------------------------------------------------------------------
+-- 3. UC-003: Handover (Submit & Accept)
+-- ----------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION submit_handover(payload jsonb)
+RETURNS uuid
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 DECLARE
-    v_handover_id UUID;
-    v_size JSONB;
+    v_handover_id uuid;
+    v_size jsonb;
 BEGIN
-    INSERT INTO public.handovers (from_task_id, to_user_id, to_vendor_id, status)
-    VALUES (p_from_task_id, p_to_user_id, p_to_vendor_id, 'pending')
-    RETURNING id INTO v_handover_id;
+    INSERT INTO handovers (from_task_id, to_user_id, to_vendor_id, status)
+    VALUES (
+        (payload->>'p_from_task_id')::uuid,
+        NULLIF(payload->>'p_to_user_id', '')::uuid,
+        NULLIF(payload->>'p_to_vendor_id', '')::uuid,
+        'pending'
+    ) RETURNING id INTO v_handover_id;
 
-    FOR v_size IN SELECT * FROM jsonb_array_elements(p_sizes)
+    FOR v_size IN SELECT * FROM jsonb_array_elements(payload->'p_sizes')
     LOOP
-        INSERT INTO public.handover_sizes (handover_id, size, qty_sent)
-        VALUES (v_handover_id, v_size->>'size', (v_size->>'qty')::INTEGER);
+        INSERT INTO handover_sizes (handover_id, size_label, qty_sent)
+        VALUES (
+            v_handover_id,
+            v_size->>'size',
+            (v_size->>'qty')::int
+        );
     END LOOP;
 
     RETURN v_handover_id;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
-
--- ==========================================
--- FUNCTION: accept_handover
--- UC-003: Terima Handover dan auto-task
--- ==========================================
-CREATE OR REPLACE FUNCTION public.accept_handover(
-    p_handover_id UUID,
-    p_actual_sizes JSONB
-) RETURNS UUID AS $$
+CREATE OR REPLACE FUNCTION accept_handover(p_handover_id uuid, p_actual_sizes jsonb)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 DECLARE
-    v_handover RECORD;
-    v_size JSONB;
-    v_task_id UUID;
-    v_order_item_id UUID;
-    v_division VARCHAR;
+    v_handover record;
+    v_size jsonb;
+    v_task_id uuid;
+    v_rate numeric;
+    v_order_item_id uuid;
 BEGIN
-    SELECT * INTO v_handover FROM public.handovers WHERE id = p_handover_id;
+    -- Validasi kepemilikan dan status
+    SELECT * INTO v_handover FROM handovers WHERE id = p_handover_id AND status = 'pending';
     IF NOT FOUND THEN
-        RAISE EXCEPTION 'Handover not found';
+        RAISE EXCEPTION 'Handover tidak valid atau sudah diproses.';
     END IF;
 
-    -- Dapatkan order_item_id dari task asal
-    SELECT order_item_id INTO v_order_item_id FROM public.tasks WHERE id = v_handover.from_task_id;
-    
-    -- Sementara set division default ke 'received' (seharusnya dikirim dari UI / param)
-    v_division := 'received';
+    -- Update status handover
+    UPDATE handovers SET status = 'accepted' WHERE id = p_handover_id;
 
-    -- Update Handover Status
-    UPDATE public.handovers SET status = 'accepted' WHERE id = p_handover_id;
+    -- Dapatkan order_item_id dari from_task_id
+    SELECT order_item_id INTO v_order_item_id FROM tasks WHERE id = v_handover.from_task_id;
 
-    -- Update Handover Sizes dgn qty_received
-    FOR v_size IN SELECT * FROM jsonb_array_elements(p_actual_sizes)
-    LOOP
-        UPDATE public.handover_sizes 
-        SET qty_received = (v_size->>'qty')::INTEGER
-        WHERE handover_id = p_handover_id AND size = v_size->>'size';
-    END LOOP;
+    -- Ambil rate snapshot untuk penerima
+    SELECT rate INTO v_rate 
+    FROM employee_rates 
+    WHERE user_id = v_handover.to_user_id
+    LIMIT 1;
 
-    -- Create New Task for Receiver
-    INSERT INTO public.tasks (order_item_id, assigned_to_user, assigned_to_vendor, division, status)
-    VALUES (v_order_item_id, v_handover.to_user_id, v_handover.to_vendor_id, v_division, 'running')
-    RETURNING id INTO v_task_id;
+    -- Auto-Task: Buat task baru untuk penerima
+    IF v_handover.to_user_id IS NOT NULL THEN
+        INSERT INTO tasks (order_item_id, assignee_id, ongkos_per_pcs_snapshot, status)
+        VALUES (v_order_item_id, v_handover.to_user_id, COALESCE(v_rate, 0), 'pending')
+        RETURNING id INTO v_task_id;
+        
+        -- Update received qty dan buat task sizes
+        FOR v_size IN SELECT * FROM jsonb_array_elements(p_actual_sizes)
+        LOOP
+            UPDATE handover_sizes 
+            SET qty_received = (v_size->>'qty')::int 
+            WHERE handover_id = p_handover_id AND size_label = v_size->>'size';
 
-    -- Insert into task sizes based on received qty
-    FOR v_size IN SELECT * FROM jsonb_array_elements(p_actual_sizes)
-    LOOP
-        IF (v_size->>'qty')::INTEGER > 0 THEN
-            INSERT INTO public.task_sizes (task_id, size, qty)
-            VALUES (v_task_id, v_size->>'size', (v_size->>'qty')::INTEGER);
-        END IF;
-    END LOOP;
-
-    RETURN v_task_id;
+            INSERT INTO task_sizes (task_id, size_label, target_qty, completed_qty)
+            VALUES (v_task_id, v_size->>'size', (v_size->>'qty')::int, 0);
+        END LOOP;
+    END IF;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
-
--- ==========================================
--- FUNCTION: get_kasbon_limit
--- UC-004
--- ==========================================
-CREATE OR REPLACE FUNCTION public.get_kasbon_limit(p_user_id UUID) 
-RETURNS DECIMAL AS $$
+-- ----------------------------------------------------------------------------------------
+-- 4. UC-004: Get Kasbon Limit
+-- ----------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION get_kasbon_limit(p_user_id uuid)
+RETURNS numeric
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 DECLARE
-    v_gross_salary DECIMAL := 0;
-    v_max_pct DECIMAL := 0.5;
-    v_branch_id UUID;
-    v_total_pending_approved DECIMAL := 0;
-    v_limit DECIMAL := 0;
+    v_branch_id uuid;
+    v_max_percent numeric;
+    v_gross_est numeric;
 BEGIN
-    -- 1. Get branch_id for user
-    SELECT branch_id INTO v_branch_id FROM public.profiles WHERE id = p_user_id;
-
-    -- 2. Get max percentage
-    SELECT max_kasbon_percentage / 100.0 INTO v_max_pct 
-    FROM public.branch_settings WHERE branch_id = v_branch_id;
+    v_branch_id := auth_branch_id();
     
-    IF v_max_pct IS NULL THEN v_max_pct := 0.5; END IF;
+    SELECT max_kasbon_percentage INTO v_max_percent 
+    FROM branch_settings WHERE branch_id = v_branch_id;
 
-    -- 3. Calculate gross salary from progress_logs for the current period
-    -- In production, add date filtering: AND pl.created_at > (last payroll date)
-    SELECT COALESCE(SUM(pl.qty_completed * er.rate_per_pcs), 0)
-    INTO v_gross_salary
-    FROM public.progress_logs pl
-    JOIN public.tasks t ON pl.task_id = t.id
-    LEFT JOIN public.employee_rates er ON er.user_id = p_user_id AND er.division = t.division
-    WHERE pl.user_id = p_user_id;
+    -- Estimasi kotor: sum(qty_completed * ongkos_per_pcs_snapshot)
+    SELECT COALESCE(SUM(pl.qty_completed * t.ongkos_per_pcs_snapshot), 0) INTO v_gross_est
+    FROM progress_logs pl
+    JOIN tasks t ON pl.task_id = t.id
+    WHERE pl.user_id = p_user_id
+    AND pl.created_at >= (now() - interval '7 days');
 
-    -- 4. Calculate total active kasbon (pending + approved but not deducted)
-    SELECT COALESCE(SUM(amount_requested), 0)
-    INTO v_total_pending_approved
-    FROM public.cash_advances
-    WHERE user_id = p_user_id AND is_deducted = false AND status IN ('pending', 'approved');
+    RETURN (v_gross_est * (v_max_percent / 100.0));
+END;
+$$;
 
-    v_limit := (v_gross_salary * v_max_pct) - v_total_pending_approved;
-    
-    IF v_limit < 0 THEN
-        v_limit := 0;
+-- ----------------------------------------------------------------------------------------
+-- 5. UC-005: Generate Weekly Salary
+-- ----------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION generate_weekly_salary(p_branch_id uuid, p_period_start date, p_period_end date)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
+DECLARE
+    v_count int := 0;
+    v_total numeric := 0;
+BEGIN
+    IF auth_user_role() NOT IN ('boss', 'owner') THEN
+        RAISE EXCEPTION 'Not authorized';
     END IF;
 
-    RETURN v_limit;
+    -- CTE (Common Table Expression) untuk aggregasi dan insert sekaligus mencegah N+1 loop (Optimasi Performa)
+    WITH EmployeeGross AS (
+        SELECT pl.user_id, SUM(pl.qty_completed * t.ongkos_per_pcs_snapshot) AS gross
+        FROM progress_logs pl
+        JOIN tasks t ON pl.task_id = t.id
+        WHERE pl.created_at::date BETWEEN p_period_start AND p_period_end
+        GROUP BY pl.user_id
+    ),
+    EmployeeDeduction AS (
+        SELECT employee_id, SUM(amount_approved) AS deduction
+        FROM cash_advances
+        WHERE branch_id = p_branch_id AND status = 'approved'
+        GROUP BY employee_id
+    ),
+    Inserted AS (
+        INSERT INTO salary_records (branch_id, user_id, period_end, gross_salary, cash_advance_deduction, net_salary)
+        SELECT 
+            p_branch_id,
+            g.user_id,
+            p_period_end,
+            g.gross,
+            COALESCE(d.deduction, 0),
+            GREATEST(g.gross - COALESCE(d.deduction, 0), 0)
+        FROM EmployeeGross g
+        LEFT JOIN EmployeeDeduction d ON g.user_id = d.employee_id
+        RETURNING net_salary
+    )
+    SELECT count(*), COALESCE(sum(net_salary), 0) INTO v_count, v_total FROM Inserted;
+    
+    RETURN jsonb_build_object('generated_count', v_count, 'total_amount', v_total);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
-
--- ==========================================
--- FUNCTION: generate_weekly_salary
--- UC-005
--- ==========================================
-CREATE OR REPLACE FUNCTION public.generate_weekly_salary(
-    p_branch_id UUID,
-    p_period_end DATE
-) RETURNS JSONB AS $$
-DECLARE
-    v_user RECORD;
-    v_gross DECIMAL;
-    v_kasbon_deduct DECIMAL;
-    v_net DECIMAL;
-    v_count INTEGER := 0;
-    v_total_amount DECIMAL := 0;
+-- ----------------------------------------------------------------------------------------
+-- 6. UC-006: Trigger Update Task Sizes
+-- ----------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION trg_update_task_completed_qty()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 BEGIN
-    -- Loop active employees in branch
-    FOR v_user IN SELECT id FROM public.profiles WHERE branch_id = p_branch_id AND role = 'employee'
-    LOOP
-        -- Gross: sum progress logs
-        SELECT COALESCE(SUM(pl.qty_completed * er.rate_per_pcs), 0)
-        INTO v_gross
-        FROM public.progress_logs pl
-        JOIN public.tasks t ON pl.task_id = t.id
-        LEFT JOIN public.employee_rates er ON er.user_id = v_user.id AND er.division = t.division
-        WHERE pl.user_id = v_user.id;
-
-        -- Get total un-deducted approved cash advances
-        SELECT COALESCE(SUM(amount_approved), 0)
-        INTO v_kasbon_deduct
-        FROM public.cash_advances
-        WHERE user_id = v_user.id AND status = 'approved' AND is_deducted = false;
-
-        v_net := v_gross - v_kasbon_deduct;
-
-        IF v_gross > 0 THEN
-            INSERT INTO public.salary_records (branch_id, user_id, period_end, gross_salary, cash_advance_deduction, net_salary)
-            VALUES (p_branch_id, v_user.id, p_period_end, v_gross, v_kasbon_deduct, v_net);
-
-            -- Mark cash advances as deducted
-            UPDATE public.cash_advances
-            SET is_deducted = true
-            WHERE user_id = v_user.id AND status = 'approved' AND is_deducted = false;
-
-            v_count := v_count + 1;
-            v_total_amount := v_total_amount + v_net;
-        END IF;
-    END LOOP;
-
-    RETURN jsonb_build_object('generated_count', v_count, 'total_amount', v_total_amount);
+    UPDATE task_sizes
+    SET completed_qty = completed_qty + NEW.qty_completed
+    WHERE task_id = NEW.task_id AND size_label = NEW.size;
+    
+    RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
+
+DROP TRIGGER IF EXISTS trigger_progress_logs_insert ON progress_logs;
+CREATE TRIGGER trigger_progress_logs_insert
+AFTER INSERT ON progress_logs
+FOR EACH ROW
+EXECUTE FUNCTION trg_update_task_completed_qty();
