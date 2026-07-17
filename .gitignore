@@ -71,3 +71,4 @@ preferensiui/
 # ===========================
 graphify-out/.graphify_*
 graphify-out/cost.json
+graphify-out/cache/
