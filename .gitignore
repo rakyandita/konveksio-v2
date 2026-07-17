@@ -65,3 +65,9 @@ node_modules/
 dist/
 .next/
 preferensiui/
+
+# ===========================
+# Graphify
+# ===========================
+graphify-out/.graphify_*
+graphify-out/cost.json
