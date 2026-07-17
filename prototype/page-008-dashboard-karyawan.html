@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Karyawan - Konveksio</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background-color: var(--color-border);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: var(--space-xs);
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background-color: var(--color-success);
+      width: 60%; /* Example progress */
+    }
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--space-xl) var(--space-md);
+      color: var(--color-muted);
+    }
+    .empty-state i {
+      font-size: 48px;
+      color: var(--color-border);
+      margin-bottom: var(--space-sm);
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-container">
+    
+    <!-- Fixed Background (KAI Style) -->
+    <div class="fixed-background fixed-background-karyawan"></div>
+
+    <!-- Dynamic App Header -->
+    <header class="app-header-dynamic" id="mainHeader">
+      <div class="flex items-center gap-sm flex-1">
+        <i class="ph-fill ph-scissors" style="font-size: 24px;"></i>
+        <span class="app-header-title-dynamic">Area Produksi</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content" id="mainContent">
+      
+      <!-- Background Text Reveal -->
+      <div style="padding: 0 var(--space-md); color: #FFF; margin-bottom: 24px;">
+        <h1 class="text-h2 mb-xs" style="color: #FFF;">Halo, Mas Budi 👋</h1>
+        <p class="text-body2" style="color: rgba(255,255,255,0.9);">Divisi Jahit • Cabang Jakarta</p>
+      </div>
+      
+      <!-- White Sheet Overlay (KAI Style) -->
+      <div class="bottom-sheet-content">
+
+        <!-- Overlapping Card -->
+        <div class="hero-balance-card-overlap">
+          <div class="text-body2 text-muted mb-xs">Sisa Kasbon Anda</div>
+          <div class="flex items-center justify-between">
+            <div class="text-h1 font-bold text-destructive">Rp 150.000</div>
+            <i class="ph-fill ph-wallet text-muted" style="font-size: 28px;"></i>
+          </div>
+        </div>
+
+        <!-- Tugas Aktif (Sectioned by Division per RISK-01) -->
+        <section class="section-padded mb-lg">
+          <div class="flex items-center justify-between mb-sm">
+            <h2 class="text-body2 text-muted">Tugas Aktif (1)</h2>
+          </div>
+          
+          <div class="card">
+            <div class="flex justify-between items-start mb-sm">
+              <h2 class="truncate flex-1">Jahit Kaos Korsa BEM</h2>
+              <span class="badge badge-produksi-berjalan shrink-0">Sedang Dikerjakan</span>
+            </div>
+            <p class="text-body2 text-muted mb-md">Deadline: Besok, 15:00 WIB</p>
+            
+            <div class="mb-md">
+              <div class="flex justify-between text-caption mb-xs">
+                <span class="text-muted">Progres: 30 / 50 pcs</span>
+                <span class="font-bold text-success">60%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill"></div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary">
+              <i class="ph-bold ph-check-circle"></i> Update Progres
+            </button>
+          </div>
+        </section>
+
+        <!-- Kotak Masuk (Empty State per RISK-03) -->
+        <section class="section-padded mb-lg">
+          <div class="flex items-center justify-between mb-sm">
+            <h2 class="text-body2 text-muted">Kotak Masuk (Handover)</h2>
+          </div>
+          
+          <!-- Empty State -->
+          <div class="card empty-state" style="background-color: transparent; border: 2px dashed var(--color-border);">
+            <i class="ph-fill ph-mailbox"></i>
+            <h3 class="text-body1 font-medium mb-xs text-foreground">Kotak masukmu kosong.</h3>
+            <p class="text-body2">Fokus selesaikan tugas aktifmu dulu ya!</p>
+          </div>
+        </section>
+        
+        <div style="height: 40px;"></div>
+
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="#" class="nav-item">
+        <i class="ph-fill ph-house" style="font-size: 24px; color: var(--color-primary);"></i>
+        <span style="color: var(--color-primary);">Beranda</span>
+      </a>
+      <a href="#" class="nav-item" style="position: relative;">
+        <i class="ph-fill ph-tray" style="font-size: 24px;"></i>
+        <span>Masuk</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="ph-fill ph-money" style="font-size: 24px;"></i>
+        <span>Kasbon</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="ph-fill ph-user" style="font-size: 24px;"></i>
+        <span>Profil</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <script>
+    // Header Scroll Effect (KAI Style)
+    const content = document.getElementById('mainContent');
+    const header = document.getElementById('mainHeader');
+    
+    content.addEventListener('scroll', () => {
+      // Trigger header color change when the white sheet starts touching the header
+      if (content.scrollTop > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>

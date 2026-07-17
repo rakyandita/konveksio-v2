@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Konveksio</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .login-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-xl);
+    }
+    .brand {
+      text-align: center;
+      margin-bottom: var(--space-xxl);
+    }
+    .brand i {
+      font-size: 64px;
+      color: var(--color-primary);
+      margin-bottom: var(--space-md);
+    }
+    .brand h1 {
+      color: var(--color-primary);
+      margin-bottom: var(--space-xs);
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-container">
+    <div class="login-container">
+      
+      <div class="brand">
+        <i class="ph-fill ph-t-shirt"></i>
+        <h1>Konveksio</h1>
+        <p class="text-muted text-body2">Biar Konveksio yang atur, kamu yang pantau.</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <label class="input-label" for="username">Nomor HP / Email</label>
+          <div style="position: relative;">
+            <i class="ph ph-user" style="position: absolute; left: 16px; top: 16px; color: var(--color-muted); font-size: 20px;"></i>
+            <input type="text" id="username" class="input-field" placeholder="Masukkan nomor HP atau email" style="padding-left: 44px; width: 100%;" required>
+          </div>
+        </div>
+
+        <div class="input-group mb-xl">
+          <label class="input-label" for="password">Kata Sandi</label>
+          <div style="position: relative;">
+            <i class="ph ph-lock-key" style="position: absolute; left: 16px; top: 16px; color: var(--color-muted); font-size: 20px;"></i>
+            <input type="password" id="password" class="input-field" placeholder="Masukkan kata sandi" style="padding-left: 44px; width: 100%;" required>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="handleLogin()">
+          Masuk <i class="ph-bold ph-arrow-right"></i>
+        </button>
+      </form>
+
+    </div>
+
+    <!-- Snackbar for interaction -->
+    <div id="snackbar" class="snackbar">
+      <i id="snackbarIcon" class="ph-fill ph-check-circle" style="font-size: 20px;"></i>
+      <span id="snackbarText">Berhasil!</span>
+    </div>
+  </div>
+
+  <script>
+    function handleLogin() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const sb = document.getElementById('snackbar');
+      const sbText = document.getElementById('snackbarText');
+      const sbIcon = document.getElementById('snackbarIcon');
+
+      if (!user || !pass) {
+        sb.classList.add('error');
+        sbIcon.className = 'ph-fill ph-warning-circle';
+        sbText.innerText = 'Waduh, nomor HP dan kata sandi wajib diisi ya.';
+        sb.classList.add('show');
+        setTimeout(() => sb.classList.remove('show'), 3000);
+        return;
+      }
+
+      sb.classList.remove('error');
+      sbIcon.className = 'ph-fill ph-check-circle';
+      sbText.innerText = 'Mantap! Sedang masuk...';
+      sb.classList.add('show');
+      setTimeout(() => sb.classList.remove('show'), 3000);
+    }
+  </script>
+</body>
+</html>
