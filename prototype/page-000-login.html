@@ -127,6 +127,10 @@
       font-size: 28px;
       border: 1px solid var(--color-border);
       cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .btn-fingerprint:active {
+      transform: scale(0.95);
     }
     .help-section {
       text-align: center;
@@ -148,13 +152,13 @@
   <div class="mobile-container">
     <div class="login-container">
       
-      <div class="brand">
+      <div class="brand animate-stagger-1">
         <i class="ph-fill ph-t-shirt"></i>
         <h1>Konveksio</h1>
         <p class="text-muted text-body2">Biar Konveksio yang atur, kamu yang pantau.</p>
       </div>
 
-      <form id="loginForm" style="display: flex; flex-direction: column; flex: 1;">
+      <form id="loginForm" class="animate-stagger-2" style="display: flex; flex-direction: column; flex: 1;">
         <div class="input-group-outline">
           <label class="input-label-outline">User ID</label>
           <div class="input-container-outline">
@@ -183,8 +187,8 @@
           <a href="#" class="forgot-link">Lupa Password?</a>
         </div>
 
-        <div class="login-row">
-          <button type="button" class="btn btn-primary" style="height: 56px; font-size: 16px; flex: 1;" onclick="handleLogin()">
+        <div class="login-row animate-stagger-3">
+          <button type="button" class="btn btn-primary" style="height: 56px; font-size: 16px; flex: 1; transition: transform 0.2s; cursor: pointer;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'" onclick="handleLogin()">
             Login
           </button>
           <button type="button" class="btn-fingerprint">
@@ -192,7 +196,7 @@
           </button>
         </div>
         
-        <div class="help-section">
+        <div class="help-section animate-stagger-4">
           <a href="#" class="help-link">
             <i class="ph ph-question"></i>
             <span style="font-size: 12px; font-weight: 500;">Help</span>
@@ -239,7 +243,10 @@
       sbIcon.className = 'ph-fill ph-check-circle';
       sbText.innerText = 'Mantap! Sedang masuk...';
       sb.classList.add('show');
-      setTimeout(() => sb.classList.remove('show'), 3000);
+      setTimeout(() => {
+        sb.classList.remove('show');
+        window.location.href = 'page-001-dashboard-owner.html';
+      }, 1000);
     }
   </script>
 </body>

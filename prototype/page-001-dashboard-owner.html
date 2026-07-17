@@ -8,167 +8,299 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
+  <style>
+    /* Container base */
+    .mobile-container {
+      background: linear-gradient(180deg, #CCFBF1 0%, #FFFFFF 25%, #FFFFFF 100%);
+      color: var(--color-foreground);
+      border: 1px solid var(--color-border);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    .app-header-dynamic {
+      color: var(--color-foreground) !important;
+    }
+    .app-header-dynamic.scrolled {
+      background-color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .content {
+      padding-top: 60px; /* Space for dynamic header */
+      padding-bottom: 90px;
+    }
+
+    /* Typography */
+    .text-h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-foreground);
+      letter-spacing: -0.5px;
+    }
+
+    .text-h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-foreground);
+    }
+
+    .text-body1 { font-size: 16px; font-weight: 400; color: var(--color-foreground); }
+    .text-body2 { font-size: 14px; font-weight: 400; color: var(--color-muted); }
+    .text-caption { font-size: 12px; font-weight: 500; color: var(--color-muted); }
+
+    .text-ellipsis {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* BENTO GRID (Variance 8) */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 var(--space-md);
+    }
+
+    /* CARD COMPONENTS (Pro Max: Soft Shadows) */
+    .bento-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md, 12px);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Thumb-friendly & Micro-interaction (Hover/Active) */
+    .bento-card:hover {
+      transform: scale(var(--scale-hover));
+      box-shadow: var(--shadow-md);
+      border-color: var(--color-primary);
+    }
+    .bento-card:active {
+      transform: scale(0.98);
+    }
+
+    .col-span-2 { grid-column: span 2; }
+
+    /* Bento Icon Wrapper */
+    .bento-icon {
+      width: 44px; height: 44px; /* Area tap minimum */
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      margin-bottom: var(--space-sm);
+    }
+
+    .icon-primary { background: #F0FDFA; color: var(--color-primary); }
+    .icon-navy { background: #F1F5F9; color: var(--color-secondary); }
+
+    /* Header Profile */
+    .executive-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 var(--space-md) var(--space-lg) var(--space-md);
+    }
+
+    .profile-ring {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 2px solid var(--color-primary);
+      padding: 2px;
+    }
+    .profile-ring img {
+      width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+    }
+
+    /* Bottom Navigation (Light) */
+    .bottom-nav {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .bottom-nav .nav-item { color: var(--color-muted); }
+    .bottom-nav .nav-item.active { color: var(--color-primary); }
+
+    /* Staggered animation classes are now in components.css */
+    
+    /* Progress Bar Flat */
+    .progress-bar-bg {
+      width: 100%; height: 8px; background: #F1F5F9; border-radius: 4px; margin-top: 8px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%; background: var(--color-primary); border-radius: 4px;
+    }
+    .progress-bar-fill.accent { background: var(--color-success); }
+
+    /* Flex Constraint Helpers */
+    .flex-row { display: flex; align-items: center; }
+    .flex-between { justify-content: space-between; }
+    .flex-expanded { flex: 1; min-width: 0; } /* Penahan benturan text overflow */
+
+    /* Section Title */
+    .section-title {
+      padding: 0 var(--space-md); margin-top: var(--space-lg); margin-bottom: var(--space-sm);
+      color: var(--color-foreground); font-size: 16px; font-weight: 600;
+    }
+
+  </style>
 </head>
 <body>
   <div class="mobile-container">
     
-    <!-- Fixed Background (KAI Style) -->
-    <div class="fixed-background fixed-background-owner"></div>
-
     <!-- Dynamic App Header -->
-    <header class="app-header-dynamic" id="mainHeader">
+    <header class="app-header-dynamic animate-stagger-1" id="mainHeader">
       <div class="flex items-center gap-sm flex-1">
-        <i class="ph-fill ph-buildings" style="font-size: 24px;"></i>
-        <span class="app-header-title-dynamic">Cabang Jakarta</span>
+        <i class="ph-fill ph-crown" style="font-size: 24px; color: var(--color-primary);"></i>
+        <span class="app-header-title-dynamic">Ringkasan Eksekutif</span>
       </div>
-      <button class="btn-icon-only" style="color: inherit; width: auto; padding: 0 8px; font-size: 14px; font-weight: 600;">
-        <i class="ph ph-sign-out" style="font-size: 20px; margin-right: 4px;"></i>Keluar
-      </button>
+      <div class="profile-ring flex-shrink-0" style="width: 32px; height: 32px; border-width: 1px;">
+        <img src="https://i.pravatar.cc/150?u=boss" alt="Owner Profile">
+      </div>
     </header>
 
-    <!-- Main Content -->
     <main class="content" id="mainContent">
       
       <!-- Background Text Reveal -->
-      <div style="padding: 0 var(--space-md); color: #FFF; margin-bottom: 24px;">
-        <h1 class="text-h2 mb-xs" style="color: #FFF;">Halo, Bos Besar 👋</h1>
-        <p class="text-body2" style="color: rgba(255,255,255,0.9);">Owner • Memantau Cabang Jakarta</p>
+      <div class="animate-stagger-2" style="padding: 0 var(--space-md); margin-bottom: 24px;">
+        <h1 class="text-h2 mb-xs" style="color: var(--color-primary);">Halo, Anda 👋</h1>
+        <p class="text-body2 text-muted">Performa cabang hari ini luar biasa. Pantau terus!</p>
       </div>
-      
-      <!-- White Sheet Overlay (KAI Style) -->
-      <div class="bottom-sheet-content">
 
-        <!-- Overlapping Card -->
-        <div class="hero-balance-card-overlap">
-          <div class="text-body2 text-muted mb-xs">Omset Aktif Bulan Ini</div>
-          <div class="flex items-center justify-between">
-            <div class="text-h1 font-bold text-primary">Rp 45.250.000</div>
-            <i class="ph-fill ph-trend-up text-success" style="font-size: 28px;"></i>
+      <div class="bottom-sheet-content">
+        <!-- Overlap Balance Card -->
+        <div class="hero-balance-card-overlap animate-stagger-3">
+          <div class="flex-row flex-between mb-md">
+            <div>
+              <div class="text-body2 mb-xs">Omzet Global (Bulan Ini)</div>
+              <div class="text-h1" style="font-size: 28px;">Rp 128.500<span class="text-muted" style="font-size: 20px;">.000</span></div>
+            </div>
+            <div class="bento-icon icon-primary" style="margin:0;">
+              <i class="ph-fill ph-chart-line-up"></i>
+            </div>
+          </div>
+          <div class="flex-row gap-sm">
+            <span class="text-caption" style="color: var(--color-success); font-weight: 600;">↑ 12.5%</span>
+            <span class="text-caption text-ellipsis">melampaui periode lalu</span>
           </div>
         </div>
 
         <!-- Menu Grid -->
-        <section class="section-padded mb-md">
-          <div class="menu-grid-container" id="menuScroll">
-            <!-- Page 1 -->
+        <section class="animate-stagger-4 px-md mb-lg">
+          <div class="menu-grid-container">
             <div class="menu-page">
               <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-shopping-cart"></i></div>
-                <span class="menu-item-text">Order Baru</span>
+                <div class="menu-icon-wrapper" style="background-color: #CCFBF1; color: var(--color-primary);"><i class="ph-fill ph-plus-circle"></i></div>
+                <span class="menu-item-text">Tambah<br>Order</span>
               </a>
               <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-t-shirt"></i></div>
-                <span class="menu-item-text">Produksi</span>
+                <div class="menu-icon-wrapper" style="background-color: #CCFBF1; color: var(--color-primary);"><i class="ph-fill ph-buildings"></i></div>
+                <span class="menu-item-text">Data<br>Cabang</span>
               </a>
               <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-package"></i></div>
-                <span class="menu-item-text">Pengiriman</span>
+                <div class="menu-icon-wrapper" style="background-color: #CCFBF1; color: var(--color-primary);"><i class="ph-fill ph-chart-pie-slice"></i></div>
+                <span class="menu-item-text">Laporan<br>Keuangan</span>
               </a>
               <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-users"></i></div>
-                <span class="menu-item-text">Pelanggan</span>
+                <div class="menu-icon-wrapper" style="background-color: #CCFBF1; color: var(--color-primary);"><i class="ph-fill ph-gear"></i></div>
+                <span class="menu-item-text">Setelan<br>Global</span>
               </a>
-              <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-money"></i></div>
-                <span class="menu-item-text">Kas & Bank</span>
-              </a>
-              <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-box-box"></i></div>
-                <span class="menu-item-text">Inventori</span>
-              </a>
-              <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-chart-line-up"></i></div>
-                <span class="menu-item-text">Laporan</span>
-              </a>
-              <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper" style="background-color: #F1F5F9;"><i class="ph-bold ph-dots-three"></i></div>
-                <span class="menu-item-text">Lainnya</span>
-              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- IA: Perbandingan Performa Cabang (Spans 2 columns) -->
+        <div class="bento-grid">
+          <div class="bento-card col-span-2 animate-stagger-5">
+            <div class="flex-row flex-between mb-sm">
+              <div class="text-body1" style="font-weight: 600;">Performa Produksi Cabang</div>
+              <i class="ph-fill ph-trophy" style="color: #F59E0B; font-size: 20px;"></i>
             </div>
             
-            <!-- Page 2 (Simulation) -->
-            <div class="menu-page">
-              <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-identification-card"></i></div>
-                <span class="menu-item-text">Karyawan</span>
-              </a>
-              <a href="#" class="menu-item">
-                <div class="menu-icon-wrapper"><i class="ph-fill ph-gear"></i></div>
-                <span class="menu-item-text">Pengaturan</span>
-              </a>
-            </div>
-          </div>
-          
-          <!-- Indicator (myBCA style) -->
-          <div class="scroll-indicator-wrapper">
-             <i class="ph-bold ph-caret-left scroll-indicator-arrow" id="arrowLeft" style="color: var(--color-border);"></i>
-             <div class="scroll-indicator-container">
-               <div class="scroll-dot active" id="dot1"></div>
-               <div class="scroll-dot" id="dot2"></div>
-             </div>
-             <i class="ph-bold ph-caret-right scroll-indicator-arrow" id="arrowRight"></i>
-          </div>
-        </section>
-
-        <!-- Danger Zone / Destructive Action Simulation -->
-        <section class="section-padded mb-lg">
-          <h2 class="text-body2 text-muted mb-sm">Tindakan Eksekutif</h2>
-          
-          <div class="card" style="border-color: var(--color-destructive); background-color: #FEF2F2;">
-            <div class="flex items-start gap-md">
-              <div class="list-item-icon" style="background-color: #FEE2E2; color: var(--color-destructive);">
-                <i class="ph-fill ph-warning-circle" style="font-size: 24px;"></i>
+            <!-- Cabang 1 -->
+            <div class="mt-sm">
+              <div class="flex-row flex-between text-caption">
+                <span>Jakarta (60% kapasitas)</span>
+                <span style="font-weight: 600;">1.200 pcs</span>
               </div>
-              <div class="flex-1">
-                <h3 class="text-body1 font-semibold mb-xs" style="color: var(--color-destructive);">Generate Gaji Karyawan</h3>
-                <p class="text-body2 text-muted mb-md">Hitung total gaji dan kasbon semua karyawan Cabang Jakarta bulan ini.</p>
-                <button class="btn btn-destructive" onclick="showDialog()">
-                  Mulai Kalkulasi Gaji
-                </button>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 60%;"></div>
+              </div>
+            </div>
+            
+            <!-- Cabang 2 -->
+            <div class="mt-sm">
+              <div class="flex-row flex-between text-caption">
+                <span>Bandung (45% kapasitas)</span>
+                <span style="font-weight: 600;">900 pcs</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill accent" style="width: 45%;"></div>
               </div>
             </div>
           </div>
-        </section>
-        
-        <div style="height: 40px;"></div>
-
-      </div>
-    </main>
-
-    <!-- Modal Dialog Simulation -->
-    <div id="dangerModal" style="display: none; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 200; align-items: center; justify-content: center; padding: var(--space-md); backdrop-filter: blur(4px);">
-      <div class="card" style="width: 100%; border: none; box-shadow: var(--shadow-lg);">
-        <i class="ph-fill ph-warning-circle text-destructive mb-sm" style="font-size: 48px;"></i>
-        <h3 class="text-h2 mb-xs">Konfirmasi Eksekutif</h3>
-        <p class="text-body2 text-muted mb-md">
-          ⚠️ Anda mengeksekusi tindakan ini sebagai <b>Owner</b> dalam Branch Context Mode. Tindakan ini akan tercatat dalam audit log dengan identitas Anda.
-        </p>
-        <div class="flex-col gap-sm">
-          <button class="btn btn-destructive" onclick="hideDialog()">Ya, Lanjutkan Kalkulasi</button>
-          <button class="btn btn-secondary" onclick="hideDialog()">Batal</button>
         </div>
+
       </div>
-    </div>
+
+      <div class="section-title animate-stagger-4">Daftar Cabang</div>
+      <p class="text-body2 px-md mb-md animate-stagger-4">Ketuk cabang untuk masuk ke Mode Operasional.</p>
+
+      <!-- IA: Kartu Cabang (Pintu Masuk UC-007) -->
+      <div class="bento-grid animate-stagger-4">
+        <!-- Cabang Jakarta -->
+        <a href="page-015-branch-context.html" class="bento-card" style="border-color: #D97706;">
+          <div class="flex-row flex-between mb-sm">
+            <div class="bento-icon icon-navy" style="margin:0; width: 32px; height: 32px; font-size: 16px;">
+              <i class="ph-fill ph-storefront"></i>
+            </div>
+            <span class="text-caption" style="color: #D97706; font-weight: 600;">Aktif</span>
+          </div>
+          <div class="mt-auto">
+            <div class="text-body1" style="font-weight: 600;">Cabang Jakarta</div>
+            <div class="text-caption mt-xs">24 Order Berjalan</div>
+          </div>
+        </a>
+
+        <!-- Cabang Bandung -->
+        <a href="page-015-branch-context.html" class="bento-card">
+          <div class="flex-row flex-between mb-sm">
+            <div class="bento-icon icon-navy" style="margin:0; width: 32px; height: 32px; font-size: 16px;">
+              <i class="ph-fill ph-storefront"></i>
+            </div>
+          </div>
+          <div class="mt-auto">
+            <div class="text-body1" style="font-weight: 600;">Cabang Bandung</div>
+            <div class="text-caption mt-xs">12 Order Berjalan</div>
+          </div>
+        </a>
+      </div>
+
+    </main>
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-      <a href="#" class="nav-item">
-        <i class="ph-fill ph-house" style="font-size: 24px; color: var(--color-primary);"></i>
-        <span style="color: var(--color-primary);">Beranda</span>
+      <a href="page-001-dashboard-owner.html" class="nav-item active">
+        <i class="ph-fill ph-squares-four" style="font-size: 24px;"></i>
+        <span class="text-caption">Beranda</span>
       </a>
       <a href="#" class="nav-item">
-        <i class="ph-fill ph-clipboard-text" style="font-size: 24px;"></i>
-        <span>Pesanan</span>
+        <i class="ph ph-buildings" style="font-size: 24px;"></i>
+        <span class="text-caption">Cabang</span>
       </a>
       <a href="#" class="nav-item">
-        <i class="ph-fill ph-bell" style="font-size: 24px;"></i>
-        <span>Notifikasi</span>
+        <i class="ph ph-users-three" style="font-size: 24px;"></i>
+        <span class="text-caption">Akses</span>
       </a>
       <a href="#" class="nav-item">
-        <i class="ph-fill ph-user" style="font-size: 24px;"></i>
-        <span>Akun</span>
+        <i class="ph ph-user-circle" style="font-size: 24px;"></i>
+        <span class="text-caption">Profil</span>
       </a>
     </nav>
+
   </div>
 
   <script>
@@ -177,41 +309,12 @@
     const header = document.getElementById('mainHeader');
     
     content.addEventListener('scroll', () => {
-      // Trigger header color change when the white sheet starts touching the header
       if (content.scrollTop > 50) {
         header.classList.add('scrolled');
       } else {
         header.classList.remove('scrolled');
       }
     });
-
-    // Horizontal Menu Scroll Indicator Effect (myBCA Style)
-    const menuScroll = document.getElementById('menuScroll');
-    const dot1 = document.getElementById('dot1');
-    const dot2 = document.getElementById('dot2');
-    const arrowLeft = document.getElementById('arrowLeft');
-    const arrowRight = document.getElementById('arrowRight');
-
-    menuScroll.addEventListener('scroll', () => {
-      if (menuScroll.scrollLeft > 50) {
-        dot1.classList.remove('active');
-        dot2.classList.add('active');
-        arrowLeft.style.color = 'var(--color-primary)';
-        arrowRight.style.color = 'var(--color-border)';
-      } else {
-        dot1.classList.add('active');
-        dot2.classList.remove('active');
-        arrowLeft.style.color = 'var(--color-border)';
-        arrowRight.style.color = 'var(--color-primary)';
-      }
-    });
-
-    function showDialog() {
-      document.getElementById('dangerModal').style.display = 'flex';
-    }
-    function hideDialog() {
-      document.getElementById('dangerModal').style.display = 'none';
-    }
   </script>
 </body>
 </html>

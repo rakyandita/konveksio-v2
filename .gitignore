@@ -2,7 +2,7 @@
 # Flutter / Dart
 # ===========================
 # Chain-of-truth skill has its own git repo, exclude from outer repo
-.agents/skills/chain-of-truth/
+.agents/*
 
 **/doc/api/
 .dart_tool/

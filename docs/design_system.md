@@ -7,7 +7,9 @@
 
 ## 1. Core Principles
 Berdasarkan analisis `ui-ux-pro-max` untuk aplikasi *productivity factory dashboard*:
-- **Flat Design Mobile (Touch-First):** Desain 2D, blok warna (*color blocking*), **tanpa bayangan (no shadows)**, berbasis geometri solid (persegi/lingkaran tegas).
+- **Sleek, Premium & Serious:** Antarmuka bergaya profesional layaknya dashboard perbankan modern.
+- **High-Density Bento Grids:** Menyajikan data secara padat dan terstruktur (Bento UI) di satu layar untuk meminimalisir *scroll* berlebih, cocok untuk operasional pabrik yang butuh efisiensi.
+- **Soft Drop Shadows & Subtle Depth:** Meninggalkan aturan *flat design* kaku. Mengizinkan penggunaan bayangan halus (*soft shadows*) untuk menciptakan ilusi elevasi dan kedalaman (*depth*) layaknya antarmuka macOS/Apple.
 - **Thumb-Friendly:** Area tap *minimum 44x44pt*, tombol aksi utama (*CTA*) selalu diletakkan di bagian bawah layar.
 - **Keterbacaan Maksimal:** Kontras tinggi untuk penggunaan di lingkungan pabrik, dengan tipografi yang tebal dan jelas.
 
@@ -55,7 +57,7 @@ Jarak antar elemen mematuhi sistem *grid* kelipatan 8:
 - *Aturan:* Tombol aksi utama (seperti `[TERIMA]`, `[UPDATE PROGRES]`) sebaiknya *full-width* (penuh ke samping) dan menempel di area bawah layar (*Bottom Sheet / Sticky Footer*).
 
 ### 5.2. Cards
-- **Tanpa Bayangan (No Shadow):** Card dirender murni dengan warna background putih `#FFFFFF` dan outline/border 1dp (`#E2E8F0`).
+- **Bento Grid & Soft Shadows:** Card dirender dengan background putih `#FFFFFF`, outline border sangat tipis 1dp (`#E2E8F0`), dan **wajib menggunakan bayangan halus** (*soft drop shadows*) dengan opasitas sangat rendah (2-5%) untuk memberikan kesan premium dan elevasi.
 - Padding dalam Card selalu menggunakan `--space-md` (16dp).
 
 ### 5.3. Kotak Input (Text Field)
@@ -65,6 +67,7 @@ Jarak antar elemen mematuhi sistem *grid* kelipatan 8:
 ### 5.4. Navigation Components
 - **Bottom Navigation Bar (Karyawan):** Latar putih `#FFFFFF`, ikon aktif berwarna Primary `#0D9488`, ikon non-aktif berwarna Muted `#64748B`. Menggunakan label di bawah ikon (ukuran `12sp`).
 - **Side Drawer (Boss/Admin):** Lebar 75% layar, header menggunakan background Primary. Item menu menggunakan ikon di sebelah kiri teks.
+- **Scroll-Reactive Header (KAI Style / Dynamic App Bar):** Header yang secara default transparan menyatu dengan warna latar (*hero section*), namun secara otomatis berubah menjadi solid (putih) dengan efek *box-shadow* ketika pengguna melakukan *scroll* ke bawah. Digunakan untuk memberikan kesan luas dan *clean* pada awal pemuatan halaman (seperti pada *Dashboard Karyawan*).
 
 ### 5.5. Status Badges & Chips
 - Bentuk *pill* (radius penuh) atau membulat `4dp`. Teks ukuran `12sp Medium`.
@@ -160,9 +163,12 @@ Setiap interaksi pengguna wajib direspon dengan umpan balik tekstual dan visual 
   - *Komponen:* Dialog / Modal konfirmasi dengan aksi ganda.
   - *Microcopy:* Tegas dan jelas konsekuensinya. (Contoh: *"Yakin mau menolak serah terima ini? Barang akan dikembalikan ke penjahit sebelumnya lho."*)
 - **Empty States (Layar Kosong):**
-  - *Komponen:* Ilustrasi *flat design* di tengah layar.
-  - *Microcopy:* Mencegah *dead-end*. (Contoh Karyawan: *"Mesin jahitmu masih nganggur nih. Istirahat dulu, atau cek Kotak Masuk!"* atau Owner: *"Belum ada cabang yang didaftarkan. Yuk tambah cabang pertama Anda."*)
-- **Loading State:** Menggunakan *Skeleton loading* tanpa bayangan untuk menjaga ilusi performa yang cepat saat menunggu respon *database*.
+  - *Komponen:* Ilustrasi di tengah layar.
+  - *Microcopy:* Mencegah *dead-end*. (Contoh: *"Belum ada cabang yang didaftarkan. Yuk tambah cabang pertama Anda."*)
+- **Loading State:** Menggunakan *Skeleton loading* tanpa bayangan kasar untuk menjaga ilusi performa yang cepat saat menunggu respon *database*.
+- **Motion & Micro-Interactions (Pro Max):**
+  - *Staggered Motion:* Elemen seperti *Card* atau *List Item* harus muncul secara berurutan dan mulus (*slide-up fade*) saat halaman dimuat, tidak muncul secara instan kaku.
+  - *Hover/Tap Scale:* Setiap elemen interaktif (tombol, *Card* yang bisa ditekan) harus memberikan umpan balik membesar perlahan (skala 1.02) saat disentuh/di-*hover* untuk memberikan kesan hidup dan responsif.
 
 ## 8. Layout & Text Constraints (Proteksi Overflow)
 Berdasarkan pendekatan `/idea-refine` dan `/spec-driven-development`, *Design System* ini menstandarkan proteksi terhadap teks panjang yang berpotensi merusak (*overlap/overflow*) *layout mobile*, khususnya secara horizontal (misal: "Renderflex overflowed by X pixels" di Flutter).

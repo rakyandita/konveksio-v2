@@ -9,16 +9,22 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
   <style>
+    .mobile-container {
+      background: linear-gradient(180deg, #E0F2FE 0%, #FFFFFF 25%, #FFFFFF 100%);
+      color: var(--color-foreground);
+    }
+    
+    .app-header-dynamic {
+      color: var(--color-foreground) !important;
+    }
+    .app-header-dynamic.scrolled {
+      background-color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
     .metric-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: var(--space-sm);
-    }
-    .metric-card {
-      padding: var(--space-md);
-      background-color: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
     }
     .metric-value {
       font-size: var(--font-size-h1);
@@ -41,6 +47,7 @@
     .order-card {
       min-width: 280px;
       scroll-snap-align: start;
+      background-color: #FFFFFF;
     }
 
     .fab {
@@ -55,7 +62,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.4); /* Only shadow allowed is for FAB to float */
+      box-shadow: var(--shadow-md);
       cursor: pointer;
       border: none;
       transition: transform 0.2s ease;
@@ -68,45 +75,46 @@
 <body>
   <div class="mobile-container">
     
-    <!-- App Header -->
-    <header class="app-header">
+    <!-- Dynamic App Header -->
+    <header class="app-header-dynamic animate-stagger-1" id="mainHeader">
       <div class="flex items-center gap-sm flex-1">
-        <i class="ph-fill ph-storefront" style="font-size: 24px;"></i>
-        <span class="app-header-title">Konveksio Yogyakarta</span>
+        <i class="ph-fill ph-storefront" style="font-size: 24px; color: var(--color-primary);"></i>
+        <span class="app-header-title-dynamic" style="color: var(--color-primary);">Konveksio Yogyakarta</span>
       </div>
-      <button class="btn-icon-only" style="color: var(--color-on-primary);">
-        <i class="ph ph-bell" style="font-size: 24px;"></i>
+      <button class="btn-icon-only" style="color: inherit; width: auto; padding: 0 8px; font-size: 14px; font-weight: 600;" onclick="window.location.href='page-000-login.html'">
+        <i class="ph ph-sign-out" style="font-size: 20px; margin-right: 4px; color: var(--color-primary);"></i>Keluar
       </button>
     </header>
 
     <!-- Main Content -->
-    <main class="content">
+    <main class="content" id="mainContent" style="padding-top: 60px;">
       
-      <div class="mb-lg">
-        <h1 class="mb-xs">Halo, Pak Budi 👋</h1>
-        <p class="text-muted">Semangat! Ada 12 pesanan aktif yang lagi jalan nih.</p>
+      <div class="animate-stagger-2" style="padding: 0 var(--space-md); margin-bottom: 24px;">
+        <h1 class="text-h2 mb-xs" style="color: var(--color-primary);">Halo, Pak Budi 👋</h1>
+        <p class="text-body2 text-muted">Semangat! Ada 12 pesanan aktif yang lagi jalan nih.</p>
       </div>
 
-      <!-- Ringkasan -->
-      <section class="mb-lg">
-        <h2 class="mb-sm text-body2 text-muted">Ringkasan Minggu Ini</h2>
-        <div class="metric-grid">
-          <div class="metric-card">
-            <div class="metric-value">4</div>
-            <div class="text-body2 text-muted">Order Masuk</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">120</div>
-            <div class="text-body2 text-muted">Pcs Selesai</div>
+      <div class="bottom-sheet-content">
+        <!-- Ringkasan (Overlap Balance Card) -->
+        <div class="hero-balance-card-overlap animate-stagger-3" style="margin-bottom: var(--space-lg);">
+          <h2 class="mb-md text-body2 text-muted" style="border-bottom: 1px dashed var(--color-border); padding-bottom: 8px;">Ringkasan Minggu Ini</h2>
+          <div class="metric-grid" style="gap: 16px;">
+            <div>
+              <div class="metric-value" style="font-size: 28px;">4</div>
+              <div class="text-body2 text-muted">Order Masuk</div>
+            </div>
+            <div>
+              <div class="metric-value" style="font-size: 28px;">120</div>
+              <div class="text-body2 text-muted">Pcs Selesai</div>
+            </div>
           </div>
         </div>
-      </section>
 
-      <!-- Order Berjalan (Horizontal Scroll) -->
-      <section class="mb-lg">
+        <!-- Order Berjalan (Horizontal Scroll) -->
+        <section class="mb-lg px-md animate-stagger-4" style="padding: 0 var(--space-md);">
         <div class="flex items-center justify-between mb-sm">
           <h2 class="text-body2 text-muted">Order Sedang Jalan</h2>
-          <a href="#" class="text-primary text-caption" style="text-decoration: none;">Lihat Semua</a>
+          <a href="page-003-order-list.html" class="text-primary text-caption" style="text-decoration: none;">Lihat Semua</a>
         </div>
         
         <div class="horizontal-scroll">
@@ -143,11 +151,11 @@
       </section>
 
       <!-- Action Required (Inbox/Handover) -->
-      <section>
+      <section class="px-md animate-stagger-4" style="padding: 0 var(--space-md);">
         <h2 class="text-body2 text-muted mb-sm">Perlu Tindakan</h2>
         
-        <div class="card" style="padding: 0;">
-          <div class="list-item" style="padding: var(--space-sm) var(--space-md);">
+        <div class="card" style="padding: 0; background-color: #FFFFFF;">
+          <div class="list-item" style="padding: var(--space-sm) var(--space-md); cursor: pointer;" onclick="window.location.href='page-007-inbox-boss.html'">
             <div class="list-item-icon" style="background-color: var(--status-konfirmasi-bg); color: var(--color-primary);">
               <i class="ph-fill ph-tray" style="font-size: 20px;"></i>
             </div>
@@ -173,7 +181,8 @@
       
       <!-- Padding for scroll under FAB -->
       <div style="height: 60px;"></div>
-
+      
+      </div> <!-- End bottom-sheet-content -->
     </main>
 
     <!-- FAB -->
@@ -183,11 +192,11 @@
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
-      <a href="#" class="nav-item active">
+      <a href="page-002-dashboard-boss.html" class="nav-item active">
         <i class="ph-fill ph-house" style="font-size: 24px;"></i>
         <span>Beranda</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="page-003-order-list.html" class="nav-item">
         <i class="ph ph-clipboard-text" style="font-size: 24px;"></i>
         <span>Order</span>
       </a>
@@ -202,5 +211,19 @@
     </nav>
 
   </div>
+
+  <script>
+    // Header Scroll Effect (KAI Style)
+    const content = document.getElementById('mainContent');
+    const header = document.getElementById('mainHeader');
+    
+    content.addEventListener('scroll', () => {
+      if (content.scrollTop > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
 </body>
 </html>

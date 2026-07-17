@@ -10,8 +10,13 @@
   font-size: var(--font-size-body1);
   cursor: pointer;
   border: none;
-  transition: opacity 0.2s ease, transform 0.1s ease;
+  transition: var(--transition-smooth);
   width: 100%;
+}
+
+.btn:hover {
+  transform: scale(var(--scale-hover));
+  box-shadow: var(--shadow-sm);
 }
 
 .btn:active {
@@ -60,6 +65,15 @@
   padding: var(--space-md);
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-smooth);
+}
+.card:hover {
+  transform: scale(var(--scale-hover));
+  box-shadow: var(--shadow-md);
+}
+.card:active {
+  transform: scale(0.98);
 }
 
 /* INPUTS */
@@ -371,4 +385,37 @@
   width: 16px;
   height: 6px;
   border-radius: 4px;
+}
+
+/* STAGGERED ANIMATION UTILITIES */
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-stagger-1 {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.1s;
+}
+.animate-stagger-2 {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.2s;
+}
+.animate-stagger-3 {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.3s;
+}
+.animate-stagger-4 {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.4s;
 }
