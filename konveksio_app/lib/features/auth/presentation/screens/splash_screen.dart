@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:konveksio_app/core/theme/app_theme.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -13,8 +12,8 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              PhosphorIcons.factory(PhosphorIconsStyle.fill),
+            const Icon(
+              Icons.factory,
               size: 80,
               color: AppTheme.onPrimary,
             ),

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:konveksio_app/core/theme/app_theme.dart';
 import 'package:konveksio_app/features/auth/providers/auth_provider.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -69,7 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Icon(
-                    PhosphorIcons.factory(PhosphorIconsStyle.fill),
+                    Icons.factory,
                     size: 64,
                     color: AppTheme.primary,
                   ),
@@ -96,7 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Nomor HP',
                       hintText: 'Contoh: 081234567890',
-                      prefixIcon: Icon(PhosphorIconsRegular.phone),
+                      prefixIcon: Icon(Icons.phone_android),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -117,12 +116,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: 'PIN (6 Digit)',
                       hintText: 'Masukkan 6 digit PIN',
-                      prefixIcon: const Icon(PhosphorIconsRegular.lockKey),
+                      prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible
-                              ? PhosphorIconsRegular.eyeSlash
-                              : PhosphorIconsRegular.eye,
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                         onPressed: () {
                           setState(() {
