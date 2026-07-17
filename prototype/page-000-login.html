@@ -29,6 +29,119 @@
       color: var(--color-primary);
       margin-bottom: var(--space-xs);
     }
+
+    /* Additional Styles for Redesign */
+    .mobile-container {
+      background: linear-gradient(180deg, #E0F2FE 0%, #FFFFFF 25%, #FFFFFF 100%);
+    }
+    .input-group-outline {
+      position: relative;
+      margin-bottom: var(--space-lg);
+    }
+    .input-label-outline {
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      background: #fff;
+      padding: 0 4px;
+      font-size: 12px;
+      color: var(--color-muted);
+      z-index: 1;
+    }
+    .input-container-outline {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 0 16px;
+      height: 56px;
+      background: #fff;
+    }
+    .input-container-outline i {
+      color: var(--color-muted);
+      font-size: 20px;
+    }
+    .input-field-outline {
+      border: none;
+      outline: none;
+      flex: 1;
+      height: 100%;
+      padding-left: 12px;
+      font-size: var(--font-size-body1);
+      color: var(--color-foreground);
+      background: transparent;
+    }
+    .input-field-outline::placeholder { color: #CBD5E1; }
+    
+    .options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-xl);
+    }
+    .toggle-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--font-size-body2);
+      color: var(--color-foreground);
+      cursor: pointer;
+    }
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #CBD5E1; border-radius: 24px; transition: .4s;
+    }
+    .slider:before {
+      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+      background-color: white; border-radius: 50%; transition: .4s;
+    }
+    .toggle input:checked + .slider { background-color: var(--color-primary); }
+    .toggle input:checked + .slider:before { transform: translateX(20px); }
+    
+    .forgot-link {
+      color: var(--color-primary);
+      font-size: var(--font-size-body2);
+      text-decoration: none;
+      font-weight: var(--font-weight-medium);
+    }
+    .login-row {
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+    }
+    .btn-fingerprint {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: #F1F5F9;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+    }
+    .help-section {
+      text-align: center;
+      margin-top: auto;
+      padding-top: 40px;
+    }
+    .help-link {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--color-muted);
+      text-decoration: none;
+    }
+    .help-link i { font-size: 24px; color: var(--color-primary); }
   </style>
 </head>
 <body>
@@ -41,26 +154,50 @@
         <p class="text-muted text-body2">Biar Konveksio yang atur, kamu yang pantau.</p>
       </div>
 
-      <form id="loginForm">
-        <div class="input-group">
-          <label class="input-label" for="username">Nomor HP / Email</label>
-          <div style="position: relative;">
-            <i class="ph ph-user" style="position: absolute; left: 16px; top: 16px; color: var(--color-muted); font-size: 20px;"></i>
-            <input type="text" id="username" class="input-field" placeholder="Masukkan nomor HP atau email" style="padding-left: 44px; width: 100%;" required>
+      <form id="loginForm" style="display: flex; flex-direction: column; flex: 1;">
+        <div class="input-group-outline">
+          <label class="input-label-outline">User ID</label>
+          <div class="input-container-outline">
+            <i class="ph ph-user"></i>
+            <input type="text" id="username" class="input-field-outline" placeholder="Enter User ID" required>
           </div>
         </div>
 
-        <div class="input-group mb-xl">
-          <label class="input-label" for="password">Kata Sandi</label>
-          <div style="position: relative;">
-            <i class="ph ph-lock-key" style="position: absolute; left: 16px; top: 16px; color: var(--color-muted); font-size: 20px;"></i>
-            <input type="password" id="password" class="input-field" placeholder="Masukkan kata sandi" style="padding-left: 44px; width: 100%;" required>
+        <div class="input-group-outline" style="margin-bottom: 24px;">
+          <label class="input-label-outline">Password</label>
+          <div class="input-container-outline">
+            <i class="ph ph-lock-key"></i>
+            <input type="password" id="password" class="input-field-outline" placeholder="••••••••" required>
+            <i class="ph ph-eye" style="cursor: pointer; color: var(--color-primary);" onclick="togglePassword()"></i>
           </div>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="handleLogin()">
-          Masuk <i class="ph-bold ph-arrow-right"></i>
-        </button>
+        <div class="options-row">
+          <label class="toggle-wrapper">
+            <div class="toggle">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </div>
+            Ingat Saya
+          </label>
+          <a href="#" class="forgot-link">Lupa Password?</a>
+        </div>
+
+        <div class="login-row">
+          <button type="button" class="btn btn-primary" style="height: 56px; font-size: 16px; flex: 1;" onclick="handleLogin()">
+            Login
+          </button>
+          <button type="button" class="btn-fingerprint">
+            <i class="ph ph-fingerprint"></i>
+          </button>
+        </div>
+        
+        <div class="help-section">
+          <a href="#" class="help-link">
+            <i class="ph ph-question"></i>
+            <span style="font-size: 12px; font-weight: 500;">Help</span>
+          </a>
+        </div>
       </form>
 
     </div>
@@ -73,6 +210,15 @@
   </div>
 
   <script>
+    function togglePassword() {
+      const pwd = document.getElementById('password');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+      } else {
+        pwd.type = 'password';
+      }
+    }
+
     function handleLogin() {
       const user = document.getElementById('username').value;
       const pass = document.getElementById('password').value;
