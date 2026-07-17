@@ -1,100 +1,279 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Konveksio</title>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/components.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    .login-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: var(--space-xl);
+    :root {
+      --primary: #0066CC;
+      --text-dark: #1A1A1A;
+      --text-light: #666666;
+      --border: #D1D5DB;
+      --bg-gradient: linear-gradient(180deg, #E6F3FF 0%, #FFFFFF 30%, #FFFFFF 100%);
     }
-    .brand {
-      text-align: center;
-      margin-bottom: var(--space-xxl);
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Open Sans', sans-serif; 
     }
-    .brand i {
-      font-size: 64px;
-      color: var(--color-primary);
-      margin-bottom: var(--space-md);
+    body { 
+      background: var(--bg-gradient); 
+      min-height: 100vh; 
+      display: flex; 
+      justify-content: center; 
     }
-    .brand h1 {
-      color: var(--color-primary);
-      margin-bottom: var(--space-xs);
+    .mobile-container { 
+      width: 100%; 
+      max-width: 480px; 
+      padding: 40px 24px; 
+      display: flex; 
+      flex-direction: column; 
+    }
+    
+    .logo-container { 
+      text-align: center; 
+      margin-top: 40px; 
+      margin-bottom: 40px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px; 
+    }
+    .logo-icon { 
+      color: var(--primary); 
+      font-size: 40px; 
+    }
+    .logo-text { 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 28px; 
+      font-weight: 600; 
+      color: var(--primary); 
+    }
+    
+    .header-text { 
+      text-align: center; 
+      margin-bottom: 40px; 
+    }
+    .header-text h1 { 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 28px; 
+      font-weight: 600; 
+      color: var(--text-dark); 
+      margin-bottom: 8px; 
+    }
+    .header-text p { 
+      font-size: 15px; 
+      color: var(--text-dark); 
+    }
+    
+    .input-wrapper { 
+      position: relative; 
+      margin-bottom: 24px; 
+    }
+    .input-label { 
+      position: absolute; 
+      top: -10px; 
+      left: 16px; 
+      background: white; 
+      padding: 0 4px; 
+      font-size: 13px; 
+      color: var(--text-light); 
+      z-index: 1; 
+    }
+    .input-field-container { 
+      display: flex; 
+      align-items: center; 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+      padding: 0 16px; 
+      height: 56px; 
+      background: white; 
+    }
+    .input-field-container i { 
+      color: var(--text-light); 
+      font-size: 22px; 
+    }
+    .input-field { 
+      border: none; 
+      outline: none; 
+      flex: 1; 
+      height: 100%; 
+      padding-left: 12px; 
+      font-size: 15px; 
+      color: var(--text-dark); 
+      background: transparent; 
+    }
+    .input-field::placeholder { 
+      color: #A0AEC0; 
+    }
+    .input-action { 
+      color: var(--text-light); 
+      font-size: 15px; 
+      cursor: pointer; 
+      border: none; 
+      background: none; 
+    }
+    
+    .options-row { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 32px; 
+    }
+    .remember-me { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      font-size: 15px; 
+      color: var(--text-dark); 
+      cursor: pointer; 
+    }
+    
+    /* Toggle Switch */
+    .toggle { 
+      position: relative; 
+      width: 50px; 
+      height: 28px; 
+    }
+    .toggle input { 
+      opacity: 0; 
+      width: 0; 
+      height: 0; 
+    }
+    .slider { 
+      position: absolute; 
+      cursor: pointer; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0; 
+      background-color: #ccc; 
+      border-radius: 28px; 
+      transition: .4s; 
+    }
+    .slider:before { 
+      position: absolute; 
+      content: ""; 
+      height: 22px; 
+      width: 22px; 
+      left: 3px; 
+      bottom: 3px; 
+      background-color: white; 
+      border-radius: 50%; 
+      transition: .4s; 
+    }
+    .toggle input:checked + .slider { 
+      background-color: var(--primary); 
+    }
+    .toggle input:checked + .slider:before { 
+      transform: translateX(22px); 
+    }
+    
+    .forgot-password { 
+      color: var(--primary); 
+      font-size: 15px; 
+      text-decoration: none; 
+      font-weight: 500; 
+    }
+    
+    .btn-login { 
+      background-color: var(--primary); 
+      color: white; 
+      border: none; 
+      border-radius: 8px; 
+      height: 56px; 
+      width: 100%; 
+      font-size: 18px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: opacity 0.2s; 
+    }
+    .btn-login:active { 
+      opacity: 0.8; 
+    }
+    
+    .bottom-actions { 
+      display: flex; 
+      justify-content: center; 
+      gap: 80px; 
+      margin-top: auto; 
+      padding-top: 40px; 
+      padding-bottom: 20px; 
+    }
+    .action-item { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 12px; 
+      color: var(--text-light); 
+      text-decoration: none; 
+      cursor: pointer; 
+    }
+    .action-item i { 
+      font-size: 36px; 
+      color: var(--primary); 
+    }
+    .action-item span { 
+      font-size: 15px; 
     }
   </style>
 </head>
 <body>
   <div class="mobile-container">
-    <div class="login-container">
-      
-      <div class="brand">
-        <i class="ph-fill ph-t-shirt"></i>
-        <h1>Konveksio</h1>
-        <p class="text-muted text-body2">Biar Konveksio yang atur, kamu yang pantau.</p>
-      </div>
-
-      <form id="loginForm">
-        <div class="input-group">
-          <label class="input-label" for="username">Nomor HP / Email</label>
-          <div style="position: relative;">
-            <i class="ph ph-user" style="position: absolute; left: 16px; top: 16px; color: var(--color-muted); font-size: 20px;"></i>
-            <input type="text" id="username" class="input-field" placeholder="Masukkan nomor HP atau email" style="padding-left: 44px; width: 100%;" required>
-          </div>
-        </div>
-
-        <div class="input-group mb-xl">
-          <label class="input-label" for="password">Kata Sandi</label>
-          <div style="position: relative;">
-            <i class="ph ph-lock-key" style="position: absolute; left: 16px; top: 16px; color: var(--color-muted); font-size: 20px;"></i>
-            <input type="password" id="password" class="input-field" placeholder="Masukkan kata sandi" style="padding-left: 44px; width: 100%;" required>
-          </div>
-        </div>
-
-        <button type="button" class="btn btn-primary" onclick="handleLogin()">
-          Masuk <i class="ph-bold ph-arrow-right"></i>
-        </button>
-      </form>
-
+    <div class="logo-container">
+      <i class="ph-bold ph-yarn logo-icon"></i>
+      <span class="logo-text">Konveksio</span>
     </div>
-
-    <!-- Snackbar for interaction -->
-    <div id="snackbar" class="snackbar">
-      <i id="snackbarIcon" class="ph-fill ph-check-circle" style="font-size: 20px;"></i>
-      <span id="snackbarText">Berhasil!</span>
+    
+    <div class="header-text">
+      <h1>Welcome back!</h1>
+      <p>Enter your details to continue.</p>
+    </div>
+    
+    <div class="input-wrapper">
+      <label class="input-label">User ID</label>
+      <div class="input-field-container">
+        <i class="ph ph-user"></i>
+        <input type="text" class="input-field" placeholder="Enter User ID">
+      </div>
+    </div>
+    
+    <div class="input-wrapper">
+      <label class="input-label">Password</label>
+      <div class="input-field-container">
+        <i class="ph ph-lock-key"></i>
+        <input type="password" class="input-field" placeholder="••••••••">
+        <button type="button" class="input-action">Show</button>
+      </div>
+    </div>
+    
+    <div class="options-row">
+      <label class="remember-me">
+        <div class="toggle">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </div>
+        Remember Me
+      </label>
+      <a href="#" class="forgot-password">Forgot Password?</a>
+    </div>
+    
+    <button type="button" class="btn-login">Login</button>
+    
+    <div class="bottom-actions">
+      <div class="action-item">
+        <i class="ph ph-fingerprint"></i>
+        <span>Fingerprint</span>
+      </div>
+      <div class="action-item">
+        <i class="ph ph-question"></i>
+        <span>Help</span>
+      </div>
     </div>
   </div>
-
-  <script>
-    function handleLogin() {
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      const sb = document.getElementById('snackbar');
-      const sbText = document.getElementById('snackbarText');
-      const sbIcon = document.getElementById('snackbarIcon');
-
-      if (!user || !pass) {
-        sb.classList.add('error');
-        sbIcon.className = 'ph-fill ph-warning-circle';
-        sbText.innerText = 'Waduh, nomor HP dan kata sandi wajib diisi ya.';
-        sb.classList.add('show');
-        setTimeout(() => sb.classList.remove('show'), 3000);
-        return;
-      }
-
-      sb.classList.remove('error');
-      sbIcon.className = 'ph-fill ph-check-circle';
-      sbText.innerText = 'Mantap! Sedang masuk...';
-      sb.classList.add('show');
-      setTimeout(() => sb.classList.remove('show'), 3000);
-    }
-  </script>
 </body>
 </html>
