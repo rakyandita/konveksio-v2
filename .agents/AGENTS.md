@@ -40,3 +40,8 @@
   | R-03 | Phase 2 | IA | Layout & Navigation | [PENDING/PROGRESS/DONE] |
 - **Strict Validation:** Agent harus selalu melakukan cross-check antara kode yang ditulis dengan User Flow dan Design System.
 - **Visual Verification:** Setiap kali Agent selesai mengimplementasikan perubahan UI/kode, Agent WAJIB memverifikasinya secara visual. Jalankan `flutter analyze` untuk mengecek error sintaks. Jika tidak ada error, buka/jalankan aplikasinya di Chrome atau Emulator (yang mana saja yang sedang terbuka, default: Chrome) menggunakan perintah terminal. Jika aplikasi sudah berjalan, Agent WAJIB memicu *hot reload* dengan menekan 'r' (atau 'R' untuk *hot restart*) agar perubahan kode segera tampil di layar pengguna.
+
+## 7. Responsibilities on Questions (Q&A Mode)
+- **Context-Aware Responses:** Jika instruksi User berupa pertanyaan (terutama yang diakhiri dengan tanda tanya `?` atau berformat investigasi seperti "Kenapa ini terjadi?", "Bagaimana menurutmu?"), Agent harus menyadari bahwa User sedang meminta diskusi atau analisis, BUKAN tindakan. Pada titik ini, Agent **HANYA BOLEH** menganalisa, menjelaskan, atau memberikan saran.
+- **Strictly No Action:** Dalam mode tanya-jawab ini, Agent **DILARANG KERAS** mengubah file apapun, merombak kode, atau menjalankan perintah eksekusi tanpa instruksi langsung.
+- **Explicit Confirmation:** Jika Agent menyimpulkan bahwa perubahan kode diperlukan berdasarkan hasil analisis tersebut, Agent **WAJIB** mempresentasikan idenya dan mengonfirmasi kembali kepada User (misal: "Saya menemukan penyebabnya, apakah Anda ingin saya memperbaikinya sekarang?"). Jangan pernah mengeksekusi perubahan dari inisiatif sendiri saat User hanya bertanya.
