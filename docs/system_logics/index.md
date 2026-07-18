@@ -23,6 +23,11 @@ Setiap Use Case (UC) didokumentasikan dalam file terpisah dengan format `sys_uc_
 | UC-006 | Update Progres Mandiri | `./sys_uc_006.md` | Supabase Client SDK | ✅ Final |
 | UC-007 | Owner Branch Context Mode | `./sys_uc_007.md` | Supabase Client SDK | ✅ Final |
 | UC-008 | Manajemen Vendor Eksternal | `./sys_uc_008.md` | Supabase Client SDK | ✅ Final |
+| UC-009 | Manajemen Cabang | `./sys_uc_009.md` | Supabase Client SDK | ✅ Final |
+| UC-010 | Manajemen User & Role | `./sys_uc_010.md` | Supabase Client SDK | ✅ Final |
+| UC-011 | Manajemen Karyawan Produksi | `./sys_uc_011.md` | Supabase Client SDK | ✅ Final |
+| UC-012 | Katalog Produk & Size Groups | `./sys_uc_012.md` | Supabase Client SDK | ✅ Final |
+| UC-013 | Manajemen Customer | `./sys_uc_013.md` | Supabase Client SDK | ✅ Final |
 
 ## 4. API Overview
 
@@ -35,3 +40,4 @@ Setiap Use Case (UC) didokumentasikan dalam file terpisah dengan format `sys_uc_
 | Version | Date | Author | Notes |
 |---------|------|--------|-------|
 | 1.0 | 2026-07-16 | Antigravity AI | Initial UCIC generation (9 Use Cases) |
+| 1.1 | 2026-07-17 | Antigravity AI | Tambah UC-009 s.d. UC-013 dan melengkapi 8 elemen wajib CoT untuk seluruh dokumen. |

@@ -1,7 +1,7 @@
 # [Fase 4 | SoT #6] Data Model Registry
 
 **Project:** Konveksio
-**Last Updated:** 2026-07-16
+**Last Updated:** 2026-07-17
 **Status:** ✅ FINAL (SoT #6 Approved)
 
 ---
@@ -41,6 +41,7 @@ erDiagram
     CUSTOMERS ||--o{ ORDERS : "places"
     ORDERS ||--o{ ORDER_ITEMS : "contains"
     ORDERS ||--o{ PAYMENTS : "has"
+    ORDERS ||--o{ ADJUSTMENT_ITEMS : "has_adjustments"
 
     PRODUCTS ||--o{ ORDER_ITEMS : "referenced_by"
     SIZE_GROUPS ||--o{ PRODUCTS : "used_by"
@@ -90,6 +91,7 @@ erDiagram
 | `order_items` | `id, order_id, product_id, price_per_pcs` | Item produk dalam satu order. Qty tidak ada di sini — qty ada di `order_item_sizes`. | Mengikuti akses `orders` melalui JOIN. |
 | `order_item_sizes` | `id, order_item_id, size, qty` | Qty per ukuran untuk setiap item. `qty > 0`. | Mengikuti akses `orders` melalui JOIN. |
 | `spks` | `id, order_item_id (UNIQUE), client_name, material, color, style, front_image_url, back_image_url` | Surat Perintah Kerja per Order Item — **opsional** (SRS BR-11.1). Dikunci (read-only) setelah order `completed`. | Owner/Boss/Admin: CRUD (sebelum order completed). **Karyawan dengan task aktif: SELECT saja** (SRS FR-11.4). Bukan semata cascading dari orders. |
+| `adjustment_items` | `id, order_id, name, amount, type` | Penyesuaian harga tambahan (biaya pengiriman, biaya desain) atau diskon. Qty selalu 1. Tipe: `addition` atau `discount`. | Mengikuti akses `orders` melalui JOIN. |
 | `payments` | `id, order_id, amount, payment_date, notes` | Riwayat pembayaran bertahap. **Append-only** — tidak ada UPDATE/DELETE. | Owner/Boss/Admin: INSERT+SELECT. Tidak ada UPDATE/DELETE policy. |
 
 ### 3.4. Produksi & Tracking
@@ -115,6 +117,12 @@ erDiagram
 |-------|-------------|-------------|--------------------|
 | `notifications` | `id, user_id, title, body, type, related_entity_id, is_read` | Riwayat notifikasi in-app. `type` mengidentifikasi jenis event. `related_entity_id` (UUID) mereferensikan entity terkait (order, handover, cash_advance, dll). | Semua: SELECT+UPDATE (`is_read`) milik sendiri. INSERT dilakukan server-side (Edge Function/RPC) — tidak dari client langsung. |
 
+### 3.7. Offline Sync (Local Only)
+
+| Table | Kolom Kunci | Description | RLS Policy Summary |
+|-------|-------------|-------------|--------------------|
+| `mutation_queue` | `id, table_name, operation, payload, created_at, status` | Antrian mutasi data untuk sinkronisasi offline-to-online. (Hanya di SQLite lokal) | **N/A** (Data hanya tersimpan secara lokal di perangkat). |
+
 ---
 
 ## 4. Enum & Type Registry
@@ -124,6 +132,7 @@ erDiagram
 | `user_role` | `owner, boss, admin, employee` | |
 | `product_category` | `setelan, non-setelan` | |
 | `order_status` | `draft, confirmation, running, completed, shipped, done, cancelled` | UI labels (Bahasa Indonesia) via i18n. Lihat SRS BR-06.3 untuk mapping. |
+| `adjustment_type` | `addition, discount` | Digunakan untuk `adjustment_items.type`. |
 | `task_status` | `running, completed` | |
 | `handover_status` | `pending, accepted, rejected` | |
 | `approval_status` | `pending, approved, rejected` | Digunakan oleh `cash_advances.status`. |
@@ -185,4 +194,5 @@ Index B-Tree tersedia untuk semua FK dan kolom high-cardinality yang digunakan d
 |---------|---------|-----------|
 | 1.0 | 2026-07-16 | Dibuat awal (Fase 4 CoT) |
 | 1.1 | 2026-07-16 | **Recovery Audit:** (1) ERD dilengkapi — tambah 8 entitas yang hilang (cash_advances, salary_records, notifications, handover_sizes, serta relasi vendors, customers, payments, products-size_groups). (2) Enum `order_status` dilengkapi semua 7 nilai. (3) Deskripsi `progress_logs` diperbaiki — hapus "per hari" yang tidak ada di SRS. (4) Tambah seksi 3.6 Notifikasi dan tabel `handover_sizes` ke seksi 3.4. (5) Policy `spks` diperbaiki — karyawan dengan task aktif memiliki akses SELECT (SRS FR-11.4). (6) Tambah Enum Registry (Seksi 4), Append-Only list (Seksi 5), Index summary (Seksi 6), Audit Log (Seksi 9). |
+| 1.2 | 2026-07-17 | Increment 1: Tambah `adjustment_items` (penyesuaian order) dan `mutation_queue` (antrian sinkronisasi offline). Tambah enum `adjustment_type`. |
 

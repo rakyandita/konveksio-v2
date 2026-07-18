@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 :root {
   /* Color Palette - Corporate Professional (Emerald & Navy) */
   --color-primary: #0D9488;
@@ -34,8 +36,8 @@
   --status-batal-text: #DC2626;
 
   /* Typography Scale */
-  --font-family-heading: 'Poppins', sans-serif;
-  --font-family: 'Open Sans', sans-serif;
+  --font-family-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-family: 'Plus Jakarta Sans', sans-serif;
   --font-size-h1: 24px;
   --font-size-h2: 20px;
   --font-size-body1: 16px;

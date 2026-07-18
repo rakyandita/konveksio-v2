@@ -43,6 +43,11 @@
 - Sistem menampilkan *snackbar* error dan tombol `[Coba Lagi]`.
 - Input teks SPK (Bahan, Warna) tersimpan di form *state* hingga unggahan gambar berhasil.
 
+**4.3. Nomor WA Customer Baru Tidak Valid**
+- Pada langkah 3, Actor memasukkan nomor WhatsApp dengan format yang salah (misal ada huruf atau kurang dari 10 digit).
+- Sistem menahan pembuatan Order dan menampilkan error: "Format WhatsApp tidak valid. Gunakan awalan 08/628."
+- Actor harus memperbaiki nomor WA sebelum melanjutkan.
+
 ## 5. Postconditions
 - Entitas Order baru tersimpan di database dengan status `draft`.
 - Jika SPK dibuat dan menyertakan gambar, URL gambar tersimpan di Supabase Storage dan referensinya ada di tabel `spks`.

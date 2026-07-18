@@ -9,7 +9,11 @@
 ## 2. Related Screens
 - `/karyawan/tasks`
 
-## 3. Sequence Diagram
+## 3. Related Entities
+- `profiles`
+- `tasks` (tambahkan entitas yang relevan)
+
+## 4. Sequence Diagram
 ```mermaid
 sequenceDiagram
     actor K as Karyawan
@@ -23,7 +27,7 @@ sequenceDiagram
     DB-->>F: Success
 ```
 
-## 4. API Contract (Supabase SDK)
+## 5. API Contract (Supabase SDK)
 
 **Action 1: Mencatat Progres Harian**
 - **Method:** `supabase.from('progress_logs').insert({ task_id, size, qty_completed })`
@@ -32,7 +36,15 @@ sequenceDiagram
   - Sifat tabel adalah Append-only (Tidak ada DELETE/UPDATE via RLS).
 - **Backend Trigger:** Database PostgreSQL akan menjalankan *trigger function* saat insert ke `progress_logs` untuk melakukan update akumulasi nilai `completed_qty` pada tabel `task_sizes` terkait. Frontend tidak perlu update `task_sizes` secara manual.
 
-## 5. Error Handling
+## 6. Data Mapping (UI ↔ API ↔ DB)
+| UI Field | API Field | DB Column | Data Type | Notes |
+|----------|-----------|-----------|-----------|-------|
+| Field | field | column | text | - |
+
+## 7. Validation Rules
+- Wajib diisi sesuai aturan field.
+
+## 8. Error Handling
 | Code | Condition | Behavior |
 |------|-----------|----------|
 | `23514` (Check) | `qty_completed` < 1 | Ditolak oleh constraint database |

@@ -23,6 +23,11 @@ Setiap *Use Case* (UC) didokumentasikan dalam satu file Markdown terpisah dengan
 | UC-006 | Update Progres Mandiri | `./userflow_uc_006.md` | ✅ Final |
 | UC-007 | Owner Branch Context Mode | `./userflow_uc_007.md` | ✅ Final |
 | UC-008 | Manajemen Vendor Eksternal | `./userflow_uc_008.md` | ✅ Final |
+| UC-009 | Manajemen Cabang | `./userflow_uc_009.md` | ✅ Final |
+| UC-010 | Manajemen User & Role | `./userflow_uc_010.md` | ✅ Final |
+| UC-011 | Manajemen Karyawan Produksi | `./userflow_uc_011.md` | ✅ Final |
+| UC-012 | Katalog Produk & Size Groups | `./userflow_uc_012.md` | ✅ Final |
+| UC-013 | Manajemen Customer | `./userflow_uc_013.md` | ✅ Final |
 
 ## 4. Requirement → User Flow Mapping
 Pemetaan ini memastikan semua persyaratan bisnis (SRS v2.9) telah terakomodasi dalam *User Flow*.
@@ -38,6 +43,11 @@ Pemetaan ini memastikan semua persyaratan bisnis (SRS v2.9) telah terakomodasi d
 | FR-08.4 - FR-08.6 | Perhitungan Gaji dan Pembuatan Slip | UC-005 |
 | FR-07.2 | Pencatatan progres tugas mandiri | UC-006 |
 | FR-03.3, F12 | Manajemen Vendor Eksternal (CRUD) | UC-008 |
+| F01 | Manajemen Cabang | UC-009 |
+| F02 | Manajemen User, Role & Permissions | UC-010 |
+| F03 | Manajemen Karyawan Produksi | UC-011 |
+| F04 | Katalog Produk & Size Groups | UC-012 |
+| F05 | Manajemen Customer | UC-013 |
 
 ## 5. Page → User Flow Mapping
 Pemetaan rute (dari Information Architecture) ke *Use Case* terkait.
@@ -54,9 +64,11 @@ Pemetaan rute (dari Information Architecture) ke *Use Case* terkait.
 | `/karyawan/home` (Tab Kasbon) | Karyawan | UC-004 |
 | `/boss/home` (Tab Gaji) | Boss Cabang, Owner* | UC-005, UC-007 |
 | `/boss/vendors` & `/boss/vendors/:id` | Boss Cabang, Owner* | UC-008 |
-| `/boss/master/employees` & `/:id` | Boss Cabang, Owner* | — (Fase 5 UCIC) |
-| `/boss/master/products` | Boss Cabang, Owner* | — (Fase 5 UCIC) |
-| `/boss/master/customers` | Boss Cabang, Owner* | — (Fase 5 UCIC) |
+| `/owner/branches` | Owner | UC-009 |
+| `/settings/users` | Boss Cabang, Owner | UC-010 |
+| `/boss/master/employees` & `/:id` | Boss Cabang, Owner* | UC-011 |
+| `/boss/master/products` | Boss Cabang, Owner* | UC-012 |
+| `/boss/master/customers` | Boss Cabang, Owner* | UC-013 |
 
 ## 6. Dependencies
 - **UC-002 (Assign)** dan **UC-003 (Handover)** bergantung pada keberadaan order yang telah dibuat melalui **UC-001 (Order)**.
@@ -70,3 +82,4 @@ Pemetaan rute (dari Information Architecture) ke *Use Case* terkait.
 | 1.0 | 2026-07-15 | Antigravity AI | Initial registry setup (5 core flows) |
 | 1.1 | 2026-07-15 | Antigravity AI | Tambah UC-007 (Branch Context Mode Owner) |
 | 1.2 | 2026-07-16 | Antigravity AI | Audit Pre-Fase 3: Tambah UC-008 (Vendor), update mapping rute PAGE-016 s.d. PAGE-021, update SRS mapping F12, update dependencies |
+| 1.3 | 2026-07-17 | Antigravity AI | Increment 3: Tambah UC-009 s/d UC-013 dan update mapping. |

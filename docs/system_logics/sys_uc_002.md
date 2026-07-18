@@ -9,7 +9,11 @@
 ## 2. Related Screens
 - `/boss/assign`
 
-## 3. Sequence Diagram
+## 3. Related Entities
+- `profiles`
+- `tasks` (tambahkan entitas yang relevan)
+
+## 4. Sequence Diagram
 ```mermaid
 sequenceDiagram
     actor B as Boss
@@ -29,7 +33,7 @@ sequenceDiagram
     F->>F: Tampilkan toast sukses
 ```
 
-## 4. API Contract (Postgres RPC)
+## 5. API Contract (Postgres RPC)
 
 - **Method:** `supabase.rpc('bulk_insert_tasks', { p_tasks: [...] })`
 - **Request Payload:**
@@ -55,7 +59,15 @@ sequenceDiagram
 { "assigned_tasks_count": 10 }
 ```
 
-## 5. Error Handling
+## 6. Data Mapping (UI ↔ API ↔ DB)
+| UI Field | API Field | DB Column | Data Type | Notes |
+|----------|-----------|-----------|-----------|-------|
+| Field | field | column | text | - |
+
+## 7. Validation Rules
+- Wajib diisi sesuai aturan field.
+
+## 8. Error Handling
 | Code | Condition | Behavior |
 |------|-----------|----------|
 | `P0002` | Assignee bukan dari divisi yang tepat | Tolak bulk assign, kembalikan error. |

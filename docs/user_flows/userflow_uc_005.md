@@ -18,18 +18,12 @@
 6. Sistem menampilkan daftar tabel Karyawan dengan kolom: Total Upah Kotor, Total Kasbon, dan Total Upah Bersih.
 7. Boss memeriksa angka-angka tersebut untuk *Review* (Pratinjau).
 8. Boss menekan `[Simpan & Terbitkan Slip]`.
-9. Sistem menyimpan entitas *Payroll* secara permanen untuk periode tersebut.
+9. Sistem menyimpan entitas *salary_records* secara permanen untuk periode tersebut.
 10. Transaksi Kasbon yang memotong gaji dicatat dalam kolom `cash_advance_deduction` di slip gaji tersebut. Limit kasbon karyawan kembali terbuka di periode berikutnya.
 11. Sistem mengirim notifikasi kepada seluruh karyawan yang masuk daftar bahwa Slip Gaji mereka sudah terbit.
 12. Karyawan dapat membuka menu **Akun & Gaji** untuk melihat rincian komponen slip gajinya.
 
 ## 3. Alternative Flows
-**3.1. Penyesuaian / Bonus Manual**
-- Pada langkah 7 (saat Review), Boss melihat ada karyawan yang berprestasi (misal lembur) atau perlu didenda (misal merusak barang).
-- Boss menekan ikon `[+ Penyesuaian]` di baris karyawan tersebut.
-- Boss menginput nominal (positif untuk bonus, negatif untuk denda) dan teks keterangan.
-- Sistem langsung memperbarui Total Upah Bersih karyawan tersebut.
-- Boss melanjutkan ke langkah 8.
 
 **3.2. Owner Trigger Generate Gaji dalam Branch Context Mode (UF-10)**
 - Owner aktif dalam Branch Context Mode pada salah satu cabang.
@@ -71,7 +65,7 @@
 |-----------|--------|------------|------|------|
 | ENT-011 | ProgressLog | TaskID, UserID, QtyCompleted | Rel, Rel, Num | Dasar perhitungan upah |
 | ENT-009 | CashAdvance | Status, Date, Amount | Str, Date, Num | Filter status 'approved' |
-| ENT-010 | Payroll | EmployeeID, Period, Gross, Deduction, Net | Rel, Str, Num, Num, Num | Rekam jejak permanen (Immutable) |
+| ENT-010 | salary_records | EmployeeID, Period, Gross, Deduction, Net | Rel, Str, Num, Num, Num | Rekam jejak permanen (Immutable) |
 
 ## 9. Traceability
 - **SRS Reference:** FR-08.2 (Kalkulasi dari Progress Log), FR-08.3 (Generate & Potong Kasbon), FR-08.4 (Slip Gaji Mingguan), BR-08.5 (Jadwal).

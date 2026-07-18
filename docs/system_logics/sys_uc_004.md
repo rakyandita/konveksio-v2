@@ -10,7 +10,11 @@
 - `/karyawan/kasbon` (`PAGE-026`)
 - `/boss/finance/kasbon` (`PAGE-024`)
 
-## 3. Sequence Diagram
+## 3. Related Entities
+- `profiles`
+- `tasks` (tambahkan entitas yang relevan)
+
+## 4. Sequence Diagram
 ```mermaid
 sequenceDiagram
     actor K as Karyawan
@@ -26,7 +30,7 @@ sequenceDiagram
     DB-->>F: Success
 ```
 
-## 4. API Contract (Supabase SDK & RPC)
+## 5. API Contract (Supabase SDK & RPC)
 
 **Action 0: Mengecek Limit (Karyawan)**
 - **Method:** `supabase.rpc('get_kasbon_limit', { p_user_id: auth.uid() })`
@@ -40,7 +44,15 @@ sequenceDiagram
 - **Method:** `supabase.from('cash_advances').update({ status: 'approved' }).eq('id', 'uuid')`
 - **Security:** RLS memastikan hanya role `boss`/`owner` yang bisa update kolom `status`.
 
-## 5. Error Handling
+## 6. Data Mapping (UI ↔ API ↔ DB)
+| UI Field | API Field | DB Column | Data Type | Notes |
+|----------|-----------|-----------|-----------|-------|
+| Field | field | column | text | - |
+
+## 7. Validation Rules
+- Wajib diisi sesuai aturan field.
+
+## 8. Error Handling
 | Code | Condition | Behavior |
 |------|-----------|----------|
 | `42501` (RLS) | Karyawan mencoba edit status ke approved | Error Permission Denied |

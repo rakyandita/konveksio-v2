@@ -160,15 +160,15 @@
 
       <form id="loginForm" class="animate-stagger-2" style="display: flex; flex-direction: column; flex: 1;">
         <div class="input-group-outline">
-          <label class="input-label-outline">User ID</label>
+          <label class="input-label-outline">Nomor HP</label>
           <div class="input-container-outline">
-            <i class="ph ph-user"></i>
-            <input type="text" id="username" class="input-field-outline" placeholder="Enter User ID" required>
+            <i class="ph ph-phone"></i>
+            <input type="tel" id="username" class="input-field-outline" placeholder="08..." required>
           </div>
         </div>
 
         <div class="input-group-outline" style="margin-bottom: 24px;">
-          <label class="input-label-outline">Password</label>
+          <label class="input-label-outline">PIN</label>
           <div class="input-container-outline">
             <i class="ph ph-lock-key"></i>
             <input type="password" id="password" class="input-field-outline" placeholder="••••••••" required>
@@ -245,7 +245,13 @@
       sb.classList.add('show');
       setTimeout(() => {
         sb.classList.remove('show');
-        window.location.href = 'page-001-dashboard-owner.html';
+        if (user === '0812') {
+          window.location.href = 'page-008-dashboard-karyawan.html';
+        } else if (user === '0811') {
+          window.location.href = 'page-002-dashboard-boss.html';
+        } else {
+          window.location.href = 'page-001-dashboard-owner.html';
+        }
       }, 1000);
     }
   </script>

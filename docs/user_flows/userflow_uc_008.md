@@ -45,6 +45,11 @@
 - Sistem menampilkan error inline: "Format nomor WA tidak valid. Gunakan format 08xxx atau +62xxx."
 - Submit diblokir sampai nomor diperbaiki.
 
+**4.3. Hapus Permanen Vendor yang Sedang Digunakan (Hard Delete)**
+- Actor (via UI tersembunyi atau API) mencoba menghapus vendor yang sudah pernah menerima task.
+- Sistem database mencegah operasi ini melalui foreign key constraint / backend logic.
+- Sistem mereturn error: "Vendor sudah memiliki riwayat tugas dan tidak dapat dihapus permanen. Gunakan fitur Nonaktifkan."
+
 ## 5. Postconditions
 - Entitas Vendor tersimpan dengan `branch_id`, `name`, `division`, `whatsapp`, `notes`, `is_active`.
 - Vendor aktif dapat dipilih sebagai penerima Handover (UC-003 Alt Flow 3.1).

@@ -64,9 +64,9 @@ Dokumen ini mendefinisikan struktur navigasi, hierarki halaman, dan arsitektur i
 │       └── Riwayat Pembayaran (Termin)
 │
 ├── Produksi
-│   ├── Pipeline / Kanban Board
+│   ├── Pipeline / Kanban Board (PAGE-028)
 │   ├── Daftar Tugas (Karyawan & Vendor)
-│   ├── Form Smart Bulk Assign
+│   ├── Form Smart Bulk Assign (PAGE-006)
 │   └── Kelola Discrepancy (Resolusi Selisih Fisik)
 │
 ├── Kotak Masuk (Inbox Boss)
@@ -123,36 +123,37 @@ Setiap layar krusial dipetakan dengan Identifier ID (Route Name). Mapping ini ak
 
 > **Catatan Branch Context Mode:** Rute `PAGE-003` s.d. `PAGE-007` (semua rute `/boss/*` kecuali `/boss/home`) juga dapat diakses oleh **Owner** yang sedang aktif dalam *Branch Context Mode*. Token autentikasi Owner akan membawa parameter `acting_branch_id` untuk menegakkan RLS Supabase pada cabang yang dipilih.
 
-| Page ID | Route Name | Deskripsi | Parameter URL/Args | Akses Role | Masuk Dari |
-|---------|------------|-----------|--------------------|------------|------------|
-| PAGE-000 | `/login` | Halaman otentikasi (No Auth) | - | Semua | *Splash Screen* |
-| PAGE-001 | `/owner/home` | Dashboard Super Admin (Global) | - | Owner | PAGE-000 |
-| PAGE-015 | `/owner/branch/:id` | Pintu masuk Branch Context Mode | `branch_id` | Owner | PAGE-001 |
-| PAGE-002 | `/boss/home` | Dashboard Boss Cabang | - | Boss | PAGE-000 |
-| PAGE-003 | `/boss/orders` | Daftar Order | `?tab=produksi` | Boss, Owner* | PAGE-002, PAGE-015 |
-| PAGE-004 | `/boss/orders/:id` | Detail Order | `order_id` | Boss, Owner* | PAGE-003 |
-| PAGE-005 | `/boss/spk/:item_id` | View/Edit SPK | `item_id` | Boss, Owner* | PAGE-004 |
-| PAGE-006 | `/boss/assign` | Smart Bulk Assign | `order_item_id` | Boss, Owner* | PAGE-004 |
-| PAGE-007 | `/boss/inbox` | Kotak Masuk Vendor/Resolusi | - | Boss, Owner* | PAGE-002, PAGE-015 |
-| PAGE-008 | `/karyawan/home` | Dashboard Karyawan | - | Karyawan | PAGE-000 |
-| PAGE-009 | `/karyawan/inbox` | Kotak Masuk Handover | - | Karyawan | PAGE-008 (Tab 2) |
-| PAGE-010 | `/karyawan/tasks` | Daftar Tugas Aktif | - | Karyawan | PAGE-008 (Tab 3) |
-| PAGE-011 | `/karyawan/tasks/:id`| Detail Tugas & Update | `task_id` | Karyawan | PAGE-010 |
-| PAGE-012 | `/karyawan/spk/:id` | SPK Viewer (Offline Support)| `item_id` | Karyawan | PAGE-011 |
-| PAGE-013 | `/karyawan/handover` | Form Buat Handover | `task_id` | Karyawan | PAGE-011 |
-| PAGE-014 | `/settings` | Pengaturan & Logout | - | Semua | Beranda/Tab 4 |
-| PAGE-016 | `/boss/vendors` | Daftar Vendor Eksternal | - | Boss, Owner* | PAGE-002, PAGE-015 |
-| PAGE-017 | `/boss/vendors/:id` | Detail / Edit Vendor | `vendor_id` | Boss, Owner* | PAGE-016 |
-| PAGE-018 | `/boss/master/employees` | Daftar Karyawan & Divisi | - | Boss, Owner* | PAGE-002, PAGE-015 |
-| PAGE-019 | `/boss/master/employees/:id` | Detail / Edit Karyawan | `employee_id` | Boss, Owner* | PAGE-018 |
-| PAGE-020 | `/boss/master/products` | Katalog Produk & Size Group | - | Boss, Owner* | PAGE-002, PAGE-015 |
-| PAGE-021 | `/boss/master/customers` | Daftar Customer | - | Boss, Owner* | PAGE-002, PAGE-015 |
-| PAGE-022 | `/boss/settings/branch` | Pengaturan Cabang (Limit, Sistem) | - | Boss, Owner* | PAGE-014 |
-| PAGE-023 | `/boss/settings/admin` | Pengaturan Admin (Akses) | - | Boss, Owner* | PAGE-014 |
-| PAGE-024 | `/boss/finance/kasbon` | Approval Kasbon Karyawan | - | Boss, Owner* | PAGE-002, PAGE-015 |
-| PAGE-025 | `/boss/finance/salary` | Generate Gaji & Slip Mingguan | - | Boss, Owner* | PAGE-002, PAGE-015 |
-| PAGE-026 | `/karyawan/kasbon` | Pengajuan & Riwayat Kasbon | - | Karyawan | PAGE-008 (Tab 4) |
-| PAGE-027 | `/karyawan/salary` | Riwayat Slip Gaji Mingguan | - | Karyawan | PAGE-008 (Tab 4) |
+| Page ID | Route Name | Deskripsi | Parameter URL/Args | Akses Role | Masuk Dari | Feature ID |
+|---------|------------|-----------|--------------------|------------|------------|------------|
+| PAGE-000 | `/login` | Halaman otentikasi (No Auth) | - | Semua | *Splash Screen* | F02 |
+| PAGE-001 | `/owner/home` | Dashboard Super Admin (Global) | - | Owner | PAGE-000 | F10 |
+| PAGE-015 | `/owner/branch/:id` | Pintu masuk Branch Context Mode | `branch_id` | Owner | PAGE-001 | F10 |
+| PAGE-002 | `/boss/home` | Dashboard Boss Cabang | - | Boss | PAGE-000 | F10 |
+| PAGE-003 | `/boss/orders` | Daftar Order | `?tab=produksi` | Boss, Owner* | PAGE-002, PAGE-015 | F11 |
+| PAGE-004 | `/boss/orders/:id` | Detail Order | `order_id` | Boss, Owner* | PAGE-003 | F11 |
+| PAGE-005 | `/boss/spk/:item_id` | View/Edit SPK | `item_id` | Boss, Owner* | PAGE-004 | F11 |
+| PAGE-006 | `/boss/assign` | Smart Bulk Assign | `order_item_id` | Boss, Owner* | PAGE-004 | F07 |
+| PAGE-007 | `/boss/inbox` | Kotak Masuk Vendor/Resolusi | - | Boss, Owner* | PAGE-002, PAGE-015 | F07 |
+| PAGE-008 | `/karyawan/home` | Dashboard Karyawan | - | Karyawan | PAGE-000 | F10 |
+| PAGE-009 | `/karyawan/inbox` | Kotak Masuk Handover | - | Karyawan | PAGE-008 (Tab 2) | F07 |
+| PAGE-010 | `/karyawan/tasks` | Daftar Tugas Aktif | - | Karyawan | PAGE-008 (Tab 3) | F07 |
+| PAGE-011 | `/karyawan/tasks/:id`| Detail Tugas & Update | `task_id` | Karyawan | PAGE-010 | F07 |
+| PAGE-012 | `/karyawan/spk/:id` | SPK Viewer (Offline Support)| `item_id` | Karyawan | PAGE-011 | F11 |
+| PAGE-013 | `/karyawan/handover` | Form Buat Handover | `task_id` | Karyawan | PAGE-011 | F07 |
+| PAGE-014 | `/settings` | Pengaturan & Logout | - | Semua | Beranda/Tab 4 | F02 |
+| PAGE-016 | `/boss/vendors` | Daftar Vendor Eksternal | - | Boss, Owner* | PAGE-002, PAGE-015 | F12 |
+| PAGE-017 | `/boss/vendors/:id` | Detail / Edit Vendor | `vendor_id` | Boss, Owner* | PAGE-016 | F12 |
+| PAGE-018 | `/boss/master/employees` | Daftar Karyawan & Divisi | - | Boss, Owner* | PAGE-002, PAGE-015 | F03 |
+| PAGE-019 | `/boss/master/employees/:id` | Detail / Edit Karyawan | `employee_id` | Boss, Owner* | PAGE-018 | F03 |
+| PAGE-020 | `/boss/master/products` | Katalog Produk & Size Group | - | Boss, Owner* | PAGE-002, PAGE-015 | F04 |
+| PAGE-021 | `/boss/master/customers` | Daftar Customer | - | Boss, Owner* | PAGE-002, PAGE-015 | F05 |
+| PAGE-022 | `/boss/settings/branch` | Pengaturan Cabang (Limit, Sistem) | - | Boss, Owner* | PAGE-014 | F01 |
+| PAGE-023 | `/boss/settings/admin` | Pengaturan Admin (Akses) | - | Boss, Owner* | PAGE-014 | F02 |
+| PAGE-024 | `/boss/finance/kasbon` | Approval Kasbon Karyawan | - | Boss, Owner* | PAGE-002, PAGE-015 | F08 |
+| PAGE-025 | `/boss/finance/salary` | Generate Gaji & Slip Mingguan | - | Boss, Owner* | PAGE-002, PAGE-015 | F08 |
+| PAGE-026 | `/karyawan/kasbon` | Pengajuan & Riwayat Kasbon | - | Karyawan | PAGE-008 (Tab 4) | F08 |
+| PAGE-027 | `/karyawan/salary` | Riwayat Slip Gaji Mingguan | - | Karyawan | PAGE-008 (Tab 4) | F08 |
+| PAGE-028 | `/boss/pipeline` | Kanban Board Produksi | - | Boss, Owner* | PAGE-002, PAGE-015 | F07 |
 
 *Owner\*: Hanya dapat mengakses rute ini ketika aktif dalam **Branch Context Mode** (telah melewati PAGE-015). Di luar konteks tersebut, Owner akan di-redirect kembali ke PAGE-001.
 

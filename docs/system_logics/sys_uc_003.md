@@ -10,7 +10,11 @@
 - `/karyawan/handover`
 - `/karyawan/inbox`
 
-## 3. Sequence Diagram
+## 3. Related Entities
+- `profiles`
+- `tasks` (tambahkan entitas yang relevan)
+
+## 4. Sequence Diagram
 ```mermaid
 sequenceDiagram
     actor K1 as Karyawan (Jahit)
@@ -28,7 +32,7 @@ sequenceDiagram
     F->>F: Tampilkan notifikasi
 ```
 
-## 4. API Contract (Supabase SDK & RPC)
+## 5. API Contract (Supabase SDK & RPC)
 
 **Action 1: Mengirim Handover**
 - **Method:** `supabase.rpc('submit_handover', { payload })`
@@ -56,7 +60,15 @@ sequenceDiagram
 ```
 - **Catatan:** RPC digunakan khusus saat penerimaan karena sistem perlu mengotomatisasi (Auto-Task): membandingkan qty sent vs received, mendeteksi discrepancy, membuat *task* baru bagi penerima, dan menduplikasi data `task_sizes`.
 
-## 5. Error Handling
+## 6. Data Mapping (UI ↔ API ↔ DB)
+| UI Field | API Field | DB Column | Data Type | Notes |
+|----------|-----------|-----------|-----------|-------|
+| Field | field | column | text | - |
+
+## 7. Validation Rules
+- Wajib diisi sesuai aturan field.
+
+## 8. Error Handling
 | Code | Condition | Behavior |
 |------|-----------|----------|
 | `P0001` | Qty sent melebihi sisa beban tugas (task_sizes) | Transaksi batal, tampilkan "Kuantitas melebihi sisa tugas." |

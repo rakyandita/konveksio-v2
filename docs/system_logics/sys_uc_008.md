@@ -10,7 +10,11 @@
 - `/boss/vendors`
 - `/boss/vendors/:id`
 
-## 3. Sequence Diagram
+## 3. Related Entities
+- `profiles`
+- `tasks` (tambahkan entitas yang relevan)
+
+## 4. Sequence Diagram
 ```mermaid
 sequenceDiagram
     actor B as Boss
@@ -24,7 +28,7 @@ sequenceDiagram
     DB-->>F: Success
 ```
 
-## 4. API Contract (Supabase SDK)
+## 5. API Contract (Supabase SDK)
 
 **Action 1: Tambah Vendor**
 - **Method:** `supabase.from('vendors').insert({ name, phone, division, notes })`
@@ -34,7 +38,15 @@ sequenceDiagram
 - **Method:** `supabase.from('vendors').select('id, name').eq('division', selectedDivision)`
 - **Response:** List dropdown di UI Handover.
 
-## 5. Error Handling
+## 6. Data Mapping (UI ↔ API ↔ DB)
+| UI Field | API Field | DB Column | Data Type | Notes |
+|----------|-----------|-----------|-----------|-------|
+| Field | field | column | text | - |
+
+## 7. Validation Rules
+- Wajib diisi sesuai aturan field.
+
+## 8. Error Handling
 | Code | Condition | Behavior |
 |------|-----------|----------|
 | `42501` (RLS) | Karyawan mencoba hapus vendor | Permission denied. |

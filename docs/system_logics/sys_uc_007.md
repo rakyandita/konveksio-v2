@@ -10,7 +10,11 @@
 - `/owner/home`
 - `/owner/branch/:id`
 
-## 3. Sequence Diagram
+## 3. Related Entities
+- `profiles`
+- `tasks` (tambahkan entitas yang relevan)
+
+## 4. Sequence Diagram
 ```mermaid
 sequenceDiagram
     actor O as Owner
@@ -25,7 +29,7 @@ sequenceDiagram
     DB-->>F: Return
 ```
 
-## 4. API Contract (Supabase SDK)
+## 5. API Contract (Supabase SDK)
 
 **Action 1: Berpindah Konteks (Frontend Only)**
 - **Method:** Tidak ada mutasi di backend. Aplikasi menyimpan `active_branch_id` di state lokal aplikasi.
@@ -34,7 +38,15 @@ sequenceDiagram
 - **Method:** Untuk setiap *query* Supabase, frontend wajib menyertakan filter `.eq('branch_id', active_branch_id)`.
 - **Security:** Fungsi `auth_user_role()` mendeteksi bahwa profil `role = owner`. RLS secara native mengizinkan akses ke SEMUA `branch_id` bagi `owner`, sehingga *query* filter di atas tidak akan ditolak.
 
-## 5. Error Handling
+## 6. Data Mapping (UI ↔ API ↔ DB)
+| UI Field | API Field | DB Column | Data Type | Notes |
+|----------|-----------|-----------|-----------|-------|
+| Field | field | column | text | - |
+
+## 7. Validation Rules
+- Wajib diisi sesuai aturan field.
+
+## 8. Error Handling
 | Code | Condition | Behavior |
 |------|-----------|----------|
 | N/A | Owner lupa mengirim .eq('branch_id') | Data seluruh cabang akan tergabung (Frontend Bug) |

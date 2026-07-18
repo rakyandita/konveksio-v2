@@ -1,6 +1,6 @@
 # [Fase 1 | SoT #1] SRS: Konveksio
 
-**Document Version:** v3.1 | **Status:** ✅ FINAL (SoT #1 Approved) | **Last Updated:** 2026-07-16 | **Author:** Antigravity AI (Chain of Truth)
+**Document Version:** v3.2 | **Status:** ✅ FINAL (SoT #1 Approved) | **Last Updated:** 2026-07-17 | **Author:** Antigravity AI (Chain of Truth)
 
 ---
 
@@ -214,6 +214,7 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 - FR-06.5: Download PDF invoice secara langsung di HP (on-device rendering via Flutter, tanpa server).
 - FR-06.6: Halaman detail order menampilkan **"Estimasi Margin"** = Total Harga Jual − (Σ qty_selesai_per_divisi × ongkos_snapshot) − Σ biaya_vendor_per_task. Nilai ini diperbarui secara dinamis seiring progress dan input biaya vendor, dan dapat berubah sampai order berstatus "Selesai". Hanya terlihat oleh Owner dan Boss Cabang.
 - FR-06.7: Setiap Order Item dapat dilengkapi dengan **SPK (Surat Perintah Kerja)** — lihat F11.
+- FR-06.8: Boss Cabang/Admin dapat menambahkan **Penyesuaian (Adjustment)** pada Order, berupa biaya tambahan (misal: ongkir, biaya desain) atau diskon.
 
 **Business Rules:**
 - BR-06.1: Pembuatan order dapat dilakukan secara offline; disinkronisasi ke Supabase saat koneksi tersedia.
@@ -234,7 +235,7 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 - BR-06.4: Total tagihan order dihitung otomatis dari (Qty × Harga Final) semua item.
 
 **Acceptance Criteria:**
-- [ ] Boss Cabang buat order offline → muncul di list order lokal → saat online, order sinkron ke Supabase.
+- [ ] Boss Cabang buat order offline → data tersimpan di `mutation_queue` SQLite lokal → saat online, sinkronisasi background berjalan dan order tersimpan ke Supabase.
 - [ ] Tap "Kirim Invoice" → sistem generate link unik → Boss Cabang kirim link ke customer via WA.
 - [ ] Customer buka link di browser → halaman invoice muncul dengan tombol "Download PDF".
 - [ ] Order berstatus "Produksi Berjalan" tidak bisa dihapus — tombol hapus tidak muncul.
@@ -400,6 +401,8 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 | Salary Record | Slip gaji mingguan | Sistem (dari Generate) | Generated setiap Sabtu, Read-only setelah dibuat |
 | Notification | Riwayat notifikasi | Sistem | Append-only, tandai is_read |
 | **Vendor** | Data vendor eksternal produksi | Boss Cabang | Dibuat Boss, Soft Delete |
+| **Adjustment Item**| Penyesuaian tagihan (tambahan/diskon) pada order | Boss / Admin | Mengikuti lifecycle Order |
+| **Mutation Queue** | Antrian sinkronisasi data offline-to-online | Sistem (SQLite) | Disisipkan lokal saat offline, dihapus/status changed saat online sync berhasil |
 
 ### 4.2 Ownership Rules
 - Semua objek bisnis memiliki kolom `branch_id` yang di-enforce oleh RLS di Supabase. Ini mencakup seluruh tabel transaksional termasuk `cash_advances` dan `salary_records` (didenormalisasi sejak Fase 4 — Schema v2).
@@ -573,3 +576,4 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 | 2.8 | 2026-07-15 | Antigravity AI | Handover wajib ke penerima spesifik (bukan divisi global) + qty per size (FR-07.3 + BR-07.3 + BR-07.8); Auto-Task qty per size (BR-07.6); notifikasi Handover real-time ke penerima spesifik (FR-09.1); Dashboard Karyawan: Kotak Masuk + Motivasi Divisi + Personal Stats (FR-10.3); AC F07 + F10 diperbarui; definisi Handover, Kotak Masuk, Auto-Task diperbarui |
 | 2.9 | 2026-07-15 | Antigravity AI | Audit 5 Edge Cases: Tambah Batal/Re-route untuk Handover menggantung (FR-07.3); Handover Vendor di-route ke Kotak Masuk Admin/Boss (FR-07.3, FR-09.1); Wajib susulkan Discrepancy (BR-07.4); Tambah tombol TOLAK di Kotak Masuk (FR-10.3); Penegasan fungsi redistribusi Smart Bulk Assign (FR-07.1) |
 | 3.0 | 2026-07-16 | Antigravity AI | **Sinkronisasi Database Schema v2 (Fase 4 Hardened):** (1) Semua nilai enum di-update ke Bahasa Inggris — `order_status`: draft/confirmation/running/completed/shipped/done/cancelled; `task_status`: running/completed; `handover_status`: pending/accepted/rejected. (2) State machine BR-06.3 diperbarui dengan nilai enum database + catatan i18n mapping ke UI. (3) BR-09.2 update referensi status. (4) Section 4.2 dikonfirmasi `cash_advances` & `salary_records` kini memiliki `branch_id` langsung (denormalisasi). (5) Section 4.3 Hard Delete rules update enum. (6) Core Objects table diperbarui dengan nilai enum dan lifecycle yang benar. |
+| 3.1 | 2026-07-17 | Antigravity AI | Increment 1: Tambah `Adjustment Item` (FR-06.8) dan explicit `Mutation Queue` (AC F06 & Core Objects) sesuai audit remediasi fase 1-5. |

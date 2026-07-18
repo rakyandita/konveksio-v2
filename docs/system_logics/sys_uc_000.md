@@ -12,7 +12,11 @@
 - `/boss/home`
 - `/owner/home`
 
-## 3. Sequence Diagram
+## 3. Related Entities
+- `profiles`
+- `tasks` (tambahkan entitas yang relevan)
+
+## 4. Sequence Diagram
 ```mermaid
 sequenceDiagram
     actor U as User
@@ -28,7 +32,7 @@ sequenceDiagram
     F->>F: Redirect based on role
 ```
 
-## 4. API Contract (Supabase Auth SDK)
+## 5. API Contract (Supabase Auth SDK)
 
 **Action 1: Authentication**
 - **Method:** `supabase.auth.signInWithPassword({ phone, password: pin })`
@@ -44,7 +48,15 @@ sequenceDiagram
 }
 ```
 
-## 5. Error Handling
+## 6. Data Mapping (UI ↔ API ↔ DB)
+| UI Field | API Field | DB Column | Data Type | Notes |
+|----------|-----------|-----------|-----------|-------|
+| Field | field | column | text | - |
+
+## 7. Validation Rules
+- Wajib diisi sesuai aturan field.
+
+## 8. Error Handling
 | Code | Condition | Behavior |
 |------|-----------|----------|
 | `InvalidCredentialsError` | No HP / PIN salah | Tampilkan toast: "Kredensial tidak valid" |

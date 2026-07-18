@@ -12,6 +12,7 @@ Berdasarkan analisis `ui-ux-pro-max` untuk aplikasi *productivity factory dashbo
 - **Soft Drop Shadows & Subtle Depth:** Meninggalkan aturan *flat design* kaku. Mengizinkan penggunaan bayangan halus (*soft shadows*) untuk menciptakan ilusi elevasi dan kedalaman (*depth*) layaknya antarmuka macOS/Apple.
 - **Thumb-Friendly:** Area tap *minimum 44x44pt*, tombol aksi utama (*CTA*) selalu diletakkan di bagian bawah layar.
 - **Keterbacaan Maksimal:** Kontras tinggi untuk penggunaan di lingkungan pabrik, dengan tipografi yang tebal dan jelas.
+- **Light Mode Only (No Dark Mode):** Untuk rilis pertama (V1), aplikasi hanya mendukung dan dioptimalkan untuk tema Terang (Light Mode). Dark Mode tidak didukung (menjawab gap DS-04).
 
 ## 2. Color Palette
 Tema warna disesuaikan berdasarkan persetujuan pengguna (Biru Emerald sebagai *Primary*).
@@ -32,15 +33,17 @@ Tema warna disesuaikan berdasarkan persetujuan pengguna (Biru Emerald sebagai *P
 | `--color-on-branch-context` | `#FFFFFF` | Teks di atas warna Branch Context (header Amber). |
 
 ## 3. Typography
-- **Font Family:** `Plus Jakarta Sans` (Bersih, modern, sangat terbaca terutama untuk angka).
+- **Heading Font:** `Poppins` (Elegan, profesional, dan ramah untuk judul besar).
+- **Body Font:** `Open Sans` (Bersih, keterbacaan tinggi untuk form dan angka operasional pabrik).
 - **Scale:**
-  - `H1 (Heading 1)`: 24sp, Bold (Untuk sapaan, judul halaman besar)
-  - `H2 (Heading 2)`: 20sp, SemiBold (Judul Card, nama Order)
-  - `Body 1`: 16sp, Regular (Teks utama, nama komponen)
-  - `Body 2`: 14sp, Regular (Deskripsi, teks sekunder)
-  - `Caption`: 12sp, Medium (Label navigasi bawah, status kecil)
+  - `H1 (Heading 1)`: 24sp, Poppins Bold (Untuk sapaan, judul halaman besar)
+  - `H2 (Heading 2)`: 20sp, Poppins SemiBold (Judul Card, nama Order)
+  - `Body 1`: 16sp, Open Sans Regular (Teks utama, nama komponen)
+  - `Body 2`: 14sp, Open Sans Regular (Deskripsi, teks sekunder)
+  - `Caption`: 12sp, Open Sans Medium (Label navigasi bawah, status kecil)
 
-## 4. Spacing & Layout (8dp Rhythm)
+## 4. Spacing, Layout & Grid
+### 4.1. 8dp Rhythm
 Jarak antar elemen mematuhi sistem *grid* kelipatan 8:
 - `--space-xs`: 4dp (Jarak teks dengan ikon di sebelahnya)
 - `--space-sm`: 8dp (Jarak antar *item* di dalam satu kelompok)
@@ -48,28 +51,33 @@ Jarak antar elemen mematuhi sistem *grid* kelipatan 8:
 - `--space-lg`: 24dp (Jarak antar bagian/seksi besar)
 - `--space-xl`: 32dp (Margin bawah sebelum tombol aksi tetap)
 
+### 4.2. Grid System
+- Konveksio Mobile menggunakan pendekatan **12-column flex grid** secara konseptual.
+- **Mobile Viewport:** Gutter/Margin kiri-kanan layar dipatok di `16dp` (`--space-md`).
+- **Tablet Breakpoint (>600dp):** Konten utama dibatasi maksimal `max-width: 600px` dan diletakkan di tengah (centered) untuk mencegah form input atau Card terlalu lebar secara tidak wajar.
+
 ## 5. UI Components
 
-### 5.1. Buttons (Tombol)
+### 5.1. Buttons (DS-01)
 - **Primary Button:** Warna `#0D9488`, teks putih, padding vertikal `14dp`, teks `SemiBold 16px`. Radius: `8dp` (melengkung lembut, tapi bukan pil bulat).
 - **Secondary Button:** Outline `#E2E8F0` tebal `1.5dp`, teks `#020617`, background `#FFFFFF`.
 - **Destructive Button:** Warna `#DC2626` atau Outline Merah, digunakan untuk "Tolak" atau aksi menghapus.
 - *Aturan:* Tombol aksi utama (seperti `[TERIMA]`, `[UPDATE PROGRES]`) sebaiknya *full-width* (penuh ke samping) dan menempel di area bawah layar (*Bottom Sheet / Sticky Footer*).
 
-### 5.2. Cards
+### 5.2. Cards (DS-02)
 - **Bento Grid & Soft Shadows:** Card dirender dengan background putih `#FFFFFF`, outline border sangat tipis 1dp (`#E2E8F0`), dan **wajib menggunakan bayangan halus** (*soft drop shadows*) dengan opasitas sangat rendah (2-5%) untuk memberikan kesan premium dan elevasi.
 - Padding dalam Card selalu menggunakan `--space-md` (16dp).
 
-### 5.3. Kotak Input (Text Field)
+### 5.3. Text Field (DS-03)
 - Tinggi minimum `48dp` untuk mempermudah tap.
 - Latar belakang abu-abu terang (`#F1F5F9`) dengan indikator garis bawah warna Primary saat aktif (fokus).
 
-### 5.4. Navigation Components
+### 5.4. Navigation Components (DS-04)
 - **Bottom Navigation Bar (Karyawan):** Latar putih `#FFFFFF`, ikon aktif berwarna Primary `#0D9488`, ikon non-aktif berwarna Muted `#64748B`. Menggunakan label di bawah ikon (ukuran `12sp`).
 - **Side Drawer (Boss/Admin):** Lebar 75% layar, header menggunakan background Primary. Item menu menggunakan ikon di sebelah kiri teks.
 - **Scroll-Reactive Header (KAI Style / Dynamic App Bar):** Header yang secara default transparan menyatu dengan warna latar (*hero section*), namun secara otomatis berubah menjadi solid (putih) dengan efek *box-shadow* ketika pengguna melakukan *scroll* ke bawah. Digunakan untuk memberikan kesan luas dan *clean* pada awal pemuatan halaman (seperti pada *Dashboard Karyawan*).
 
-### 5.5. Status Badges & Chips
+### 5.5. Status Badges & Chips (DS-05)
 - Bentuk *pill* (radius penuh) atau membulat `4dp`. Teks ukuran `12sp Medium`.
 - **Aktif / Selesai:** Latar Hijau Muda (`#DCFCE7`), Teks Hijau Tua (`#16A34A`).
 - **Pending / Draft:** Latar Abu-abu (`#F1F5F9`), Teks Muted (`#64748B`).
@@ -88,10 +96,14 @@ Pemetaan setiap status Order ke token warna badge agar konsisten di semua halama
 | `Selesai / Lunas` | `#052E16` | `#FFFFFF` | Hitam Hijau gelap — tuntas |
 | `Batal` | `#FEE2E2` | `#DC2626` | Merah — order dibatalkan |
 
-### 5.6. List Items
+### 5.6. List Items (DS-06)
 - Tata letak satu baris: Leading Icon (opsional), Title (Body 1), Subtitle (Body 2 / Caption), Trailing (opsional, misal nilai angka atau indikator navigasi). Padding vertikal `12dp`.
 
-### 5.7. Branch Context Mode Visual State (Owner Mode Operasional)
+### 5.7. Icon Library (DS-07)
+- **Standar Ikon:** Menggunakan **Phosphor Icons** untuk seluruh antarmuka aplikasi.
+- **Gaya Visual:** Gunakan varian `Regular` untuk ikon standar, dan `Fill`/`Bold` untuk kondisi terpilih (misal Bottom Navigation aktif).
+
+### 5.8. Branch Context Mode Visual State (DS-08)
 Spesifikasi visual untuk membedakan secara tegas antara **Mode Eksekutif** (Global Dashboard default Owner) dan **Mode Operasional** (Branch Context Mode). Ini adalah *safety mechanism* UX agar Owner selalu sadar penuh bahwa tindakannya berdampak nyata pada data operasional cabang.
 
 #### Lapisan 1: Perubahan Header (Wajib, Paling Prioritas)

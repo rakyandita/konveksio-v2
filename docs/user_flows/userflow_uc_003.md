@@ -20,6 +20,7 @@
 10. Sistem mencocokkan Qty Pengirim = Qty Penerima. Data cocok (*No Discrepancy*).
 11. Sistem mencatat Handover sukses dan mengirim notifikasi kembali ke Budi ("Penyerahan Diterima").
 12. **Auto-Task:** Sistem secara otomatis menciptakan *Task* baru untuk Siti dengan target S=10, M=15 dan mengunci tarif borongan (*snapshot*) Siti pada detik itu.
+13. Sistem mengirimkan *push notification* (FCM) ke HP Siti yang menginformasikan bahwa tugas baru telah ditambahkan ke daftarnya.
 
 ## 3. Alternative Flows
 **3.1. Handover ke Vendor (Vendor Route)**

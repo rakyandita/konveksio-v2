@@ -10,7 +10,11 @@
 - `/boss/orders` (List)
 - `/boss/orders/new` (Form Order & Item)
 
-## 3. Sequence Diagram
+## 3. Related Entities
+- `profiles`
+- `tasks` (tambahkan entitas yang relevan)
+
+## 4. Sequence Diagram
 ```mermaid
 sequenceDiagram
     actor B as Boss
@@ -30,7 +34,7 @@ sequenceDiagram
     F->>F: Tampilkan sukses, ke daftar order
 ```
 
-## 4. API Contract (Postgres RPC)
+## 5. API Contract (Postgres RPC)
 
 **Action 1: Create Order Transaction**
 - **Method:** `supabase.rpc('create_order_transaction', { payload })`

@@ -45,6 +45,12 @@
 - Setelah Owner berhasil login ulang, sistem selalu mengarahkan ke **Global Dashboard Owner** (`PAGE-001`) — bukan kembali ke Branch Context Mode sebelumnya.
 - *Alasan:* Re-masuk ke Branch Context Mode secara otomatis berisiko jika Owner tidak menyadari token sudah diperbarui. Memulai dari Global Dashboard memberikan Owner kendali penuh.
 
+**4.3. Koneksi Internet Terputus (Offline) dalam Branch Context Mode**
+- Owner kehilangan koneksi internet.
+- Sistem menghentikan sementara kemampuan manipulasi data (Create/Update/Delete) dan menampilkan banner "Offline - Anda dalam Mode Cabang".
+- Owner hanya dapat membaca data yang di-cache di perangkat (Read-only).
+- Jika Owner mencoba menekan tombol aksi, sistem menampilkan peringatan: "Tindakan ini memerlukan koneksi internet."
+
 ## 5. Postconditions
 - `acting_branch_id` aktif dalam session Owner.
 - Semua operasi tulis (Order, Assign, dll.) tercatat dengan `created_by = owner_id` dan `branch_id = acting_branch_id`.
