@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/kvx_button.dart';
-import '../../../core/widgets/kvx_text_field.dart';
-import '../data/auth_repository.dart';
+import '../domain/auth_state.dart';
+import 'auth_controller.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -16,10 +15,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _phoneController = TextEditingController();
   final _pinController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  
-  bool _isLoading = false;
-  String? _errorMessage;
+  bool _isPinVisible = false;
+  bool _rememberMe = true;
 
   @override
   void dispose() {
@@ -28,130 +25,245 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
-    if (!_formKey.currentState!.validate()) return;
+  void _handleLogin() {
+    final phone = _phoneController.text.trim();
+    final pin = _pinController.text.trim();
 
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final authRepo = ref.read(authRepositoryProvider);
-      await authRepo.signInWithPhone(
-        _phoneController.text,
-        _pinController.text,
-      );
-      
-      if (mounted) {
-        context.go('/');
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = e.toString().replaceAll('Exception: ', '');
-      });
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+    if (phone.isEmpty || pin.isEmpty) {
+      _showSnackbar('Waduh, nomor HP dan kata sandi wajib diisi ya.', AppTheme.destructive, PhosphorIconsFill.warningCircle);
+      return;
     }
+
+    ref.read(authControllerProvider.notifier).login(phone, pin);
+  }
+
+  void _showSnackbar(String message, Color bgColor, IconData iconData) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(iconData, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message)),
+          ],
+        ),
+        backgroundColor: bgColor,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.pagePadding),
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: AppSpacing.maxContentWidth),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Logo / Brand (Simulasi)
-                    const Icon(
-                      Icons.factory_rounded,
-                      size: 64,
-                      color: AppColors.primary,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      'Konveksio',
-                      textAlign: TextAlign.center,
-                      style: AppTypography.h1,
-                    ),
-                    Text(
-                      'Masuk untuk mengelola operasional',
-                      textAlign: TextAlign.center,
-                      style: AppTypography.body2.copyWith(color: AppColors.muted),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
+    ref.listen<AuthState>(authControllerProvider, (previous, next) {
+      if (next.errorMessage != null && next.errorMessage != previous?.errorMessage) {
+        _showSnackbar(next.errorMessage!, AppTheme.destructive, PhosphorIconsFill.warningCircle);
+      }
+    });
 
-                    if (_errorMessage != null) ...[
-                      Container(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        decoration: BoxDecoration(
-                          color: AppColors.statusBatalBg,
-                          borderRadius: BorderRadius.circular(AppRadius.md),
-                          border: Border.all(color: AppColors.statusBatalText),
-                        ),
-                        child: Text(
-                          _errorMessage!,
-                          style: AppTypography.caption.copyWith(
-                            color: AppColors.statusBatalText,
+    final authState = ref.watch(authControllerProvider);
+    final showForgotPassword = authState.failedAttempts >= 5;
+
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFE0F2FE), Colors.white, Colors.white],
+            stops: [0.0, 0.25, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Spacer(flex: 2),
+                // Brand
+                Center(
+                  child: Column(
+                    children: [
+                      Icon(PhosphorIconsFill.tShirt, size: 64, color: AppTheme.primary),
+                      const SizedBox(height: 16),
+                      Text('Konveksio', style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppTheme.primary)),
+                      const SizedBox(height: 4),
+                      Text('Biar Konveksio yang atur, kamu yang pantau.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.muted)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 48),
+
+                // Phone Input (Outline Group Style)
+                _buildInputGroup(
+                  label: 'Nomor HP',
+                  icon: PhosphorIcons.phone,
+                  child: TextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      hintText: '08...',
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      filled: false,
+                      contentPadding: EdgeInsets.only(left: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // PIN Input
+                _buildInputGroup(
+                  label: 'PIN',
+                  icon: PhosphorIcons.lockKey,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _pinController,
+                          obscureText: !_isPinVisible,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            hintText: '••••••••',
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            filled: false,
+                            contentPadding: EdgeInsets.only(left: 12),
                           ),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.md),
+                      IconButton(
+                        icon: Icon(
+                          _isPinVisible ? PhosphorIcons.eyeSlash : PhosphorIcons.eye,
+                          color: AppTheme.primary,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPinVisible = !_isPinVisible;
+                          });
+                        },
+                      ),
                     ],
+                  ),
+                ),
+                const SizedBox(height: 24),
 
-                    KvxTextField(
-                      label: 'Nomor HP',
-                      hint: 'Contoh: 081234567890',
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      validator: (val) {
-                        if (val == null || val.isEmpty) {
-                          return 'Nomor HP tidak boleh kosong';
-                        }
-                        return null;
-                      },
+                // Options Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Switch(
+                          value: _rememberMe,
+                          onChanged: (val) => setState(() => _rememberMe = val),
+                          activeColor: AppTheme.primary,
+                        ),
+                        const Text('Ingat Saya', style: TextStyle(color: AppTheme.foreground)),
+                      ],
                     ),
-                    const SizedBox(height: AppSpacing.md),
-                    KvxTextField(
-                      label: 'PIN',
-                      hint: '6 digit angka',
-                      controller: _pinController,
-                      obscureText: true,
-                      keyboardType: TextInputType.number,
-                      validator: (val) {
-                        if (val == null || val.isEmpty) {
-                          return 'PIN tidak boleh kosong';
-                        }
-                        if (val.length < 6) {
-                          return 'PIN harus 6 digit';
-                        }
-                        return null;
-                      },
+                    if (showForgotPassword)
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('Lupa Password?'),
+                      )
+                    else
+                      TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(foregroundColor: AppTheme.muted),
+                        child: const Text('Lupa Password?'),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+
+                // Login Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: authState.isLoading ? null : _handleLogin,
+                          child: authState.isLoading
+                              ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                              : const Text('Login'),
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: AppSpacing.xl),
-                    KvxButton(
-                      text: 'MASUK',
-                      isLoading: _isLoading,
-                      onPressed: _handleLogin,
+                    const SizedBox(width: 16),
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF1F5F9),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppTheme.border),
+                      ),
+                      child: IconButton(
+                        icon: Icon(PhosphorIcons.fingerprint, color: AppTheme.primary, size: 28),
+                        onPressed: () {},
+                      ),
                     ),
                   ],
                 ),
-              ),
+                
+                const Spacer(flex: 3),
+                // Help Section
+                Center(
+                  child: Column(
+                    children: [
+                      Icon(PhosphorIcons.question, color: AppTheme.primary, size: 24),
+                      const SizedBox(height: 4),
+                      const Text('Help', style: TextStyle(color: AppTheme.muted, fontSize: 12, fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInputGroup({required String label, required IconData icon, required Widget child}) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          height: 56,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppTheme.border),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Icon(icon, color: AppTheme.muted, size: 20),
+              Expanded(child: child),
+            ],
+          ),
+        ),
+        Positioned(
+          top: -10,
+          left: 16,
+          child: Container(
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 12, color: AppTheme.muted),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
