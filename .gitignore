@@ -72,3 +72,9 @@ preferensiui/
 graphify-out/.graphify_*
 graphify-out/cost.json
 graphify-out/cache/
+
+# ===========================
+# Local Workspace & Temp Tasks
+# ===========================
+*.code-workspace
+tasks/
