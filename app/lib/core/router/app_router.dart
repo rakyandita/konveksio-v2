@@ -6,6 +6,15 @@ import '../../features/auth/domain/auth_state.dart';
 import '../../features/auth/presentation/auth_controller.dart';
 import '../../features/auth/presentation/login_screen.dart';
 
+import '../../features/dashboard/presentation/karyawan_shell.dart';
+import '../../features/dashboard/presentation/karyawan_beranda_screen.dart';
+import '../../features/dashboard/presentation/karyawan_produksi_screen.dart';
+import '../../features/dashboard/presentation/karyawan_keuangan_screen.dart';
+import '../../features/dashboard/presentation/karyawan_profil_screen.dart';
+
+import '../../features/dashboard/presentation/boss_dashboard_screen.dart';
+import '../../features/dashboard/presentation/owner_dashboard_screen.dart';
+
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
   RouterNotifier(this._ref) {
@@ -65,33 +74,53 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/owner/home',
-        builder: (context, state) => _buildPlaceholder('Dashboard Owner', ref),
+        builder: (context, state) => const OwnerDashboardScreen(),
       ),
       GoRoute(
         path: '/boss/home',
-        builder: (context, state) => _buildPlaceholder('Dashboard Cabang', ref),
+        builder: (context, state) => const BossDashboardScreen(),
       ),
-      GoRoute(
-        path: '/karyawan/home',
-        builder: (context, state) => _buildPlaceholder('Dashboard Karyawan', ref),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return KaryawanShell(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/karyawan/home',
+                builder: (context, state) => const KaryawanBerandaScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/karyawan/produksi',
+                builder: (context, state) => const KaryawanProduksiScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/karyawan/keuangan',
+                builder: (context, state) => const KaryawanKeuanganScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/karyawan/profil',
+                builder: (context, state) => const KaryawanProfilScreen(),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );
 });
 
-Widget _buildPlaceholder(String title, Ref ref) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(title),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: () {
-            ref.read(authControllerProvider.notifier).logout();
-          },
-        )
-      ],
-    ),
-    body: Center(child: Text(title)),
-  );
-}
+

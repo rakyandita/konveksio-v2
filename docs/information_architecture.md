@@ -99,22 +99,17 @@ Dokumen ini mendefinisikan struktur navigasi, hierarki halaman, dan arsitektur i
 │   ├── Ringkasan Pcs Selesai (Minggu Ini)
 │   └── Proyeksi Upah
 │
-├── Kotak Masuk / Inbox (Tab 2)
-│   ├── Daftar Handover Masuk
-│   └── Form Konfirmasi Terima / Tolak (Input aktual Qty per size)
+├── Produksi (Tab 2) - Mobile Kanban Swipeable
+│   ├── Kolom 1: MASUK (Handover masuk, tombol Terima/Tolak)
+│   ├── Kolom 2: PROSES (Tugas aktif, form update progres)
+│   └── Kolom 3: SELESAI (Tugas yang sudah selesai 100%)
 │
-├── Tugas Aktif (Tab 3)
-│   ├── Daftar Tugas Berjalan
-│   ├── Detail Tugas
-│   │   ├── Form Update Progres (Input Qty per size)
-│   │   ├── SPK Digital Viewer (Offline Support)
-│   │   └── Riwayat Progres
-│   └── Form Handover (Buat serah terima baru)
+├── Keuangan (Tab 3)
+│   ├── Form Pengajuan & Riwayat Kasbon
+│   └── Riwayat Slip Gaji Mingguan
 │
-└── Akun & Gaji (Tab 4)
-    ├── Profil Karyawan
-    ├── Form Pengajuan Kasbon
-    ├── Riwayat Slip Gaji Mingguan
+└── Profil (Tab 4)
+    ├── Detail Data Karyawan
     └── Logout
 ```
 

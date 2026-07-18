@@ -13,6 +13,12 @@ class AuthRepository {
 
   /// Sign in using phone and PIN (password)
   Future<AuthState> signIn(String phone, String pin) async {
+    // --- BYPASS MOCK UNTUK VISUAL REVIEW (OPSI A) ---
+    if (phone == '08111') return const AuthState(isAuthenticated: true, role: UserRole.employee);
+    if (phone == '08222') return const AuthState(isAuthenticated: true, role: UserRole.boss);
+    if (phone == '08333') return const AuthState(isAuthenticated: true, role: UserRole.owner);
+    // ------------------------------------------------
+
     try {
       // 1. Authenticate via Supabase Auth
       // Add fake email domain to phone number since Supabase expects email format
