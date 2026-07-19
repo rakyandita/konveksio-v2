@@ -430,10 +430,10 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 
 ### 5.1 UI Requirements
 - Bahasa antarmuka: **Bahasa Indonesia** secara keseluruhan.
-- Navigasi utama: **Grid Menu** (2×3 atau 3×3) di halaman dashboard setiap role.
+- Navigasi utama: **Bottom Navigation (4 Tab)** yang dikombinasikan dengan **Grid Menu** di Tab Beranda untuk fitur sekunder. Pola ini berlaku seragam untuk semua peran (Owner, Boss, Karyawan).
 - Input kasbon tidak menggunakan dropdown; menggunakan komponen pilihan yang lebih natural (dibahas di Fase 3 Design System).
 - Responsif untuk layar Android 5–7 inci.
-- Mendukung mode operasi dengan satu tangan (thumb-friendly layout) untuk karyawan produksi.
+- Mendukung mode operasi dengan satu tangan (thumb-friendly layout) untuk semua pengguna.
 
 ### 5.2 External Systems
 | Sistem | Tujuan | Protokol |

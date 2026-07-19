@@ -10,7 +10,7 @@
   2. **[WAJIB — RISK-05]** Tidak ada *Mutation Queue* yang masih pending di perangkat. Jika ada, sistem menampilkan dialog: *"Ada data progres yang belum tersinkronisasi. Tunggu sinkronisasi selesai agar kalkulasi gaji akurat."* dan memblokir proses Generate Gaji hingga antrean kosong.
 
 ## 2. Main Flow (Skenario Utama)
-1. Boss Cabang menavigasi ke menu **Keuangan & SDM > Generate Gaji**.
+1. Boss Cabang mengetuk Tab Beranda lalu membuka menu **Keuangan & SDM > Generate Gaji** pada Grid Menu.
 2. Boss memilih periode cut-off (tanggal awal - tanggal akhir, default: 1 minggu terakhir).
 3. Boss menekan tombol `[Hitung Gaji]`.
 4. Sistem melakukan agregasi (*query*) seluruh **Progress Log** (log pcs selesai aktual) pada periode tersebut, dan mengalikannya dengan Tarif *Snapshot* yang terkunci pada masing-masing task terkait (SRS FR-08.2).

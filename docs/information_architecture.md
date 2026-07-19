@@ -10,9 +10,9 @@
 Dokumen ini mendefinisikan struktur navigasi, hierarki halaman, dan arsitektur informasi aplikasi Konveksio. Aplikasi ini menggunakan pendekatan *role-based rendering* (satu aplikasi, namun menampilkan pengalaman navigasi yang sepenuhnya berbeda sesuai tingkat *role* pengguna yang masuk).
 
 ## 2. Global Navigation Strategy
-- **Karyawan Produksi:** Menggunakan **Bottom Navigation Bar** untuk akses cepat dengan satu tangan di lapangan (*thumb-friendly*).
-- **Boss Cabang / Admin:** Menggunakan **Dashboard Grid Menu** di halaman Beranda (akses cepat ke fungsi prioritas), ditambah **Side Drawer (Hamburger Menu)** untuk fitur-fitur administratif lengkap yang jarang diakses.
-- **Owner:** Menggunakan **Dashboard Global** dengan dua mode: **(1) Mode Pantau** (Global Dashboard default) dan **(2) Mode Konteks Cabang** (*Branch Context Mode*) — di mana Owner dapat masuk ke konteks operasional satu cabang dan mengakses UI yang identik dengan Boss Cabang, termasuk membuat Order.
+- **Karyawan Produksi:** Menggunakan **Bottom Navigation Bar (4 Tab)** untuk akses cepat dengan satu tangan di lapangan (*thumb-friendly*).
+- **Boss Cabang / Admin:** Menggunakan **Bottom Navigation Bar (4 Tab)** dengan Tab 1 sebagai Beranda (Bento Grid) untuk menampung fitur-fitur administratif lengkap tanpa menyembunyikannya di dalam Hamburger Menu.
+- **Owner:** Menggunakan **Bottom Navigation Bar (4 Tab)** dengan fungsi serupa Boss Cabang untuk konsistensi antar peran. Tetap memiliki dua mode: **(1) Mode Pantau** (Global Dashboard default) dan **(2) Mode Konteks Cabang** (*Branch Context Mode*) — di mana Owner dapat masuk ke konteks operasional satu cabang dan mengakses UI yang identik dengan Boss Cabang, termasuk membuat Order.
 
 ## 3. Sitemap & Page Hierarchy
 
@@ -21,10 +21,19 @@ Dokumen ini mendefinisikan struktur navigasi, hierarki halaman, dan arsitektur i
 [Owner Root]
 ├── Auth
 │   └── Login & Role Redirect
-├── Beranda (Global Dashboard) ← Mode Pantau Default
+├── Beranda (Tab 1) ← Mode Pantau Default
 │   ├── Metrik Omzet Global
 │   ├── Perbandingan Performa Cabang
 │   └── Kartu Cabang (tap untuk masuk konteks)
+├── Cabang (Tab 2)
+│   ├── Daftar Cabang
+│   ├── Detail Cabang
+│   └── Form Tambah/Edit Cabang
+├── Akun & Akses (Tab 3)
+│   ├── Daftar Boss Cabang/Admin
+│   └── Form Tambah/Edit Boss Cabang
+├── Profil (Tab 4)
+│   └── Pengaturan & Logout
 ├── [Branch Context Mode] ← Aktif setelah tap Kartu Cabang
 │   └── [UI IDENTIK DENGAN BOSS CABANG]
 │       ├── Order & SPK (termasuk Buat Order)
@@ -33,27 +42,21 @@ Dokumen ini mendefinisikan struktur navigasi, hierarki halaman, dan arsitektur i
 │       ├── Keuangan & SDM
 │       │   └── Generate Gaji *[ada konfirmasi tambahan]
 │       └── Master Data
-├── Cabang
-│   ├── Daftar Cabang
-│   ├── Detail Cabang
-│   └── Form Tambah/Edit Cabang
-├── Akun & Akses
-│   ├── Daftar Boss Cabang/Admin
-│   └── Form Tambah/Edit Boss Cabang
-└── Pengaturan
-    └── Logout
 ```
 
 ### 3.2. Role: Boss Cabang / Admin
 ```text
 [Boss Root]
-├── Beranda (Dashboard Cabang)
+├── Beranda (Tab 1)
 │   ├── Ringkasan Order & Produksi
 │   ├── Alert Box (Deadline < 3 Hari, Tugas Stuck)
 │   ├── Quick Action: [Tambah Order]
-│   └── Grid Menu (Akses ke semua modul)
+│   └── Grid Menu (Akses ke Modul Sekunder)
+│       ├── Kotak Masuk (Resolusi Handover, PAGE-007)
+│       ├── Keuangan & SDM (Kasbon, Gaji)
+│       └── Master Data (Produk, Karyawan, Vendor, Customer)
 │
-├── Order (Pesanan)
+├── Order (Tab 2)
 │   ├── Daftar Order
 │   │   └── Tab filter: Draft | Konfirmasi | Produksi | Selesai | Dikirim | Selesai(done) | Batal
 │   │       > (Label UI Bahasa Indonesia. Nilai enum database: draft | confirmation | running | completed | shipped | done | cancelled)
@@ -63,27 +66,13 @@ Dokumen ini mendefinisikan struktur navigasi, hierarki halaman, dan arsitektur i
 │       ├── SPK Digital (View/Upload)
 │       └── Riwayat Pembayaran (Termin)
 │
-├── Produksi
+├── Produksi (Tab 3) - Kanban Board
 │   ├── Pipeline / Kanban Board (PAGE-028)
 │   ├── Daftar Tugas (Karyawan & Vendor)
 │   ├── Form Smart Bulk Assign (PAGE-006)
 │   └── Kelola Discrepancy (Resolusi Selisih Fisik)
 │
-├── Kotak Masuk (Inbox Boss)
-│   ├── Konfirmasi Handover Vendor
-│   └── Konfirmasi Handover Ditolak / Stuck
-│
-├── Keuangan & SDM
-│   ├── Approval Kasbon Karyawan
-│   ├── Generate Gaji (Slip Gaji Mingguan)
-│   └── Detail Karyawan (Limit Kasbon)
-│
-├── Master Data
-│   ├── Katalog Produk & Size Group
-│   ├── Master Karyawan & Divisi (Setup Ongkos Borongan)
-│   └── Master Vendor
-│
-└── Pengaturan
+└── Profil (Tab 4)
     ├── Pengaturan Cabang (Profil, Invoice, Kasbon, Sistem Upah)
     ├── Pengaturan Admin (Akses Modul)
     └── Logout

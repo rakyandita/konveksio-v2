@@ -4,7 +4,7 @@
 - **ID:** UC-009
 - **Name:** Manajemen Cabang
 - **Actor:** Owner
-- **Trigger:** Owner menekan menu "Pengaturan Cabang" dari Dashboard Owner.
+- **Trigger:** Owner mengetuk Tab Profil lalu menekan menu "Pengaturan Cabang".
 - **Pre-conditions:** Pengguna sudah login sebagai Owner (`PAGE-001`).
 
 ## 2. Main Flow (Skenario Utama)

@@ -22,49 +22,7 @@ class OwnerDashboardScreen extends ConsumerWidget {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: AppTheme.secondary,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text(
-                    'Konveksio Utama',
-                    style: TextStyle(
-                      color: AppTheme.onPrimary,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'Owner Account',
-                    style: TextStyle(
-                      color: AppTheme.onPrimary.withOpacity(0.8),
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.domain),
-              title: const Text('Manajemen Cabang'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.bar_chart),
-              title: const Text('Laporan Konsolidasi'),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

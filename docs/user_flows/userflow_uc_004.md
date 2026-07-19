@@ -15,7 +15,7 @@
 5. Sistem memvalidasi bahwa nominal input tidak melebihi sisa Limit Kasbon.
 6. Karyawan menekan `[Kirim Pengajuan]`.
 7. Status entitas kasbon menjadi "Menunggu Persetujuan" (`pending`). Sistem mengirim notifikasi *push* ke aplikasi Boss Cabang.
-8. Boss Cabang membuka menu **Keuangan & SDM > Approval Kasbon**.
+8. Boss Cabang mengetuk Tab Beranda lalu membuka menu **Keuangan & SDM > Approval Kasbon** pada Grid Menu.
 9. Boss melihat rincian pengajuan karyawan beserta catatan performa dan sisa limitnya.
 10. Boss menekan `[SETUJUI]`.
 11. Sistem mencatat transaksi kasbon sebagai aktif (Approved). Sistem otomatis mengurangi (reserve) saldo dompet kasbon karyawan.

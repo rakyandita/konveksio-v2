@@ -8,7 +8,7 @@
 - **Pre-conditions:** Pengguna telah login sebagai Boss Cabang — atau sebagai Owner yang aktif dalam Branch Context Mode (telah melewati `PAGE-015`).
 
 ## 2. Main Flow (Skenario Utama)
-1. Actor menavigasi ke menu **Master Data > Vendor** (`PAGE-016`).
+1. Actor mengetuk Tab Beranda lalu menavigasi ke menu **Master Data > Vendor** (`PAGE-016`) pada Grid Menu.
 2. Sistem menampilkan daftar semua vendor yang terdaftar di cabang ini.
 3. Actor menekan tombol `[Tambah Vendor]`.
 4. Sistem menampilkan form input vendor baru (`PAGE-017` versi Create).

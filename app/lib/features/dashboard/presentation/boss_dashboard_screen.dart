@@ -22,54 +22,7 @@ class BossDashboardScreen extends ConsumerWidget {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: AppTheme.primary,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text(
-                    'Cabang Jakarta',
-                    style: TextStyle(
-                      color: AppTheme.onPrimary,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'Manager: Pak Joko',
-                    style: TextStyle(
-                      color: AppTheme.onPrimary.withOpacity(0.8),
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.show_chart),
-              title: const Text('Laporan Produksi'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.people_outline),
-              title: const Text('Manajemen Karyawan'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet_outlined),
-              title: const Text('Pengajuan Kasbon'),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
