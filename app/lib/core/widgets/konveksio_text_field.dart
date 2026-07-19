@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../theme/app_theme.dart';
 
 class KonveksioTextField extends StatelessWidget {
@@ -11,6 +12,7 @@ class KonveksioTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final List<TextInputFormatter>? inputFormatters;
 
   const KonveksioTextField({
     super.key,
@@ -23,6 +25,7 @@ class KonveksioTextField extends StatelessWidget {
     this.validator,
     this.prefixIcon,
     this.suffixIcon,
+    this.inputFormatters,
   });
 
   @override
@@ -45,6 +48,7 @@ class KonveksioTextField extends StatelessWidget {
           obscureText: obscureText,
           maxLines: maxLines,
           validator: validator,
+          inputFormatters: inputFormatters,
           decoration: InputDecoration(
             hintText: hintText,
             prefixIcon: prefixIcon,

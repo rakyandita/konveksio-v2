@@ -9,6 +9,7 @@ class KonveksioButton extends StatelessWidget {
   final KonveksioButtonType type;
   final bool isFullWidth;
   final IconData? icon;
+  final bool isLoading;
 
   const KonveksioButton({
     super.key,
@@ -17,6 +18,7 @@ class KonveksioButton extends StatelessWidget {
     this.type = KonveksioButtonType.primary,
     this.isFullWidth = true,
     this.icon,
+    this.isLoading = false,
   });
 
   @override
@@ -79,10 +81,21 @@ class KonveksioButton extends StatelessWidget {
       buttonChild = Text(text);
     }
 
+    if (isLoading) {
+      buttonChild = SizedBox(
+        height: 20,
+        width: 20,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          color: foregroundColor,
+        ),
+      );
+    }
+
     return SizedBox(
       width: isFullWidth ? double.infinity : null,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: buttonStyle,
         child: buttonChild,
       ),
