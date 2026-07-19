@@ -44,7 +44,7 @@ dependencies:
   path_provider: ^2.1.6
   path: ^1.9.1
   phosphoricons_flutter: ^1.0.0
-  phosphor_flutter: ^2.1.0
+  intl: ^0.20.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
