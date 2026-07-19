@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../production/presentation/handover_modal.dart';
 
 class KaryawanProduksiScreen extends StatefulWidget {
   const KaryawanProduksiScreen({super.key});
@@ -70,7 +71,7 @@ class _KaryawanProduksiScreenState extends State<KaryawanProduksiScreen> with Si
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: AppTheme.primary.withOpacity(0.1),
+                      backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
                       child: Icon(PhosphorIconsRegular.package, color: AppTheme.primary),
                     ),
                     const SizedBox(width: 8),
@@ -132,7 +133,7 @@ class _KaryawanProduksiScreenState extends State<KaryawanProduksiScreen> with Si
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: AppTheme.primary.withOpacity(0.1),
+                      backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
                       child: Icon(PhosphorIconsRegular.scissors, color: AppTheme.primary),
                     ),
                     const SizedBox(width: 8),
@@ -156,9 +157,22 @@ class _KaryawanProduksiScreenState extends State<KaryawanProduksiScreen> with Si
                   color: AppTheme.primary,
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('UPDATE PROGRES'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        child: const Text('UPDATE PROGRES'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => HandoverModal.show(context, 'task-id-$index'),
+                        child: const Text('SERAH TERIMA'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
