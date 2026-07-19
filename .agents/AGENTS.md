@@ -29,6 +29,7 @@
 - **Hard Block Policy:** Jika satu atau lebih dokumen SOT di atas belum tersedia di folder proyek, DILARANG melakukan coding atau file generation.
 - **SOT Development Mode:** Jika SOT belum lengkap, tugas utama Agent adalah melakukan wawancara kepada user untuk mengumpulkan data dan men-generate dokumen SOT tersebut.
 - **No Side-Quests:** Jika user meminta fitur di luar cakupan SOT, Agent WAJIB menolak dan meminta user memperbarui dokumen SOT terlebih dahulu. Jika user tetap memaksa maka Agent tetap wajib menolak.
+- **SOT Impact Analysis:** Jika user meminta perubahan fitur atau arsitektur yang mengharuskan modifikasi dokumen SOT, Agent WAJIB melakukan pengecekan menyeluruh terhadap seluruh pilar dokumen SOT (SRS, IA, Design System, Data Model, User Flows, System Logics, Prototype) untuk melihat dampak perubahannya (*blast radius*). Agent harus memberikan penjelasan detail kepada user mengenai file SOT apa saja yang terdampak beserta rincian perubahannya untuk setiap file. Eksekusi perubahan hanya boleh dilakukan setelah user menyetujui analisis dampak tersebut.
 - **Mandatory Logging:** Setiap respon yang melibatkan perubahan kode/file harus menyertakan tabel Requirement Log di bagian akhir dengan format persis seperti ini (sesuaikan isi barisnya dengan tugas yang sedang dikerjakan):
 
   ## 📊 REQUIREMENT LOG
