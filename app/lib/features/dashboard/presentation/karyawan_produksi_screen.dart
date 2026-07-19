@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 
 class KaryawanProduksiScreen extends StatefulWidget {
@@ -68,7 +69,10 @@ class _KaryawanProduksiScreenState extends State<KaryawanProduksiScreen> with Si
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.inventory_2_outlined, color: AppTheme.primary),
+                    CircleAvatar(
+                      backgroundColor: AppTheme.primary.withOpacity(0.1),
+                      child: Icon(PhosphorIconsRegular.package, color: AppTheme.primary),
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'Dari: Budi (Divisi Potong)',
@@ -127,7 +131,10 @@ class _KaryawanProduksiScreenState extends State<KaryawanProduksiScreen> with Si
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.content_cut, color: AppTheme.primary),
+                    CircleAvatar(
+                      backgroundColor: AppTheme.primary.withOpacity(0.1),
+                      child: Icon(PhosphorIconsRegular.scissors, color: AppTheme.primary),
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -175,9 +182,9 @@ class _KaryawanProduksiScreenState extends State<KaryawanProduksiScreen> with Si
           color: AppTheme.background,
           margin: const EdgeInsets.only(bottom: 16),
           child: ListTile(
-            leading: const Icon(Icons.check_circle, color: AppTheme.success),
-            title: Text('Celana Training SMP - ${index + 1}'),
-            subtitle: const Text('50 pcs selesai hari ini'),
+            title: Text('SPK-202310-${250 + index}', style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: const Text('Selesai pada: 25 Okt 2023'),
+            trailing: const Icon(PhosphorIconsRegular.checkCircle, color: AppTheme.success),
           ),
         );
       },

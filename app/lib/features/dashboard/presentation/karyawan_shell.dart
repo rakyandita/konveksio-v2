@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 
 class KaryawanShell extends StatelessWidget {
@@ -28,23 +29,23 @@ class KaryawanShell extends StatelessWidget {
         indicatorColor: AppTheme.primary.withOpacity(0.1),
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.house),
+            selectedIcon: Icon(PhosphorIconsFill.house, color: AppTheme.primary),
             label: 'Beranda',
           ),
           NavigationDestination(
-            icon: const Icon(Icons.factory_outlined),
-            selectedIcon: const Icon(Icons.factory, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.buildings),
+            selectedIcon: Icon(PhosphorIconsFill.buildings, color: AppTheme.primary),
             label: 'Produksi',
           ),
           NavigationDestination(
-            icon: const Icon(Icons.account_balance_wallet_outlined),
-            selectedIcon: const Icon(Icons.account_balance_wallet, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.wallet),
+            selectedIcon: Icon(PhosphorIconsFill.wallet, color: AppTheme.primary),
             label: 'Keuangan',
           ),
           NavigationDestination(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.user),
+            selectedIcon: Icon(PhosphorIconsFill.user, color: AppTheme.primary),
             label: 'Profil',
           ),
         ],

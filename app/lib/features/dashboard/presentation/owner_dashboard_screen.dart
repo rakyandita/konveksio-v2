@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../auth/presentation/auth_controller.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/konveksio_card.dart';
 
 class OwnerDashboardScreen extends ConsumerWidget {
   const OwnerDashboardScreen({super.key});
@@ -9,25 +11,23 @@ class OwnerDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard Owner'),
-        backgroundColor: AppTheme.surface,
-        scrolledUnderElevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              ref.read(authControllerProvider.notifier).logout();
-            },
+      body: CustomScrollView(
+        slivers: [
+          const SliverAppBar(
+            title: Text('Dashboard Owner'),
+            backgroundColor: AppTheme.background,
+            surfaceTintColor: Colors.transparent,
+            shadowColor: Color(0x26000000), // 15% black for visibility
+            pinned: true,
+            elevation: 0,
+            scrolledUnderElevation: 4.0,
           ),
-        ],
-      ),
-
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
             // Global Metrics
             Text('Metrik Global (Bulan Ini)', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
@@ -37,8 +37,8 @@ class OwnerDashboardScreen extends ConsumerWidget {
                   child: _buildMetricCard(
                     context,
                     title: 'Total Revenue',
-                    value: 'Rp 125M',
-                    icon: Icons.attach_money,
+                    value: AppFormatters.formatCurrency(125000000),
+                    icon: PhosphorIconsRegular.money,
                     color: AppTheme.primary,
                   ),
                 ),
@@ -48,7 +48,7 @@ class OwnerDashboardScreen extends ConsumerWidget {
                     context,
                     title: 'Total Produksi',
                     value: '15.4K',
-                    icon: Icons.inventory_2_outlined,
+                    icon: PhosphorIconsRegular.package,
                     color: AppTheme.secondary,
                   ),
                 ),
@@ -66,7 +66,7 @@ class OwnerDashboardScreen extends ConsumerWidget {
               manager: 'Pak Joko',
               status: 'Normal',
               produksi: '8.2K pcs',
-              revenue: 'Rp 80M',
+              revenue: AppFormatters.formatCurrency(80000000),
               statusColor: AppTheme.success,
             ),
             const SizedBox(height: 16),
@@ -76,22 +76,22 @@ class OwnerDashboardScreen extends ConsumerWidget {
               manager: 'Bu Rini',
               status: 'Kritis (Overload)',
               produksi: '7.2K pcs',
-              revenue: 'Rp 45M',
+              revenue: AppFormatters.formatCurrency(45000000),
               statusColor: AppTheme.destructive,
             ),
           ],
         ),
       ),
+    ),
+  ],
+),
     );
   }
 
   Widget _buildMetricCard(BuildContext context, {required String title, required String value, required IconData icon, required Color color}) {
-    return Container(
+    return KonveksioCard(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(16),
-      ),
+      backgroundColor: color,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,21 +113,12 @@ class OwnerDashboardScreen extends ConsumerWidget {
     required String revenue,
     required Color statusColor,
   }) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: AppTheme.border),
-      ),
-      color: AppTheme.surface,
-      child: InkWell(
-        onTap: () {
-          // Masuk ke Branch Context Mode (Header Amber)
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+    return KonveksioCard(
+      onTap: () {
+        // Masuk ke Branch Context Mode (Header Amber)
+      },
+      padding: const EdgeInsets.all(16),
+      child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -179,13 +170,11 @@ class OwnerDashboardScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  const Icon(Icons.chevron_right, color: AppTheme.muted),
+                  Icon(PhosphorIconsRegular.caretRight, color: AppTheme.muted),
                 ],
               ),
             ],
           ),
-        ),
-      ),
     );
   }
 }

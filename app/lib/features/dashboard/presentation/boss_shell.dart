@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 
 class BossShell extends StatelessWidget {
@@ -26,25 +27,25 @@ class BossShell extends StatelessWidget {
         onDestinationSelected: _onItemTapped,
         backgroundColor: AppTheme.surface,
         indicatorColor: AppTheme.primary.withOpacity(0.1),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.house),
+            selectedIcon: Icon(PhosphorIconsFill.house, color: AppTheme.primary),
             label: 'Beranda',
           ),
           NavigationDestination(
-            icon: Icon(Icons.shopping_cart_outlined),
-            selectedIcon: Icon(Icons.shopping_cart, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.shoppingCart),
+            selectedIcon: Icon(PhosphorIconsFill.shoppingCart, color: AppTheme.primary),
             label: 'Order',
           ),
           NavigationDestination(
-            icon: Icon(Icons.view_kanban_outlined),
-            selectedIcon: Icon(Icons.view_kanban, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.kanban),
+            selectedIcon: Icon(PhosphorIconsFill.kanban, color: AppTheme.primary),
             label: 'Produksi',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.user),
+            selectedIcon: Icon(PhosphorIconsFill.user, color: AppTheme.primary),
             label: 'Profil',
           ),
         ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/konveksio_card.dart';
 
 class KaryawanBerandaScreen extends StatelessWidget {
   const KaryawanBerandaScreen({super.key});
@@ -27,24 +29,21 @@ class KaryawanBerandaScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
             ),
             const SizedBox(height: 24),
-            Card(
-              color: AppTheme.primary,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Semangat Pagi!',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTheme.onPrimary),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Hari ini ada 2 pekerjaan baru yang menunggu diterima.',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.onPrimary),
-                    ),
-                  ],
-                ),
+            KonveksioCard(
+              backgroundColor: AppTheme.primary,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Semangat Pagi!',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTheme.onPrimary),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Hari ini ada 2 pekerjaan baru yang menunggu diterima.',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.onPrimary),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 24),
@@ -63,7 +62,7 @@ class KaryawanBerandaScreen extends StatelessWidget {
                   child: _buildMetricCard(
                     context,
                     title: 'Proyeksi Upah',
-                    value: 'Rp350.000',
+                    value: AppFormatters.formatCurrency(350000),
                     subtitle: 'Minggu ini',
                   ),
                 ),
@@ -76,34 +75,25 @@ class KaryawanBerandaScreen extends StatelessWidget {
   }
 
   Widget _buildMetricCard(BuildContext context, {required String title, required String value, required String subtitle}) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: AppTheme.border),
-      ),
-      color: AppTheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTheme.primary),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        ),
+    return KonveksioCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTheme.primary),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
       ),
     );
   }

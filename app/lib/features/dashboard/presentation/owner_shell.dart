@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 
 class OwnerShell extends StatelessWidget {
@@ -26,25 +27,25 @@ class OwnerShell extends StatelessWidget {
         onDestinationSelected: _onItemTapped,
         backgroundColor: AppTheme.surface,
         indicatorColor: AppTheme.primary.withOpacity(0.1),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.house),
+            selectedIcon: Icon(PhosphorIconsFill.house, color: AppTheme.primary),
             label: 'Beranda',
           ),
           NavigationDestination(
-            icon: Icon(Icons.store_outlined),
-            selectedIcon: Icon(Icons.store, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.storefront),
+            selectedIcon: Icon(PhosphorIconsFill.storefront, color: AppTheme.primary),
             label: 'Cabang',
           ),
           NavigationDestination(
-            icon: Icon(Icons.security_outlined),
-            selectedIcon: Icon(Icons.security, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.shieldCheck),
+            selectedIcon: Icon(PhosphorIconsFill.shieldCheck, color: AppTheme.primary),
             label: 'Akun',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person, color: AppTheme.primary),
+            icon: Icon(PhosphorIconsRegular.user),
+            selectedIcon: Icon(PhosphorIconsFill.user, color: AppTheme.primary),
             label: 'Profil',
           ),
         ],
