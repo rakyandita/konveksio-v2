@@ -100,8 +100,8 @@ Pemetaan setiap status Order ke token warna badge agar konsisten di semua halama
 - Tata letak satu baris: Leading Icon (opsional), Title (Body 1), Subtitle (Body 2 / Caption), Trailing (opsional, misal nilai angka atau indikator navigasi). Padding vertikal `12dp`.
 
 ### 5.7. Icon Library (DS-07)
-- **Standar Ikon:** Menggunakan **Phosphor Icons** untuk seluruh antarmuka aplikasi.
-- **Gaya Visual:** Gunakan varian `Regular` untuk ikon standar, dan `Fill`/`Bold` untuk kondisi terpilih (misal Bottom Navigation aktif).
+- **Standar Ikon:** Menggunakan pustaka **Phosphor Icons** (`phosphor_flutter`) untuk seluruh antarmuka aplikasi. Penggunaan ikon bawaan Google Material dilarang.
+- **Gaya Visual:** Gunakan varian `Regular` untuk ikon standar, dan `Fill` untuk kondisi terpilih (misal Bottom Navigation aktif).
 
 ### 5.8. Branch Context Mode Visual State (DS-08)
 Spesifikasi visual untuk membedakan secara tegas antara **Mode Eksekutif** (Global Dashboard default Owner) dan **Mode Operasional** (Branch Context Mode). Ini adalah *safety mechanism* UX agar Owner selalu sadar penuh bahwa tindakannya berdampak nyata pada data operasional cabang.
@@ -198,5 +198,12 @@ Aturan implementasi komponen UI:
 - [ ] Area *Safe-Area-View* di iOS/Android tidak menutupi informasi penting atau navigasi bawah.
 - [ ] Semua teks nama/judul menggunakan elipsis, dan semua row memakai batas fleksibel untuk **mencegah horizontal overflow**.
 
-## 10. Traceability
+## 10. Data Formatting Standards
+Untuk menjaga konsistensi visual di seluruh antarmuka aplikasi, seluruh data wajib diformat menggunakan kelas utilitas terpusat:
+- **Format Uang/Nominal (Currency):** Wajib menggunakan pemisah ribuan titik bergaya Indonesia tanpa desimal (contoh: `Rp 1.000.000`).
+- **Format Tanggal (Date):** 
+  - Format Ringkas (default): `dd-MM-yyyy` (contoh: `19-07-2026`).
+  - Format Panjang (jika ruang lebar): `dd MMM yyyy` (contoh: `19 Jul 2026`).
+
+## 11. Traceability
 - Dokumen ini merangkum *Source of Truth* visual, gaya komunikasi (*Voice & Tone*), dan pedoman ketahanan *layout* (*Constraint*) yang menjadi acuan ketat saat membangun **HiFi Prototype** (Fase 3) dan implementasi UI di Flutter.
