@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
@@ -61,33 +62,37 @@ class _BossDashboardScreenState extends ConsumerState<BossDashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
             // Alert Box
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppTheme.destructive.withOpacity(0.1),
-                border: Border.all(color: AppTheme.destructive),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(PhosphorIconsRegular.warning, color: AppTheme.destructive),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Perhatian',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppTheme.destructive),
-                        ),
-                        Text(
-                          'Ada 3 pengajuan kasbon yang menunggu persetujuan.',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.destructive),
-                        ),
-                      ],
+            InkWell(
+              onTap: () => context.push('/boss/finance/kasbon'),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppTheme.destructive.withValues(alpha: 0.1),
+                  border: Border.all(color: AppTheme.destructive),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(PhosphorIconsRegular.warning, color: AppTheme.destructive),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Perhatian',
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppTheme.destructive),
+                          ),
+                          Text(
+                            'Ada 3 pengajuan kasbon yang menunggu persetujuan. Klik untuk melihat.',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.destructive),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 24),

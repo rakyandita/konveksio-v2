@@ -28,6 +28,7 @@ class AppTheme {
 
   // Status Colors
   static const Color success = Color(0xFF16A34A);
+  static const Color warning = Color(0xFFEAB308); // Amber/Yellow
 
   static ThemeData get lightTheme {
     // Kombinasi Font: Poppins untuk Heading, Open Sans untuk Body
