@@ -68,7 +68,7 @@ class AuthRepository {
         role: userRole,
         branchId: branchId,
       );
-    } on AuthException catch (e) {
+    } on AuthException catch (_) {
       // Generic error per Acceptance Criteria
       return const AuthState(errorMessage: 'Nomor HP atau PIN salah.');
     } on PostgrestException catch (e) {
@@ -76,7 +76,7 @@ class AuthRepository {
         return const AuthState(errorMessage: 'Profil Anda belum dikonfigurasi admin');
       }
       return const AuthState(errorMessage: 'Terjadi kesalahan sistem.');
-    } catch (e) {
+    } catch (_) {
       return const AuthState(errorMessage: 'Nomor HP atau PIN salah.');
     }
   }

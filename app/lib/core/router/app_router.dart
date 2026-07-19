@@ -24,6 +24,8 @@ import '../../features/dashboard/presentation/owner_cabang_screen.dart';
 import '../../features/dashboard/presentation/owner_akun_screen.dart';
 import '../../features/dashboard/presentation/owner_profil_screen.dart';
 
+import '../../features/finance/presentation/karyawan_kasbon_screen.dart';
+
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
   RouterNotifier(this._ref) {
@@ -197,6 +199,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: '/karyawan/kasbon',
+        builder: (context, state) => const KaryawanKasbonScreen(),
       ),
     ],
   );

@@ -12,6 +12,15 @@ class AppTheme {
   static const Color muted = Color(0xFF64748B); // Text Sekunder
   static const Color border = Color(0xFFE2E8F0); // Divider/Outline
   static const Color destructive = Color(0xFFDC2626); // Error/Tolak
+  static const double borderRadius = 8.0;
+
+  // Spacing & Radius
+  static const double spacingSm = 8.0;
+  static const double spacingBase = 16.0;
+  static const double spacingLg = 24.0;
+  static const double spacingXl = 32.0;
+  static const double radiusMd = 8.0;
+  static const double radiusLg = 12.0;
 
   // Branch Context Specific
   static const Color branchContext = Color(0xFFD97706); // Amber
