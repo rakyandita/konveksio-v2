@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
+import 'forms/master_employee_form_modal.dart' as import_modal;
 
 class MasterEmployeesScreen extends StatelessWidget {
   const MasterEmployeesScreen({super.key});
@@ -54,6 +56,13 @@ class MasterEmployeesScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          import_modal.MasterEmployeeFormModal.show(context);
+        },
+        backgroundColor: AppTheme.primary,
+        child: const Icon(PhosphorIconsRegular.plus, color: AppTheme.background),
       ),
     );
   }

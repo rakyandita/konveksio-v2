@@ -35,6 +35,7 @@ import '../../features/finance/presentation/boss_salary_screen.dart';
 import '../../features/production/presentation/spk_viewer_screen.dart';
 
 import '../../features/dashboard/presentation/boss_inbox_screen.dart';
+import '../../features/dashboard/presentation/forms/boss_order_form_screen.dart';
 import '../../features/master/presentation/master_vendors_screen.dart';
 import '../../features/master/presentation/master_vendors_detail_screen.dart';
 import '../../features/master/presentation/master_employees_screen.dart';
@@ -239,6 +240,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => SpkViewerScreen(
           orderItemId: state.pathParameters['id']!,
         ),
+      ),
+      GoRoute(
+        path: '/boss/orders/new',
+        builder: (context, state) => const BossOrderFormScreen(),
       ),
       GoRoute(
         path: '/boss/finance/kasbon',

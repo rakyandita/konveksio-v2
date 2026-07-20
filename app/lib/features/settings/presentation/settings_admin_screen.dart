@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/konveksio_button.dart';
+import 'forms/settings_admin_form_modal.dart' as import_modal;
 
 class SettingsAdminScreen extends StatelessWidget {
   const SettingsAdminScreen({super.key});
@@ -38,7 +39,9 @@ class SettingsAdminScreen extends StatelessWidget {
             const SizedBox(height: AppTheme.spacingLg),
             KonveksioButton(
               text: 'TAMBAH ADMIN BARU',
-              onPressed: () {},
+              onPressed: () {
+                import_modal.SettingsAdminFormModal.show(context);
+              },
             ),
           ],
         ),

@@ -6,6 +6,8 @@ import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/konveksio_button.dart';
 import 'boss_orders_controller.dart';
+import '../../finance/presentation/forms/boss_payment_form_modal.dart' as import_payment;
+import '../../finance/presentation/forms/boss_adjustment_form_modal.dart' as import_adj;
 
 class BossOrderDetailScreen extends ConsumerWidget {
   final String orderId;
@@ -237,10 +239,16 @@ class BossOrderDetailScreen extends ConsumerWidget {
           KonveksioButton(
             text: 'TAMBAH PEMBAYARAN',
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Fitur tambah pembayaran segera hadir')),
-              );
+              import_payment.BossPaymentFormModal.show(context);
             },
+          ),
+          const SizedBox(height: AppTheme.spacingSm),
+          KonveksioButton(
+            text: 'TAMBAH PENYESUAIAN (DISKON / BIAYA)',
+            onPressed: () {
+              import_adj.BossAdjustmentFormModal.show(context);
+            },
+            type: KonveksioButtonType.outline,
           ),
         ],
       ),

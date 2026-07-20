@@ -49,11 +49,7 @@ class _BossOrdersScreenState extends ConsumerState<BossOrdersScreen> with Single
         actions: [
           IconButton(
             icon: const Icon(PhosphorIconsRegular.plus),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Form Tambah Order (Segera Hadir)')),
-              );
-            },
+            onPressed: () => context.push('/boss/orders/new'),
           ),
         ],
         bottom: TabBar(

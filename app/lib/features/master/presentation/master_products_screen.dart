@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
+import 'forms/master_product_form_modal.dart' as import_modal;
 
 class MasterProductsScreen extends StatelessWidget {
   const MasterProductsScreen({super.key});
@@ -57,6 +58,13 @@ class MasterProductsScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          import_modal.MasterProductFormModal.show(context);
+        },
+        backgroundColor: AppTheme.primary,
+        child: const Icon(PhosphorIconsRegular.plus, color: AppTheme.background),
       ),
     );
   }

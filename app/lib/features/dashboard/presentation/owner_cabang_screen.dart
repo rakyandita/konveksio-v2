@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
+import 'forms/owner_branch_form_modal.dart' as import_modal;
 
 class OwnerCabangScreen extends StatelessWidget {
   const OwnerCabangScreen({super.key});
@@ -71,7 +72,7 @@ class OwnerCabangScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // TODO: Tampilkan form tambah cabang
+          import_modal.OwnerBranchFormModal.show(context);
         },
         icon: const Icon(PhosphorIconsRegular.plus),
         label: const Text('Cabang Baru'),

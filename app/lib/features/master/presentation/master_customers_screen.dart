@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
+import 'forms/master_customer_form_modal.dart' as import_modal;
 
 class MasterCustomersScreen extends StatelessWidget {
   const MasterCustomersScreen({super.key});
@@ -48,6 +49,13 @@ class MasterCustomersScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          import_modal.MasterCustomerFormModal.show(context);
+        },
+        backgroundColor: AppTheme.primary,
+        child: const Icon(PhosphorIconsRegular.plus, color: AppTheme.background),
       ),
     );
   }
