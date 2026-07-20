@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 import 'forms/owner_branch_form_modal.dart' as import_modal;
+import 'owner_cabang_controller.dart';
 
-class OwnerCabangScreen extends StatelessWidget {
+class OwnerCabangScreen extends ConsumerWidget {
   const OwnerCabangScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(ownerCabangControllerProvider);
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -34,40 +38,42 @@ class OwnerCabangScreen extends StatelessWidget {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingBase),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _buildBranchListItem(
-                  context,
-                  name: 'Cabang Jakarta (Pusat)',
-                  address: 'Jl. Sudirman No. 123, Jakarta Selatan',
-                  status: 'Aktif',
-                  statusColor: AppTheme.success,
-                  employeesCount: 45,
+          if (state.isLoading)
+            const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (state.branches.isEmpty)
+            const SliverFillRemaining(
+              child: Center(child: Text('Belum ada cabang. Tambahkan cabang baru.')),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingBase),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    if (index == state.branches.length) {
+                      return const SizedBox(height: 100); // padding for FAB
+                    }
+                    final branch = state.branches[index];
+                    final isActive = branch['is_active'] as bool? ?? false;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: _buildBranchListItem(
+                        context,
+                        name: branch['name'] as String? ?? 'Tanpa Nama',
+                        address: branch['address'] as String? ?? 'Tanpa Alamat',
+                        status: isActive ? 'Aktif' : 'Nonaktif',
+                        statusColor: isActive ? AppTheme.success : AppTheme.muted,
+                        employeesCount: 0, // Mock count, update in real query
+                      ),
+                    );
+                  },
+                  childCount: state.branches.length + 1,
                 ),
-                const SizedBox(height: 16.0),
-                _buildBranchListItem(
-                  context,
-                  name: 'Cabang Bandung',
-                  address: 'Jl. Riau No. 45, Bandung',
-                  status: 'Aktif',
-                  statusColor: AppTheme.success,
-                  employeesCount: 28,
-                ),
-                const SizedBox(height: 16.0),
-                _buildBranchListItem(
-                  context,
-                  name: 'Cabang Surabaya',
-                  address: 'Jl. Pemuda No. 88, Surabaya',
-                  status: 'Nonaktif',
-                  statusColor: AppTheme.muted,
-                  employeesCount: 0,
-                ),
-                const SizedBox(height: 100), // padding for FAB
-              ]),
+              ),
             ),
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
