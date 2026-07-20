@@ -26,6 +26,7 @@ import '../../features/dashboard/presentation/owner_dashboard_screen.dart';
 import '../../features/dashboard/presentation/owner_cabang_screen.dart';
 import '../../features/dashboard/presentation/owner_akun_screen.dart';
 import '../../features/dashboard/presentation/owner_profil_screen.dart';
+import '../../features/dashboard/presentation/owner_branch_context_screen.dart';
 
 import '../../features/finance/presentation/karyawan_kasbon_screen.dart';
 import '../../features/finance/presentation/boss_kasbon_approval_screen.dart';
@@ -277,6 +278,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/boss/settings/admin',
         builder: (context, state) => const SettingsAdminScreen(),
+      ),
+      GoRoute(
+        path: '/owner/branch/:id',
+        builder: (context, state) => OwnerBranchContextScreen(
+          branchId: state.pathParameters['id']!,
+        ),
       ),
     ],
   );

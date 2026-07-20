@@ -58,6 +58,14 @@ class BossProfilScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppTheme.spacingXl),
             KonveksioButton(
+              text: 'Kembali ke Owner Dashboard',
+              type: KonveksioButtonType.secondary,
+              onPressed: () {
+                context.go('/owner/home');
+              },
+            ),
+            const SizedBox(height: AppTheme.spacingBase),
+            KonveksioButton(
               text: 'Keluar (Logout)',
               type: KonveksioButtonType.destructive,
               onPressed: () {
