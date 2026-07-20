@@ -24,7 +24,7 @@ class _MasterCustomerFormModalContent extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: AppTheme.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTheme.radiusXl)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTheme.radiusLg)),
       ),
       padding: EdgeInsets.only(
         left: AppTheme.spacingBase,
