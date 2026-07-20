@@ -27,8 +27,8 @@ final taskProgressProvider = FutureProvider.family<Map<String, int>, String>((re
   int target = 0;
   int completed = 0;
   for (var size in sizes) {
-    target += size.targetQty;
-    completed += size.completedQty;
+    target += size.targetQty.toInt();
+    completed += size.completedQty.toInt();
   }
   return {'target': target == 0 ? 1 : target, 'completed': completed};
 });

@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../core/supabase/supabase_client_provider.dart';
 import '../domain/task_model.dart';
 import '../domain/handover_model.dart';
-import '../domain/progress_log_model.dart';
+import '../../../core/supabase/supabase_client_provider.dart';
 
 final taskRepositoryProvider = Provider<TaskRepository>((ref) {
   return TaskRepository(ref.watch(supabaseClientProvider));

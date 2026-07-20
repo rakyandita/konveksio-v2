@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import 'forms/owner_account_form_modal.dart';
+import 'owner_akun_controller.dart';
 
-class OwnerAkunScreen extends StatelessWidget {
+class OwnerAkunScreen extends ConsumerWidget {
   const OwnerAkunScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(ownerAkunControllerProvider);
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -33,54 +37,51 @@ class OwnerAkunScreen extends StatelessWidget {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingBase),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                const Text(
-                  'Daftar Pengguna',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          if (state.isLoading)
+            const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (state.profiles.isEmpty)
+            const SliverFillRemaining(
+              child: Center(child: Text('Belum ada pengguna.')),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingBase),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    if (index == state.profiles.length) {
+                      return const SizedBox(height: 100); // padding for FAB
+                    }
+                    final profile = state.profiles[index];
+                    final name = profile['name'] as String? ?? 'Tanpa Nama';
+                    final role = profile['role'] as String? ?? 'Employee';
+                    final isActive = profile['is_active'] as bool? ?? false;
+                    
+                    String branch = 'Tanpa Cabang';
+                    if (profile['branches'] != null && profile['branches']['name'] != null) {
+                      branch = profile['branches']['name'];
+                    }
+
+                    return Column(
+                      children: [
+                        _buildUserListItem(
+                          context,
+                          name: name,
+                          email: 'Login menggunakan PIN',
+                          role: role.toUpperCase(),
+                          branch: branch,
+                          status: isActive ? 'Aktif' : 'Nonaktif',
+                        ),
+                        if (index < state.profiles.length - 1) const Divider(),
+                      ],
+                    );
+                  },
+                  childCount: state.profiles.length + 1,
                 ),
-                const SizedBox(height: 16.0),
-                _buildUserListItem(
-                  context,
-                  name: 'Budi Santoso',
-                  email: 'budi@konveksio.id',
-                  role: 'Boss Cabang',
-                  branch: 'Cabang Jakarta (Pusat)',
-                  status: 'Aktif',
-                ),
-                const Divider(),
-                _buildUserListItem(
-                  context,
-                  name: 'Rina Kusuma',
-                  email: 'rina@konveksio.id',
-                  role: 'Admin',
-                  branch: 'Cabang Jakarta (Pusat)',
-                  status: 'Aktif',
-                ),
-                const Divider(),
-                _buildUserListItem(
-                  context,
-                  name: 'Joko Anwar',
-                  email: 'joko@konveksio.id',
-                  role: 'Boss Cabang',
-                  branch: 'Cabang Bandung',
-                  status: 'Aktif',
-                ),
-                const Divider(),
-                _buildUserListItem(
-                  context,
-                  name: 'Siti Aminah',
-                  email: 'siti@konveksio.id',
-                  role: 'Admin',
-                  branch: 'Cabang Bandung',
-                  status: 'Nonaktif',
-                ),
-                const SizedBox(height: 100), // padding for FAB
-              ]),
+              ),
             ),
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -110,7 +111,7 @@ class OwnerAkunScreen extends StatelessWidget {
       leading: CircleAvatar(
         backgroundColor: isActive ? AppTheme.primary.withOpacity(0.1) : AppTheme.muted.withOpacity(0.2),
         child: Text(
-          name.substring(0, 1).toUpperCase(),
+          name.isNotEmpty ? name.substring(0, 1).toUpperCase() : '?',
           style: TextStyle(
             color: isActive ? AppTheme.primary : AppTheme.muted,
             fontWeight: FontWeight.bold,

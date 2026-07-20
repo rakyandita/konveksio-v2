@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/konveksio_button.dart';
@@ -23,17 +24,81 @@ class _KaryawanEditProfilFormModalContent extends StatefulWidget {
 }
 
 class _KaryawanEditProfilFormModalContentState extends State<_KaryawanEditProfilFormModalContent> {
-  late final TextEditingController _nameController;
+  final _nameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = true;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: 'Budi');
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final supabase = Supabase.instance.client;
+      final user = supabase.auth.currentUser;
+      if (user != null) {
+        final profile = await supabase
+            .from('profiles')
+            .select('name')
+            .eq('id', user.id)
+            .single();
+        _nameController.text = profile['name'] as String? ?? '';
+      }
+    } catch (e) {
+      _errorMessage = 'Gagal memuat profil: $e';
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final supabase = Supabase.instance.client;
+      final user = supabase.auth.currentUser;
+      if (user == null) throw Exception('Sesi tidak valid');
+
+      // Update Name
+      final newName = _nameController.text.trim();
+      if (newName.isNotEmpty) {
+        await supabase.from('profiles').update({'name': newName}).eq('id', user.id);
+      }
+
+      // Update Password (if provided)
+      final newPassword = _passwordController.text;
+      if (newPassword.isNotEmpty) {
+        await supabase.auth.updateUser(UserAttributes(password: newPassword));
+      }
+
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profil berhasil diperbarui')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Gagal menyimpan profil: $e';
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -66,25 +131,35 @@ class _KaryawanEditProfilFormModalContentState extends State<_KaryawanEditProfil
             ],
           ),
           const SizedBox(height: AppTheme.spacingBase),
-          KonveksioTextField(
-            label: 'Nama Lengkap',
-            controller: _nameController,
-            prefixIcon: const Icon(PhosphorIconsRegular.user),
-          ),
-          const SizedBox(height: AppTheme.spacingSm),
-          const KonveksioTextField(
-            label: 'Ubah Kata Sandi (Opsional)',
-            hintText: 'Biarkan kosong jika tidak diubah',
-            obscureText: true,
-            prefixIcon: Icon(PhosphorIconsRegular.lock),
-          ),
-          const SizedBox(height: AppTheme.spacingSm),
-          const Text('Catatan: Untuk mengubah divisi atau tarif ongkos, silakan hubungi Boss Cabang Anda.', style: TextStyle(color: AppTheme.muted, fontSize: 12)),
-          const SizedBox(height: AppTheme.spacingXl),
-          KonveksioButton(
-            text: 'Simpan Profil',
-            onPressed: () => Navigator.pop(context),
-          ),
+          if (_errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppTheme.spacingBase),
+              child: Text(_errorMessage!, style: const TextStyle(color: AppTheme.destructive, fontSize: 14)),
+            ),
+          if (_isLoading)
+            const Center(child: CircularProgressIndicator())
+          else ...[
+            KonveksioTextField(
+              label: 'Nama Lengkap',
+              controller: _nameController,
+              prefixIcon: const Icon(PhosphorIconsRegular.user),
+            ),
+            const SizedBox(height: AppTheme.spacingSm),
+            KonveksioTextField(
+              label: 'Ubah Kata Sandi (Opsional)',
+              controller: _passwordController,
+              hintText: 'Biarkan kosong jika tidak diubah',
+              obscureText: true,
+              prefixIcon: const Icon(PhosphorIconsRegular.lock),
+            ),
+            const SizedBox(height: AppTheme.spacingSm),
+            const Text('Catatan: Untuk mengubah divisi atau tarif ongkos, silakan hubungi Boss Cabang Anda.', style: TextStyle(color: AppTheme.muted, fontSize: 12)),
+            const SizedBox(height: AppTheme.spacingXl),
+            KonveksioButton(
+              text: 'Simpan Profil',
+              onPressed: _saveProfile,
+            ),
+          ],
         ],
       ),
     );

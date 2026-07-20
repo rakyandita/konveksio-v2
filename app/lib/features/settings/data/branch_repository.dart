@@ -43,10 +43,28 @@ class BranchRepository {
   Future<List<Map<String, dynamic>>> getBranches() async {
     try {
       // Used by Owner to select acting branch
-      final response = await _supabase.from('branches').select('id, name, address, is_active').eq('is_active', true);
+      final response = await _supabase.from('branches').select('id, name, address, phone, is_active').eq('is_active', true);
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       throw Exception('Gagal mengambil daftar cabang: $e');
+    }
+  }
+
+  Future<void> createBranch(String name, String address, String phone) async {
+    try {
+      final response = await _supabase.from('branches').insert({
+        'name': name,
+        'address': address,
+        'phone': phone,
+        'is_active': true,
+      }).select().single();
+
+      // Automatically create default settings for the new branch
+      await _supabase.from('branch_settings').insert({
+        'branch_id': response['id'],
+      });
+    } catch (e) {
+      throw Exception('Gagal membuat cabang: $e');
     }
   }
 }

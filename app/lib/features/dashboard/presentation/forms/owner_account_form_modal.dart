@@ -81,7 +81,12 @@ class _OwnerAccountFormModalContent extends StatelessWidget {
           const SizedBox(height: AppTheme.spacingXl),
           KonveksioButton(
             text: 'Simpan Akun',
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Penambahan akun memerlukan Admin API agar owner tidak ter-logout. Hubungi developer.')),
+              );
+            },
           ),
         ],
       ),

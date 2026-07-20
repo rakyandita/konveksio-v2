@@ -41,6 +41,16 @@ class OwnerCabangController extends Notifier<OwnerCabangState> {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
+
+  Future<void> addBranch(String name, String address, String phone) async {
+    try {
+      await ref.read(branchRepositoryProvider).createBranch(name, address, phone);
+      await loadBranches(); // Refresh list
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
 }
 
 final ownerCabangControllerProvider = NotifierProvider<OwnerCabangController, OwnerCabangState>(() {

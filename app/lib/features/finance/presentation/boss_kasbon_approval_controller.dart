@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../core/utils/mock_data.dart';
 import '../domain/cash_advance_model.dart';
 import '../data/finance_repository.dart';
 

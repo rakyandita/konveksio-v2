@@ -2,26 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/konveksio_button.dart';
+import '../../../../core/utils/formatters.dart';
+import '../../dashboard/presentation/karyawan_completed_tasks_controller.dart';
 
 class KaryawanSelesaiDetailModal {
-  static void show(BuildContext context, {required String taskName, required String date}) {
+  static void show(BuildContext context, {required CompletedTaskItem item}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _KaryawanSelesaiDetailModalContent(taskName: taskName, date: date),
+      builder: (context) => _KaryawanSelesaiDetailModalContent(item: item),
     );
   }
 }
 
 class _KaryawanSelesaiDetailModalContent extends StatelessWidget {
-  final String taskName;
-  final String date;
+  final CompletedTaskItem item;
 
-  const _KaryawanSelesaiDetailModalContent({required this.taskName, required this.date});
+  const _KaryawanSelesaiDetailModalContent({required this.item});
 
   @override
   Widget build(BuildContext context) {
+    final dateStr = AppFormatters.formatDate(item.completedAt);
     return Container(
       decoration: const BoxDecoration(
         color: AppTheme.background,
@@ -48,8 +50,9 @@ class _KaryawanSelesaiDetailModalContent extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppTheme.spacingSm),
-          Text(taskName, style: Theme.of(context).textTheme.titleMedium),
-          Text('Selesai pada: $date', style: const TextStyle(color: AppTheme.muted)),
+          Text(item.productName, style: Theme.of(context).textTheme.titleMedium),
+          Text('Klien: ${item.customerName ?? '-'}', style: const TextStyle(color: AppTheme.muted)),
+          Text('Selesai pada: $dateStr', style: const TextStyle(color: AppTheme.muted)),
           
           const SizedBox(height: AppTheme.spacingLg),
           const Text('Alur Pekerjaan', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -66,22 +69,10 @@ class _KaryawanSelesaiDetailModalContent extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(PhosphorIconsRegular.arrowDownLeft, color: AppTheme.muted),
-                    const SizedBox(width: AppTheme.spacingSm),
-                    const Expanded(child: Text('Diterima dari:', style: TextStyle(color: AppTheme.muted))),
-                    Text('Divisi Cutting (Andi)', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: AppTheme.spacingSm),
-                  child: Divider(height: 1),
-                ),
-                Row(
-                  children: [
                     const Icon(PhosphorIconsRegular.arrowUpRight, color: AppTheme.success),
                     const SizedBox(width: AppTheme.spacingSm),
                     const Expanded(child: Text('Diserahkan ke:', style: TextStyle(color: AppTheme.muted))),
-                    Text('Divisi Sablon (Tono)', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(item.handedOverTo, style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 ),
               ],
@@ -99,14 +90,13 @@ class _KaryawanSelesaiDetailModalContent extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppTheme.radiusMd),
               border: Border.all(color: AppTheme.border),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildSizeBox('S', '20'),
-                _buildSizeBox('M', '40'),
-                _buildSizeBox('L', '30'),
-                _buildSizeBox('XL', '10'),
-              ],
+            child: Wrap(
+              alignment: WrapAlignment.spaceAround,
+              spacing: 16,
+              runSpacing: 16,
+              children: item.handoverSizes.entries.map((e) {
+                return _buildSizeBox(e.key, e.value.toString());
+              }).toList(),
             ),
           ),
           
@@ -123,6 +113,7 @@ class _KaryawanSelesaiDetailModalContent extends StatelessWidget {
 
   Widget _buildSizeBox(String size, String qty) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(size, style: const TextStyle(color: AppTheme.muted, fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),

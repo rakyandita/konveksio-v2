@@ -9,6 +9,7 @@ import '../../production/presentation/update_progress_modal.dart';
 import '../../production/presentation/karyawan_selesai_detail_modal.dart';
 import 'karyawan_tasks_controller.dart';
 import 'karyawan_incoming_tasks_controller.dart';
+import 'karyawan_completed_tasks_controller.dart';
 class KaryawanProduksiScreen extends ConsumerStatefulWidget {
   const KaryawanProduksiScreen({super.key});
 
@@ -375,28 +376,50 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
   }
 
   Widget _buildSelesaiTab() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        return Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: const BorderSide(color: AppTheme.border),
-          ),
-          color: AppTheme.background,
-          margin: const EdgeInsets.only(bottom: 16),
-          child: ListTile(
-            title: Text('SPK-202310-${250 + index}', style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: const Text('Selesai pada: 25 Okt 2023'),
-            trailing: const Icon(PhosphorIconsRegular.checkCircle, color: AppTheme.success),
-            onTap: () {
-              KaryawanSelesaiDetailModal.show(context, taskName: 'SPK-202310-${250 + index}', date: '25 Okt 2023');
+    final completedAsync = ref.watch(karyawanCompletedTasksControllerProvider);
+
+    return completedAsync.when(
+      data: (items) {
+        if (items.isEmpty) {
+          return const Center(
+            child: Text('Belum ada tugas selesai.', style: TextStyle(color: AppTheme.muted)),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => ref.invalidate(karyawanCompletedTasksControllerProvider),
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
+              final dateStr = '${item.completedAt.day}/${item.completedAt.month}/${item.completedAt.year}';
+              return Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: const BorderSide(color: AppTheme.border),
+                ),
+                color: AppTheme.background,
+                margin: const EdgeInsets.only(bottom: 16),
+                child: ListTile(
+                  title: Text(item.productName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text('Selesai pada: $dateStr\nKe: ${item.handedOverTo}'),
+                  trailing: const Icon(PhosphorIconsRegular.checkCircle, color: AppTheme.success),
+                  isThreeLine: true,
+                  onTap: () {
+                    KaryawanSelesaiDetailModal.show(context, item: item);
+                  },
+                ),
+              );
             },
           ),
         );
       },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Text('Terjadi kesalahan: $error', style: const TextStyle(color: AppTheme.destructive)),
+      ),
     );
   }
 }

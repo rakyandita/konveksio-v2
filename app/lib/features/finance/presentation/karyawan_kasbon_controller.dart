@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../auth/presentation/auth_controller.dart';
-import '../../../core/utils/mock_data.dart';
 import '../domain/cash_advance_model.dart';
 import '../data/finance_repository.dart';
 
@@ -68,16 +67,13 @@ class KaryawanKasbonController extends Notifier<KasbonState> {
         return;
       }
 
-      // Alur normal Supabase
       if (!authState.isAuthenticated) {
         throw Exception('Sesi tidak valid: Belum login (isAuthenticated=false).');
       }
 
-      // BYPASS UNTUK TESTING (Fallback branch_id)
       String? targetBranchId = authState.branchId;
       if (targetBranchId == null) {
-        final branchData = await supabase.from('branches').select('id').limit(1).single();
-        targetBranchId = branchData['id'] as String;
+        throw Exception('Branch ID tidak ditemukan.');
       }
 
       await ref.read(financeRepositoryProvider).submitCashAdvance(
