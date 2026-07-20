@@ -95,6 +95,8 @@ class _BossDashboardScreenState extends ConsumerState<BossDashboardScreen> {
                 ),
               ),
             ),
+            _buildMenuGrid(context),
+            const SizedBox(height: AppTheme.spacingLg),
             const SizedBox(height: 24),
             Text('Ringkasan Hari Ini', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
@@ -211,6 +213,54 @@ class _BossDashboardScreenState extends ConsumerState<BossDashboardScreen> {
           style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
         ),
       ],
+    );
+  }
+
+  Widget _buildMenuGrid(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 4,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 8,
+      children: [
+        _buildMenuIcon(context, 'Kotak Masuk', PhosphorIconsRegular.tray, () => context.push('/boss/inbox')),
+        _buildMenuIcon(context, 'Kasbon', PhosphorIconsRegular.money, () => context.push('/boss/finance/kasbon')),
+        _buildMenuIcon(context, 'Gaji', PhosphorIconsRegular.wallet, () => context.push('/boss/finance/salary')),
+        _buildMenuIcon(context, 'Karyawan', PhosphorIconsRegular.users, () => context.push('/boss/master/employees')),
+        _buildMenuIcon(context, 'Produk', PhosphorIconsRegular.tShirt, () => context.push('/boss/master/products')),
+        _buildMenuIcon(context, 'Vendor', PhosphorIconsRegular.buildings, () => context.push('/boss/master/vendors')),
+        _buildMenuIcon(context, 'Customer', PhosphorIconsRegular.addressBook, () => context.push('/boss/master/customers')),
+        _buildMenuIcon(context, 'Laporan', PhosphorIconsRegular.chartBar, () {}),
+      ],
+    );
+  }
+
+  Widget _buildMenuIcon(BuildContext context, String label, IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppTheme.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: AppTheme.primary, size: 28),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 }

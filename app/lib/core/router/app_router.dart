@@ -15,6 +15,9 @@ import '../../features/dashboard/presentation/karyawan_profil_screen.dart';
 import '../../features/dashboard/presentation/boss_shell.dart';
 import '../../features/dashboard/presentation/boss_dashboard_screen.dart';
 import '../../features/dashboard/presentation/boss_orders_screen.dart';
+import '../../features/dashboard/presentation/boss_order_detail_screen.dart';
+import '../../features/dashboard/presentation/boss_spk_screen.dart';
+import '../../features/dashboard/presentation/boss_assign_screen.dart';
 import '../../features/dashboard/presentation/boss_pipeline_screen.dart';
 import '../../features/dashboard/presentation/boss_profil_screen.dart';
 
@@ -27,7 +30,15 @@ import '../../features/dashboard/presentation/owner_profil_screen.dart';
 import '../../features/finance/presentation/karyawan_kasbon_screen.dart';
 import '../../features/finance/presentation/boss_kasbon_approval_screen.dart';
 import '../../features/finance/presentation/karyawan_salary_screen.dart';
+import '../../features/finance/presentation/boss_salary_screen.dart';
 import '../../features/production/presentation/spk_viewer_screen.dart';
+
+import '../../features/master/presentation/master_vendors_screen.dart';
+import '../../features/master/presentation/master_employees_screen.dart';
+import '../../features/master/presentation/master_products_screen.dart';
+import '../../features/master/presentation/master_customers_screen.dart';
+import '../../features/settings/presentation/settings_branch_screen.dart';
+import '../../features/settings/presentation/settings_admin_screen.dart';
 
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
@@ -143,6 +154,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/boss/orders',
                 builder: (context, state) => const BossOrdersScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    builder: (context, state) => BossOrderDetailScreen(
+                      orderId: state.pathParameters['id']!,
+                    ),
+                  ),
+                ]
               ),
             ],
           ),
@@ -220,6 +239,44 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/boss/finance/kasbon',
         builder: (context, state) => const BossKasbonApprovalScreen(),
+      ),
+      GoRoute(
+        path: '/boss/finance/salary',
+        builder: (context, state) => const BossSalaryScreen(),
+      ),
+      GoRoute(
+        path: '/boss/assign',
+        builder: (context, state) => const BossAssignScreen(),
+      ),
+      GoRoute(
+        path: '/boss/spk/:item_id',
+        builder: (context, state) => BossSpkScreen(
+          orderItemId: state.pathParameters['item_id']!,
+        ),
+      ),
+      GoRoute(
+        path: '/boss/master/vendors',
+        builder: (context, state) => const MasterVendorsScreen(),
+      ),
+      GoRoute(
+        path: '/boss/master/employees',
+        builder: (context, state) => const MasterEmployeesScreen(),
+      ),
+      GoRoute(
+        path: '/boss/master/products',
+        builder: (context, state) => const MasterProductsScreen(),
+      ),
+      GoRoute(
+        path: '/boss/master/customers',
+        builder: (context, state) => const MasterCustomersScreen(),
+      ),
+      GoRoute(
+        path: '/boss/settings/branch',
+        builder: (context, state) => const SettingsBranchScreen(),
+      ),
+      GoRoute(
+        path: '/boss/settings/admin',
+        builder: (context, state) => const SettingsAdminScreen(),
       ),
     ],
   );
