@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../dashboard/presentation/karyawan_tasks_controller.dart';
+import '../data/task_repository.dart';
 
 class UpdateProgressState {
   final bool isLoading;
@@ -61,20 +62,15 @@ class UpdateProgressController extends Notifier<UpdateProgressState> {
       final userId = supabase.auth.currentUser?.id;
 
       if (userId == null) {
-        // Mock success if not logged in (for demo)
-        await Future.delayed(const Duration(seconds: 1));
-        state = state.copyWith(isLoading: false, isSuccess: true);
-        return;
+        throw Exception('Sesi tidak valid: Belum login');
       }
 
-      final payload = toSubmit.map((e) => {
-        'task_id': taskId,
-        'user_id': userId,
-        'size': e.key,
-        'qty_completed': e.value,
-      }).toList();
+      final taskRepo = ref.read(taskRepositoryProvider);
+      
+      for (final entry in toSubmit) {
+        await taskRepo.logProgress(taskId, entry.key, entry.value);
+      }
 
-      await supabase.from('progress_logs').insert(payload);
       ref.invalidate(karyawanTasksControllerProvider);
       state = state.copyWith(isLoading: false, isSuccess: true);
     } catch (e) {

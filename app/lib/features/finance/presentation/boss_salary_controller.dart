@@ -56,12 +56,29 @@ class BossSalaryController extends Notifier<BossSalaryState> {
     try {
       final supabase = Supabase.instance.client;
       if (supabase.auth.currentUser == null) {
-        state = state.copyWith(isLoading: false);
+        state = state.copyWith(isLoading: false, error: 'Sesi tidak valid');
+        return;
+      }
+      
+      final authState = ref.read(authControllerProvider);
+      if (authState.branchId == null) {
+        state = state.copyWith(isLoading: false, error: 'Branch ID tidak ditemukan');
         return;
       }
 
-      // Ini adalah mock generate, pada fase lanjut akan menggunakan Edge Function atau RPC PostgreSQL
-      await Future.delayed(const Duration(seconds: 1));
+      // Hitung periode minggu lalu (Senin - Minggu)
+      final now = DateTime.now();
+      final currentWeekday = now.weekday; // 1 = Monday, 7 = Sunday
+      // Menghitung end date ke Minggu sebelumnya
+      final end = now.subtract(Duration(days: currentWeekday));
+      // Menghitung start date ke Senin pada minggu sebelumnya
+      final start = end.subtract(const Duration(days: 6));
+
+      await ref.read(financeRepositoryProvider).generateWeeklySalary(
+            authState.branchId!,
+            start,
+            end,
+          );
       
       // Muat ulang history setelah generate
       await loadHistory();

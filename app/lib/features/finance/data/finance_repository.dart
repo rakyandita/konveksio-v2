@@ -124,18 +124,16 @@ class FinanceRepository {
     }
   }
 
-  Future<void> generateSalaryRecord(SalaryRecordModel record) async {
+  Future<Map<String, dynamic>> generateWeeklySalary(String branchId, DateTime periodStart, DateTime periodEnd) async {
     try {
-      await _supabase.from('salary_records').insert({
-        'branch_id': record.branchId,
-        'user_id': record.userId,
-        'period_end': record.periodEnd.toIso8601String(),
-        'gross_salary': record.grossSalary,
-        'cash_advance_deduction': record.cashAdvanceDeduction,
-        'net_salary': record.netSalary,
+      final response = await _supabase.rpc('generate_weekly_salary', params: {
+        'p_branch_id': branchId,
+        'p_period_start': periodStart.toIso8601String().split('T')[0],
+        'p_period_end': periodEnd.toIso8601String().split('T')[0],
       });
+      return response as Map<String, dynamic>;
     } catch (e) {
-      throw Exception('Gagal membuat catatan gaji: $e');
+      throw Exception('Gagal membuat catatan gaji mingguan: $e');
     }
   }
 }

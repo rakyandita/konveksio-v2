@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../auth/presentation/auth_controller.dart';
+import '../../production/data/order_repository.dart';
 
 class OrderItem {
   final String id;
@@ -56,43 +58,48 @@ class Order {
 final bossOrdersControllerProvider =
     FutureProvider.autoDispose<List<Order>>((ref) async {
   final supabase = Supabase.instance.client;
-
+  
   if (supabase.auth.currentUser == null) {
-    // Fase 6 Mock Bypass
-    await Future.delayed(const Duration(milliseconds: 600));
-    return [
-      Order.mock(
-        id: 'ORD-001',
-        customerName: 'Dinas Pendidikan',
-        status: 'draft',
-        deadlineDate: DateTime.now().add(const Duration(days: 14)),
-        totalPrice: 7500000,
-      ),
-      Order.mock(
-        id: 'ORD-002',
-        customerName: 'Universitas Brawijaya',
-        status: 'confirmation',
-        deadlineDate: DateTime.now().add(const Duration(days: 7)),
-        totalPrice: 15000000,
-      ),
-      Order.mock(
-        id: 'ORD-003',
-        customerName: 'PT. Maju Mundur',
-        status: 'running',
-        deadlineDate: DateTime.now().add(const Duration(days: 3)),
-        totalPrice: 5000000,
-      ),
-      Order.mock(
-        id: 'ORD-004',
-        customerName: 'Komunitas Motor',
-        status: 'completed',
-        deadlineDate: DateTime.now().subtract(const Duration(days: 2)),
-        totalPrice: 2000000,
-      ),
-    ];
+    throw Exception('Sesi tidak valid: Belum login');
   }
 
-  // Real Database Query (Fase 7)
-  // TODO: implement real Supabase query with order_items join
-  return [];
+  final authState = ref.read(authControllerProvider);
+  if (authState.branchId == null) {
+    throw Exception('Branch ID tidak ditemukan');
+  }
+
+  final rawOrders = await ref.read(orderRepositoryProvider).getOrdersWithDetails(authState.branchId!);
+  
+  return rawOrders.map((json) {
+    final itemsList = (json['order_items'] as List?) ?? [];
+    final parsedItems = itemsList.map((item) {
+      final productInfo = item['products'];
+      final sizes = (item['order_item_sizes'] as List?) ?? [];
+      
+      int totalQty = 0;
+      for (var size in sizes) {
+        totalQty += (size['qty'] as num?)?.toInt() ?? 0;
+      }
+      
+      return OrderItem(
+        id: item['id'] as String,
+        productName: productInfo != null ? productInfo['name'] as String : 'Unknown Product',
+        pricePerPcs: (item['price_per_pcs'] as num?)?.toInt() ?? 0,
+        totalQty: totalQty,
+      );
+    }).toList();
+
+    final customerInfo = json['customers'];
+    
+    return Order(
+      id: json['id'] as String,
+      customerName: customerInfo != null ? customerInfo['name'] as String : 'Unknown Customer',
+      status: json['status'] as String? ?? 'draft',
+      deadlineDate: json['deadline_date'] != null 
+          ? DateTime.parse(json['deadline_date'] as String) 
+          : DateTime.now(),
+      totalPrice: (json['total_price'] as num?)?.toInt() ?? 0,
+      items: parsedItems,
+    );
+  }).toList();
 });

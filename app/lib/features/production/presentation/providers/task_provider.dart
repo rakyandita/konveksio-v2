@@ -21,3 +21,14 @@ final userTaskListProvider = FutureProvider.family<List<TaskModel>, String>((ref
 final incomingHandoverProvider = FutureProvider.family<List<HandoverModel>, String>((ref, userId) async {
   return ref.watch(taskRepositoryProvider).getIncomingHandovers(userId);
 });
+
+final taskProgressProvider = FutureProvider.family<Map<String, int>, String>((ref, taskId) async {
+  final sizes = await ref.watch(taskRepositoryProvider).getTaskSizes(taskId);
+  int target = 0;
+  int completed = 0;
+  for (var size in sizes) {
+    target += size.targetQty;
+    completed += size.completedQty;
+  }
+  return {'target': target == 0 ? 1 : target, 'completed': completed};
+});

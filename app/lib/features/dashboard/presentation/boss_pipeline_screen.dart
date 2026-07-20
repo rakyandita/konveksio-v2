@@ -77,74 +77,93 @@ class _BossPipelineScreenState extends ConsumerState<BossPipelineScreen> with Si
         itemCount: items.length,
         itemBuilder: (context, index) {
           final data = items[index];
-          // For now, these are dummy target/completed since we might need to fetch task_sizes
-          // To fetch sizes, we'd ideally have it in the task object via a JOIN or separate provider
-          final progress = 0;
-          final target = 100;
-          final progressValue = progress / target;
-  
-          return Card(
-            elevation: 0,
-            color: AppTheme.surface,
-            margin: const EdgeInsets.only(bottom: AppTheme.spacingBase),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-              side: const BorderSide(color: AppTheme.border),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(AppTheme.spacingBase),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        data.id,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      Icon(
-                        data.status == 'completed' ? PhosphorIconsRegular.checkCircle : PhosphorIconsRegular.clock,
-                        color: data.status == 'completed' ? AppTheme.success : AppTheme.warning,
-                        size: 20,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppTheme.spacingSm),
-                  Text(
-                    'Item: ${data.orderItemId}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.muted),
-                  ),
-                  const SizedBox(height: AppTheme.spacingBase),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Progres (Mock)',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      Text(
-                        '$progress / $target pcs',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.primary,
-                            ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: progressValue,
-                    backgroundColor: AppTheme.border,
-                    color: data.status == 'completed' ? AppTheme.success : AppTheme.primary,
-                  ),
-                ],
-              ),
-            ),
-          );
+          return _PipelineTaskCard(task: data);
         },
+      ),
+    );
+  }
+}
+
+class _PipelineTaskCard extends ConsumerWidget {
+  final TaskModel task;
+  const _PipelineTaskCard({required this.task});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progressAsync = ref.watch(taskProgressProvider(task.id));
+    
+    return Card(
+      elevation: 0,
+      color: AppTheme.surface,
+      margin: const EdgeInsets.only(bottom: AppTheme.spacingBase),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+        side: const BorderSide(color: AppTheme.border),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppTheme.spacingBase),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  task.id.split('-').first,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                Icon(
+                  task.status == 'completed' ? PhosphorIconsRegular.checkCircle : PhosphorIconsRegular.clock,
+                  color: task.status == 'completed' ? AppTheme.success : AppTheme.warning,
+                  size: 20,
+                ),
+              ],
+            ),
+            const SizedBox(height: AppTheme.spacingSm),
+            Text(
+              'Item: ${task.orderItemId.split('-').first}',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.muted),
+            ),
+            const SizedBox(height: AppTheme.spacingBase),
+            progressAsync.when(
+              data: (progData) {
+                final progress = progData['completed'] ?? 0;
+                final target = progData['target'] ?? 1;
+                final progressValue = progress / target;
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Progres',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '$progress / $target pcs',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.primary,
+                              ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: progressValue,
+                      backgroundColor: AppTheme.border,
+                      color: task.status == 'completed' ? AppTheme.success : AppTheme.primary,
+                    ),
+                  ],
+                );
+              },
+              loading: () => const LinearProgressIndicator(color: AppTheme.primary),
+              error: (err, _) => Text('Error: $err'),
+            ),
+          ],
+        ),
       ),
     );
   }

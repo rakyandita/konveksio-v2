@@ -4,6 +4,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/konveksio_button.dart';
 import '../../../core/widgets/konveksio_size_input.dart';
 import '../../../core/widgets/konveksio_text_field.dart';
+import '../../master/presentation/providers/employee_provider.dart';
 import 'handover_controller.dart';
 
 class HandoverModal extends ConsumerStatefulWidget {
@@ -50,14 +51,7 @@ class _HandoverModalState extends ConsumerState<HandoverModal> {
   }
 
   final _notesController = TextEditingController();
-  String _selectedReceiver = 'user_siti'; // Dummy default
-  
-  // In a real app, this would be fetched from Supabase
-  final List<Map<String, String>> _receivers = [
-    {'id': 'user_siti', 'name': 'Siti (Jahit)'},
-    {'id': 'user_anto', 'name': 'Anto (Sablon)'},
-    {'id': 'user_vendor', 'name': 'Vendor Eksternal'},
-  ];
+  String? _selectedReceiver;
 
   @override
   void dispose() {
@@ -88,9 +82,19 @@ class _HandoverModalState extends ConsumerState<HandoverModal> {
       return;
     }
 
+    if (_selectedReceiver == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Pilih penerima tugas terlebih dahulu'),
+          backgroundColor: AppTheme.warning,
+        ),
+      );
+      return;
+    }
+
     ref.read(handoverControllerProvider.notifier).submitHandover(
       taskId: widget.taskId,
-      receiverId: _selectedReceiver,
+      receiverId: _selectedReceiver!,
       sizes: sizes,
       notes: _notesController.text.isNotEmpty ? _notesController.text : null,
     );
@@ -142,20 +146,48 @@ class _HandoverModalState extends ConsumerState<HandoverModal> {
               borderRadius: BorderRadius.circular(AppTheme.radiusMd),
             ),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _selectedReceiver,
-                isExpanded: true,
-                items: _receivers.map((r) {
-                  return DropdownMenuItem<String>(
-                    value: r['id']!,
-                    child: Text(r['name']!),
-                  );
-                }).toList(),
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() => _selectedReceiver = val);
+              child: ref.watch(employeeListProvider).when(
+                data: (employees) {
+                  if (employees.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Text('Tidak ada karyawan tersedia'),
+                    );
                   }
+                  
+                  // Reset selected receiver if not in list
+                  if (_selectedReceiver != null && !employees.any((e) => e.id == _selectedReceiver)) {
+                    _selectedReceiver = null;
+                  }
+                  if (_selectedReceiver == null && employees.isNotEmpty) {
+                    _selectedReceiver = employees.first.id;
+                  }
+
+                  return DropdownButton<String>(
+                    value: _selectedReceiver,
+                    isExpanded: true,
+                    hint: const Text('Pilih Karyawan'),
+                    items: employees.map((employee) {
+                      return DropdownMenuItem<String>(
+                        value: employee.id,
+                        child: Text('${employee.name} (${employee.role.toUpperCase()})'),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() => _selectedReceiver = val);
+                      }
+                    },
+                  );
                 },
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (err, _) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Text('Error: $err', style: const TextStyle(color: AppTheme.destructive)),
+                ),
               ),
             ),
           ),

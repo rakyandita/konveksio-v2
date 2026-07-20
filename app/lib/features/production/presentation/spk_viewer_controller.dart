@@ -38,7 +38,7 @@ class Spk {
       style: json['style'] as String?,
       frontImageUrl: json['front_image_url'] as String?,
       backImageUrl: json['back_image_url'] as String?,
-      orderName: json['order_items']?['orders']?['customer_name'] ?? json['order_items']?['product']?['name'] ?? 'Pesanan',
+      orderName: json['order_items']?['orders']?['customers']?['name'] ?? json['order_items']?['products']?['name'] ?? 'Pesanan',
       productName: json['order_items']?['products']?['name'],
     );
   }
@@ -49,23 +49,10 @@ final spkViewerControllerProvider =
   final supabase = Supabase.instance.client;
   
   if (supabase.auth.currentUser == null) {
-    // Mock data if not logged in
-    await Future.delayed(const Duration(milliseconds: 500));
-    return Spk(
-      id: 'spk-123',
-      orderItemId: orderItemId,
-      clientName: 'PT. Maju Mundur',
-      material: 'Katun Combed 30s',
-      color: 'Biru Navy',
-      style: 'Reguler Fit, Lengan Pendek',
-      frontImageUrl: null,
-      backImageUrl: null,
-      orderName: 'Pesanan Mock',
-      productName: 'Kaus',
-    );
+    throw Exception('Sesi tidak valid: Belum login');
   }
 
-  // Fetch from spks and join with order_items -> products, and order_items -> orders
+  // Fetch from spks and join with order_items -> products, and order_items -> orders -> customers
   final response = await supabase
       .from('spks')
       .select('''
@@ -73,7 +60,10 @@ final spkViewerControllerProvider =
         order_items (
           id,
           products (name),
-          orders (id)
+          orders (
+            id,
+            customers (name)
+          )
         )
       ''')
       .eq('order_item_id', orderItemId)

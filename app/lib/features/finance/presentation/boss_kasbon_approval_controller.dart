@@ -41,15 +41,8 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
     try {
       final supabase = Supabase.instance.client;
 
-      // BYPASS MOCK UNTUK PENGUJIAN VISUAL
       if (supabase.auth.currentUser == null) {
-        final pending = MockData.cashAdvances
-            .where((e) => e.status == ApprovalStatus.pending)
-            .toList();
-        // Sort descending by date
-        pending.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        
-        state = state.copyWith(isLoading: false, pendingRequests: pending);
+        state = state.copyWith(isLoading: false, error: 'Sesi tidak valid');
         return;
       }
 
@@ -66,24 +59,8 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
     try {
       final supabase = Supabase.instance.client;
 
-      // BYPASS MOCK UNTUK PENGUJIAN VISUAL
       if (supabase.auth.currentUser == null) {
-        final index = MockData.cashAdvances.indexWhere((e) => e.id == id);
-        if (index != -1) {
-          final old = MockData.cashAdvances[index];
-          MockData.cashAdvances[index] = CashAdvanceModel(
-            id: old.id,
-            branchId: old.branchId,
-            userId: old.userId,
-            amountRequested: old.amountRequested,
-            amountApproved: amountApproved ?? old.amountRequested,
-            reason: old.reason,
-            status: ApprovalStatus.approved,
-            createdAt: old.createdAt,
-            approvedAt: DateTime.now(),
-          );
-        }
-        await _fetchPendingRequests();
+        state = state.copyWith(isLoading: false, error: 'Sesi tidak valid');
         return;
       }
 
@@ -105,23 +82,8 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
     try {
       final supabase = Supabase.instance.client;
 
-      // BYPASS MOCK UNTUK PENGUJIAN VISUAL
       if (supabase.auth.currentUser == null) {
-        final index = MockData.cashAdvances.indexWhere((e) => e.id == id);
-        if (index != -1) {
-          final old = MockData.cashAdvances[index];
-          MockData.cashAdvances[index] = CashAdvanceModel(
-            id: old.id,
-            branchId: old.branchId,
-            userId: old.userId,
-            amountRequested: old.amountRequested,
-            reason: old.reason,
-            status: ApprovalStatus.rejected,
-            createdAt: old.createdAt,
-            rejectionReason: rejectionReason,
-          );
-        }
-        await _fetchPendingRequests();
+        state = state.copyWith(isLoading: false, error: 'Sesi tidak valid');
         return;
       }
 

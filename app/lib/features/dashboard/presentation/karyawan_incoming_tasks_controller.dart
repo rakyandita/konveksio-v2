@@ -100,6 +100,19 @@ class KaryawanIncomingTasksController extends AsyncNotifier<List<IncomingTaskIte
       throw Exception('Gagal menerima barang: $e');
     }
   }
+
+  Future<void> rejectHandover(String handoverId, String? reason) async {
+    final supabase = Supabase.instance.client;
+    try {
+      await supabase.from('handovers').update({
+        'status': 'rejected',
+        if (reason != null && reason.isNotEmpty) 'notes': reason,
+      }).eq('id', handoverId);
+      ref.invalidateSelf();
+    } catch (e) {
+      throw Exception('Gagal menolak barang: $e');
+    }
+  }
 }
 
 final karyawanIncomingTasksControllerProvider =

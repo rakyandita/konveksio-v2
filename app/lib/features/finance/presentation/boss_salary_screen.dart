@@ -103,11 +103,10 @@ class _BossSalaryScreenState extends ConsumerState<BossSalaryScreen> with Single
             isLoading: state.isLoading,
             onPressed: () async {
               await ref.read(bossSalaryControllerProvider.notifier).generateSalary();
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Slip gaji berhasil dibuat untuk periode ini')),
-                );
-              }
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Slip gaji berhasil dibuat untuk periode ini')),
+              );
             },
           ),
         ],

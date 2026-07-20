@@ -17,8 +17,30 @@ class OrderRepository {
     final response = await _supabase
         .from('orders')
         .select()
-        .order('order_date', ascending: false);
+        .order('created_at', ascending: false);
     return response.map((json) => OrderModel.fromJson(json)).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> getOrdersWithDetails(String branchId) async {
+    final response = await _supabase
+        .from('orders')
+        .select('''
+          id,
+          status,
+          deadline_date,
+          total_price,
+          customers(name),
+          order_items(
+            id,
+            price_per_pcs,
+            products(name),
+            order_item_sizes(qty)
+          )
+        ''')
+        .eq('branch_id', branchId)
+        .order('created_at', ascending: false);
+        
+    return List<Map<String, dynamic>>.from(response);
   }
 
   Future<String> createOrderTransaction(Map<String, dynamic> payload) async {

@@ -63,21 +63,8 @@ class KaryawanKasbonController extends Notifier<KasbonState> {
       final supabase = Supabase.instance.client;
       final authState = ref.read(authControllerProvider);
       
-      // BYPASS MOCK UNTUK PENGUJIAN VISUAL
-      // Jika login menggunakan mock (tanpa API key valid), currentUser akan null
       if (supabase.auth.currentUser == null) {
-        MockData.cashAdvances.add(
-          CashAdvanceModel(
-            id: 'mock-${DateTime.now().millisecondsSinceEpoch}',
-            branchId: 'mock-branch',
-            userId: 'Karyawan 08111',
-            amountRequested: amount,
-            reason: reason,
-            status: ApprovalStatus.pending,
-            createdAt: DateTime.now(),
-          )
-        );
-        state = state.copyWith(isLoading: false, isSuccess: true);
+        state = state.copyWith(isLoading: false, error: 'Sesi tidak valid');
         return;
       }
 

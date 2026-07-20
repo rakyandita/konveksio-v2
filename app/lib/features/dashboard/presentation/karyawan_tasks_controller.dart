@@ -78,20 +78,7 @@ final karyawanTasksControllerProvider =
   final user = supabase.auth.currentUser;
 
   if (user == null) {
-    // Return mock data for preview/testing when logged out
-    await Future.delayed(const Duration(milliseconds: 500));
-    return [
-      TaskItem(
-        id: 'task-mock-1',
-        orderItemId: 'order-item-mock-1',
-        status: 'running',
-        productName: 'Kemeja Polos Merah (Mock)',
-        customerName: 'PT. Maju Mundur',
-        deadlineDate: DateTime.now().add(const Duration(days: 2)),
-        targets: {'S': 5, 'M': 10, 'L': 2},
-        completed: {'S': 0, 'M': 5, 'L': 0},
-      ),
-    ];
+    return [];
   }
 
   try {

@@ -72,6 +72,61 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
     );
   }
 
+  void _showTolakDialog(BuildContext context, WidgetRef ref, IncomingTaskItem handover) {
+    final reasonController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Tolak Barang'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Berikan alasan penolakan (opsional):'),
+            const SizedBox(height: 8),
+            TextField(
+              controller: reasonController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Alasan penolakan',
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.destructive, foregroundColor: Colors.white),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              try {
+                await ref.read(karyawanIncomingTasksControllerProvider.notifier).rejectHandover(
+                  handover.handoverId,
+                  reasonController.text,
+                );
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Barang berhasil ditolak.')),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+                  );
+                }
+              }
+            },
+            child: const Text('Tolak'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,7 +230,7 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
                             child: KonveksioButton(
                               text: 'Tolak',
                               type: KonveksioButtonType.destructive,
-                              onPressed: () {}, // TODO: Implement reject logic
+                              onPressed: () => _showTolakDialog(context, ref, handover),
                             ),
                           ),
                           const SizedBox(width: 16),
