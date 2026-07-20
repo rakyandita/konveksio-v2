@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/konveksio_button.dart';
 import '../../production/presentation/handover_modal.dart';
 import '../../production/presentation/update_progress_modal.dart';
-import '../../production/presentation/spk_viewer_screen.dart';
 import 'karyawan_tasks_controller.dart';
 import 'karyawan_incoming_tasks_controller.dart';
 class KaryawanProduksiScreen extends ConsumerStatefulWidget {
@@ -143,12 +143,7 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
                           ),
                           TextButton.icon(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => SpkViewerScreen(orderItemId: handover.orderItemId),
-                                ),
-                              );
+                              context.push('/karyawan/spk/${handover.orderItemId}');
                             },
                             icon: const Icon(PhosphorIconsRegular.fileText, size: 16),
                             label: const Text('DETAIL SPK'),
@@ -255,12 +250,7 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
                           ),
                           TextButton.icon(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => SpkViewerScreen(orderItemId: task.orderItemId),
-                                ),
-                              );
+                              context.push('/karyawan/spk/${task.orderItemId}');
                             },
                             icon: const Icon(PhosphorIconsRegular.fileText, size: 16),
                             label: const Text('DETAIL SPK'),

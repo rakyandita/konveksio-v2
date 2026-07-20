@@ -30,13 +30,9 @@ class KaryawanKeuanganScreen extends StatelessWidget {
           _buildMenuCard(
             context,
             title: 'Slip Gaji',
-            subtitle: 'Lihat riwayat gaji Anda (Segera Hadir)',
+            subtitle: 'Lihat riwayat gaji mingguan Anda',
             icon: PhosphorIconsRegular.receipt,
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Fitur Slip Gaji belum tersedia')),
-              );
-            },
+            onTap: () => context.push('/karyawan/salary'),
           ),
         ],
       ),

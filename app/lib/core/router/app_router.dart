@@ -26,6 +26,8 @@ import '../../features/dashboard/presentation/owner_profil_screen.dart';
 
 import '../../features/finance/presentation/karyawan_kasbon_screen.dart';
 import '../../features/finance/presentation/boss_kasbon_approval_screen.dart';
+import '../../features/finance/presentation/karyawan_salary_screen.dart';
+import '../../features/production/presentation/spk_viewer_screen.dart';
 
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
@@ -204,6 +206,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/karyawan/kasbon',
         builder: (context, state) => const KaryawanKasbonScreen(),
+      ),
+      GoRoute(
+        path: '/karyawan/salary',
+        builder: (context, state) => const KaryawanSalaryScreen(),
+      ),
+      GoRoute(
+        path: '/karyawan/spk/:id',
+        builder: (context, state) => SpkViewerScreen(
+          orderItemId: state.pathParameters['id']!,
+        ),
       ),
       GoRoute(
         path: '/boss/finance/kasbon',
