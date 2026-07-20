@@ -117,7 +117,7 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 
 **Functional Requirements:**
 - FR-01.1: Owner dapat membuat, mengedit, dan menonaktifkan cabang.
-- FR-01.2: Setiap cabang memiliki atribut: nama, alamat, nomor kontak.
+- FR-01.2: Setiap cabang memiliki atribut: nama, alamat, nomor kontak, Nomor WhatsApp (untuk dicetak di invoice), dan Informasi Rekening Bank.
 - FR-01.3: Setiap pengguna (kecuali Owner) terikat pada satu `branch_id` dan tidak bisa berpindah cabang.
 
 **Business Rules:**
@@ -288,7 +288,7 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 **Functional Requirements:**
 - FR-08.1: **Kasbon:** Boss Cabang mengatur persentase maksimal potongan kasbon per karyawan di halaman pengaturan (default: 50% dari Gaji Kotor). Karyawan mengajukan nominal kasbon beserta alasan (pilihan: Kebutuhan Harian, Sekolah Anak, Listrik/Air, Kesehatan, Lainnya). Boss Cabang dapat Tolak, Setujui Penuh, atau Setujui sebagian (ubah nominal).
 - FR-08.2: **Penggajian:** Sistem menghitung upah otomatis berdasarkan **Progress Log**: Total Pcs Selesai yang dilaporkan karyawan × Ongkos per Pcs (tarif yang di-snapshot saat Assign). Penghitungan mencakup seluruh Progress Log yang telah terkonfirmasi **hingga saat Generate Gaji ditekan** — tidak menunggu order selesai.
-- FR-08.3: Boss Cabang menekan tombol **"Generate Gaji Minggu Ini"** → sistem memotong kasbon yang sudah disetujui dari gaji kotor → menghasilkan slip gaji digital.
+- FR-08.3: Boss Cabang menekan tombol **"Generate Gaji Minggu Ini"** → sistem memotong kasbon yang sudah disetujui dari gaji kotor → menghasilkan slip gaji digital. Boss Cabang juga dapat melihat **Riwayat Gaji** (Slip yang sudah di-generate) dari minggu-minggu sebelumnya.
 - FR-08.4: Karyawan dapat melihat slip gaji mingguan dan saldo total kasbon mereka sendiri.
 - FR-08.5: Model Vendor/SPV (Cabang Solo): Boss Cabang mencatat pembayaran lump-sum ke SPV, tanpa detail per karyawan.
 

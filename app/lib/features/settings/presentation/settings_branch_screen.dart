@@ -32,11 +32,30 @@ class SettingsBranchScreen extends StatelessWidget {
               decoration: const InputDecoration(labelText: 'Alamat Cabang'),
               maxLines: 2,
             ),
+            const Text('Kontak & Pembayaran (Untuk Invoice)', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: AppTheme.spacingSm),
+            TextFormField(
+              initialValue: '081234567890',
+              decoration: const InputDecoration(
+                labelText: 'Nomor WhatsApp Cabang',
+                prefixIcon: Icon(PhosphorIconsRegular.whatsappLogo),
+              ),
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: AppTheme.spacingBase),
+            TextFormField(
+              initialValue: 'BCA 123456789 a/n Budi Konveksi',
+              decoration: const InputDecoration(
+                labelText: 'Informasi Rekening Bank',
+                prefixIcon: Icon(PhosphorIconsRegular.bank),
+              ),
+              maxLines: 2,
+            ),
             const SizedBox(height: AppTheme.spacingLg),
             const Text('Limit Keuangan', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: AppTheme.spacingSm),
             TextFormField(
-              initialValue: '500000',
+              initialValue: '500.000',
               decoration: const InputDecoration(
                 labelText: 'Maksimal Kasbon per Karyawan (Rp)',
                 prefixText: 'Rp ',

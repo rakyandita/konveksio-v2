@@ -54,6 +54,7 @@ class MasterVendorsScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () {
           import_modal.MasterVendorFormModal.show(context);
         },

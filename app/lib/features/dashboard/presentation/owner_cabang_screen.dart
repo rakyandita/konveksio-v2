@@ -71,6 +71,7 @@ class OwnerCabangScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
         onPressed: () {
           import_modal.OwnerBranchFormModal.show(context);
         },
@@ -98,7 +99,9 @@ class OwnerCabangScreen extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            import_modal.OwnerBranchFormModal.show(context);
+          },
           borderRadius: BorderRadius.circular(AppTheme.radiusLg),
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.spacingBase),

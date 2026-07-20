@@ -43,21 +43,27 @@ class OwnerProfilScreen extends ConsumerWidget {
                     leading: const Icon(PhosphorIconsRegular.gear, color: AppTheme.primary),
                     title: const Text('Pengaturan Sistem Global'),
                     trailing: const Icon(Icons.chevron_right, color: AppTheme.muted),
-                    onTap: () {},
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Menu Pengaturan Sistem belum tersedia')));
+                    },
                   ),
                   const Divider(height: 1, color: AppTheme.border),
                   ListTile(
                     leading: const Icon(PhosphorIconsRegular.shieldCheck, color: AppTheme.primary),
                     title: const Text('Keamanan & Sandi'),
                     trailing: const Icon(Icons.chevron_right, color: AppTheme.muted),
-                    onTap: () {},
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Menu Keamanan & Sandi belum tersedia')));
+                    },
                   ),
                   const Divider(height: 1, color: AppTheme.border),
                   ListTile(
                     leading: const Icon(PhosphorIconsRegular.info, color: AppTheme.primary),
                     title: const Text('Tentang Konveksio'),
                     trailing: const Icon(Icons.chevron_right, color: AppTheme.muted),
-                    onTap: () {},
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Konveksio v2.0.0')));
+                    },
                   ),
                 ],
               ),

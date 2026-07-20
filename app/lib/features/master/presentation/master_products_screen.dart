@@ -56,6 +56,7 @@ class MasterProductsScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () {
           import_modal.MasterProductFormModal.show(context);
         },

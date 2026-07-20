@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../auth/presentation/auth_controller.dart';
-
+import 'forms/karyawan_edit_profil_form_modal.dart';
 class KaryawanProfilScreen extends ConsumerWidget {
   const KaryawanProfilScreen({super.key});
 
@@ -35,7 +35,9 @@ class KaryawanProfilScreen extends ConsumerWidget {
               leading: Icon(PhosphorIconsRegular.user, color: AppTheme.foreground),
               title: const Text('Edit Profil'),
               trailing: Icon(PhosphorIconsRegular.caretRight),
-              onTap: () {},
+              onTap: () {
+                KaryawanEditProfilFormModal.show(context);
+              },
             ),
             const Divider(),
             ListTile(

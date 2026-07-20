@@ -3,71 +3,142 @@ import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/konveksio_button.dart';
 
-class BossSalaryScreen extends StatelessWidget {
+class BossSalaryScreen extends StatefulWidget {
   const BossSalaryScreen({super.key});
+
+  @override
+  State<BossSalaryScreen> createState() => _BossSalaryScreenState();
+}
+
+class _BossSalaryScreenState extends State<BossSalaryScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('Generate Gaji Mingguan'),
+        title: const Text('Penggajian'),
         backgroundColor: AppTheme.surface,
         scrolledUnderElevation: 4.0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppTheme.spacingBase),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(AppTheme.spacingBase),
-              decoration: BoxDecoration(
-                color: AppTheme.surface,
-                borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-                border: Border.all(color: AppTheme.border),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Periode Penggajian',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: AppTheme.spacingSm),
-                  Text(
-                    '10 Juli - 16 Juli 2026',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: AppTheme.spacingBase),
-            const Text(
-              'Pratinjau Gaji Karyawan',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: AppTheme.spacingSm),
-            _buildSalaryCard(context, 'Budi Santoso', 'Jahit', 500000, 150000, 650000),
-            _buildSalaryCard(context, 'Siti Aminah', 'Finishing', 300000, 0, 300000),
-            const SizedBox(height: AppTheme.spacingLg),
-            KonveksioButton(
-              text: 'GENERATE SLIP GAJI & SIMPAN',
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Slip gaji berhasil dibuat untuk periode ini')),
-                );
-              },
-            ),
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: AppTheme.primary,
+          unselectedLabelColor: AppTheme.muted,
+          indicatorColor: AppTheme.primary,
+          tabs: const [
+            Tab(text: 'GENERATE BARU'),
+            Tab(text: 'RIWAYAT GAJI'),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildGenerateBaruTab(context),
+          _buildRiwayatGajiTab(context),
+        ],
       ),
     );
   }
 
-  Widget _buildSalaryCard(BuildContext context, String name, String div, int pokok, int potongan, int total) {
+  Widget _buildGenerateBaruTab(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppTheme.spacingBase),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(AppTheme.spacingBase),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+              border: Border.all(color: AppTheme.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Periode Penggajian',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                const SizedBox(height: AppTheme.spacingSm),
+                Text(
+                  '10 Juli - 16 Juli 2026',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppTheme.spacingBase),
+          const Text(
+            'Pratinjau Gaji Karyawan',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: AppTheme.spacingSm),
+          _buildSalaryCard(context, 'Budi Santoso', 'Jahit', '500.000', '150.000', '350.000'),
+          _buildSalaryCard(context, 'Siti Aminah', 'Finishing', '300.000', '0', '300.000'),
+          const SizedBox(height: AppTheme.spacingLg),
+          KonveksioButton(
+            text: 'GENERATE SLIP GAJI & SIMPAN',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Slip gaji berhasil dibuat untuk periode ini')),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRiwayatGajiTab(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(AppTheme.spacingBase),
+      children: [
+        _buildHistoryCard(context, '03 Juli - 09 Juli 2026', 'Total: Rp 1.250.000 (4 Karyawan)'),
+        _buildHistoryCard(context, '26 Juni - 02 Juli 2026', 'Total: Rp 1.400.000 (5 Karyawan)'),
+      ],
+    );
+  }
+
+  Widget _buildHistoryCard(BuildContext context, String period, String summary) {
+    return Card(
+      elevation: 0,
+      color: AppTheme.surface,
+      margin: const EdgeInsets.only(bottom: AppTheme.spacingSm),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+        side: const BorderSide(color: AppTheme.border),
+      ),
+      child: ListTile(
+        title: Text(period, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(summary, style: const TextStyle(color: AppTheme.muted)),
+        trailing: const Icon(PhosphorIconsRegular.filePdf, color: AppTheme.primary),
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Membuka detail slip gaji...')),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSalaryCard(BuildContext context, String name, String div, String pokok, String potongan, String total) {
     return Card(
       elevation: 0,
       color: AppTheme.surface,
@@ -100,7 +171,7 @@ class BossSalaryScreen extends StatelessWidget {
                 Text('Rp $pokok'),
               ],
             ),
-            if (potongan > 0)
+            if (potongan != '0')
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

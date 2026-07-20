@@ -54,6 +54,7 @@ class MasterEmployeesScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () {
           import_modal.MasterEmployeeFormModal.show(context);
         },

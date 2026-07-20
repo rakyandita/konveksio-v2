@@ -6,6 +6,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/konveksio_button.dart';
 import '../../production/presentation/handover_modal.dart';
 import '../../production/presentation/update_progress_modal.dart';
+import '../../production/presentation/karyawan_selesai_detail_modal.dart';
 import 'karyawan_tasks_controller.dart';
 import 'karyawan_incoming_tasks_controller.dart';
 class KaryawanProduksiScreen extends ConsumerStatefulWidget {
@@ -335,6 +336,9 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
             title: Text('SPK-202310-${250 + index}', style: const TextStyle(fontWeight: FontWeight.bold)),
             subtitle: const Text('Selesai pada: 25 Okt 2023'),
             trailing: const Icon(PhosphorIconsRegular.checkCircle, color: AppTheme.success),
+            onTap: () {
+              KaryawanSelesaiDetailModal.show(context, taskName: 'SPK-202310-${250 + index}', date: '25 Okt 2023');
+            },
           ),
         );
       },

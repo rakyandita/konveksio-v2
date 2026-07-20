@@ -135,9 +135,13 @@ Setiap layar krusial dipetakan dengan Identifier ID (Route Name). Mapping ini ak
 | PAGE-023 | `/boss/settings/admin` | Pengaturan Admin (Akses) | - | Boss, Owner* | PAGE-014 | F02 |
 | PAGE-024 | `/boss/finance/kasbon` | Approval Kasbon Karyawan | - | Boss, Owner* | PAGE-002, PAGE-015 | F08 |
 | PAGE-025 | `/boss/finance/salary` | Generate Gaji & Slip Mingguan | - | Boss, Owner* | PAGE-002, PAGE-015 | F08 |
+| PAGE-029 | `/boss/finance/salary_history` | Riwayat Gaji (Boss) | - | Boss, Owner* | PAGE-025 | F08 |
 | PAGE-026 | `/karyawan/kasbon` | Pengajuan & Riwayat Kasbon | - | Karyawan | PAGE-008 (Tab 4) | F08 |
 | PAGE-027 | `/karyawan/salary` | Riwayat Slip Gaji Mingguan | - | Karyawan | PAGE-008 (Tab 4) | F08 |
 | PAGE-028 | `/boss/pipeline` | Kanban Board Produksi | - | Boss, Owner* | PAGE-002, PAGE-015 | F07 |
+| MODAL-005| `N/A` | Edit Profil Karyawan (Bottom Sheet) | - | Karyawan | Profil Tab | F03 |
+| MODAL-006| `N/A` | Detail Selesai (Bottom Sheet) | `handover_id` | Karyawan | Produksi Tab Selesai | F07 |
+| MODAL-007| `N/A` | Owner Branch Account Form (Bottom Sheet)| - | Owner | Akun Tab | F02 |
 
 *Owner\*: Hanya dapat mengakses rute ini ketika aktif dalam **Branch Context Mode** (telah melewati PAGE-015). Di luar konteks tersebut, Owner akan di-redirect kembali ke PAGE-001.
 

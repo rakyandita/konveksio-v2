@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
+import 'forms/owner_account_form_modal.dart';
 
 class OwnerAkunScreen extends StatelessWidget {
   const OwnerAkunScreen({super.key});
@@ -83,8 +84,9 @@ class OwnerAkunScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
         onPressed: () {
-          // TODO: Tampilkan form tambah akun
+          OwnerAccountFormModal.show(context);
         },
         icon: const Icon(PhosphorIconsRegular.userPlus),
         label: const Text('Tambah Akun'),
@@ -156,7 +158,9 @@ class OwnerAkunScreen extends StatelessWidget {
         ],
       ),
       trailing: const Icon(PhosphorIconsRegular.caretRight, color: AppTheme.muted),
-      onTap: () {},
+      onTap: () {
+        OwnerAccountFormModal.show(context);
+      },
     );
   }
 }

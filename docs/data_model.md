@@ -69,7 +69,7 @@ erDiagram
 | Table | Kolom Kunci | Description | RLS Policy Summary |
 |-------|-------------|-------------|--------------------|
 | `branches` | `id, name, address, phone, is_active` | Entitas utama tenant. Soft Delete via `is_active`. | Owner: CRUD. Authenticated: SELECT. Tidak ada policy DELETE (integritas data). |
-| `branch_settings` | `branch_id (PK), payment_system, max_kasbon_percentage` | Konfigurasi sistem cabang — logo, bank, kasbon limit, sistem upah. | Owner: SELECT+UPDATE. Boss (cabangnya): UPDATE. |
+| `branch_settings` | `branch_id (PK), payment_system, max_kasbon_percentage, contact_wa, bank_account_info` | Konfigurasi sistem cabang — logo, bank, kasbon limit, sistem upah. | Owner: SELECT+UPDATE. Boss (cabangnya): UPDATE. |
 | `profiles` | `id (= auth.users.id), branch_id, role, name, is_active` | Data user tersinkronisasi dengan Supabase Auth. Soft Delete via `is_active`. | Owner/Boss: INSERT. Owner/Boss/Admin: UPDATE (cabangnya). User: SELECT+UPDATE profil sendiri. Tidak ada DELETE (CASCADE dari auth.users). |
 | `admin_permissions` | `user_id (PK), can_manage_orders, can_manage_production, can_view_reports` | RBAC granular untuk role Admin — dynamic permissions dikonfigurasi Boss Cabang. | Owner/Boss: INSERT+UPDATE (admin di cabangnya). Semua: SELECT (cabangnya). |
 

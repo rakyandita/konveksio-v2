@@ -47,6 +47,7 @@ class MasterCustomersScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () {
           import_modal.MasterCustomerFormModal.show(context);
         },
