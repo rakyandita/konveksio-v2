@@ -22,11 +22,7 @@ class MasterEmployeesScreen extends StatelessWidget {
         backgroundColor: AppTheme.surface,
         scrolledUnderElevation: 4.0,
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.primary,
-        onPressed: () {},
-        child: const Icon(PhosphorIconsRegular.plus, color: AppTheme.onPrimary),
-      ),
+
       body: ListView.builder(
         padding: const EdgeInsets.all(AppTheme.spacingBase),
         itemCount: mockEmployees.length,
