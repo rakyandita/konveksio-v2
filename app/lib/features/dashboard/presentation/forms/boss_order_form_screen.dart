@@ -96,9 +96,8 @@ class _BossOrderFormScreenState extends State<BossOrderFormScreen> {
                     hint: const Text('Pilih produk...'),
                   ),
                   const SizedBox(height: 16),
-                  const Text('Harga Final per Pcs (Rp)', style: TextStyle(color: AppTheme.muted, fontSize: 13)),
-                  const SizedBox(height: 8),
                   KonveksioTextField(
+                    label: 'Harga Final per Pcs (Rp)',
                     hintText: 'Contoh: 100.000',
                     keyboardType: TextInputType.number,
                     prefixIcon: Icon(PhosphorIconsRegular.money),

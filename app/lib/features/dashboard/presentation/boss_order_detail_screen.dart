@@ -248,7 +248,7 @@ class BossOrderDetailScreen extends ConsumerWidget {
             onPressed: () {
               import_adj.BossAdjustmentFormModal.show(context);
             },
-            type: KonveksioButtonType.outline,
+            type: KonveksioButtonType.secondary,
           ),
         ],
       ),
