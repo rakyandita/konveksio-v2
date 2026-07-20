@@ -76,19 +76,22 @@ class _KasbonCard extends ConsumerWidget {
             onPressed: () => Navigator.pop(context),
             child: const Text('Batal'),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.destructive, foregroundColor: Colors.white),
-            onPressed: () {
-              ref.read(bossKasbonApprovalControllerProvider.notifier).rejectRequest(request.id, controller.text);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Pengajuan kasbon berhasil ditolak'),
-                  backgroundColor: AppTheme.destructive,
-                ),
-              );
-            },
-            child: const Text('TOLAK KASBON'),
+          SizedBox(
+            width: double.infinity,
+            child: KonveksioButton(
+              text: 'TOLAK KASBON',
+              type: KonveksioButtonType.destructive,
+              onPressed: () {
+                ref.read(bossKasbonApprovalControllerProvider.notifier).rejectRequest(request.id, controller.text);
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Pengajuan kasbon berhasil ditolak'),
+                    backgroundColor: AppTheme.destructive,
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -134,22 +137,25 @@ class _KasbonCard extends ConsumerWidget {
             onPressed: () => Navigator.pop(context),
             child: const Text('Batal'),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.success, foregroundColor: Colors.white),
-            onPressed: () {
-              final amount = double.tryParse(controller.text.replaceAll(RegExp(r'[^0-9]'), ''));
-              if (amount != null && amount > 0) {
-                ref.read(bossKasbonApprovalControllerProvider.notifier).approveRequest(request.id, amountApproved: amount);
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Pengajuan kasbon berhasil disetujui'),
-                    backgroundColor: AppTheme.success,
-                  ),
-                );
-              }
-            },
-            child: const Text('SETUJUI'),
+          SizedBox(
+            width: double.infinity,
+            child: KonveksioButton(
+              text: 'SETUJUI',
+              type: KonveksioButtonType.primary,
+              onPressed: () {
+                final amount = double.tryParse(controller.text.replaceAll(RegExp(r'[^0-9]'), ''));
+                if (amount != null && amount > 0) {
+                  ref.read(bossKasbonApprovalControllerProvider.notifier).approveRequest(request.id, amountApproved: amount);
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Pengajuan kasbon berhasil disetujui'),
+                      backgroundColor: AppTheme.success,
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -225,7 +231,7 @@ class _KasbonCard extends ConsumerWidget {
               Expanded(
                 child: KonveksioButton(
                   text: 'TOLAK',
-                  type: KonveksioButtonType.secondary,
+                  type: KonveksioButtonType.destructive,
                   onPressed: () => _showRejectDialog(context, ref),
                 ),
               ),
