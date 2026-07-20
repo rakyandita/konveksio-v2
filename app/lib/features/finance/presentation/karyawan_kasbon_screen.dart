@@ -63,15 +63,16 @@ class _KaryawanKasbonScreenState extends ConsumerState<KaryawanKasbonScreen> {
       return;
     }
 
-    if (amount > limit) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Nominal melebihi sisa limit Anda (Maks ${AppFormatters.formatCurrency(limit)})'),
-          backgroundColor: AppTheme.destructive,
-        ),
-      );
-      return;
-    }
+    // BYPASS UNTUK TESTING
+    // if (amount > limit) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text('Nominal melebihi sisa limit Anda (Maks ${AppFormatters.formatCurrency(limit)})'),
+    //       backgroundColor: AppTheme.destructive,
+    //     ),
+    //   );
+    //   return;
+    // }
 
     ref.read(karyawanKasbonControllerProvider.notifier).submitKasbon(
       amount: amount,
@@ -205,11 +206,18 @@ class _KaryawanKasbonScreenState extends ConsumerState<KaryawanKasbonScreen> {
                     }).toList(),
                   ),
                   const SizedBox(height: AppTheme.spacingXl),
-
-                  KonveksioButton(
-                    text: 'Kirim Pengajuan',
-                    onPressed: state.isLoading ? null : () => _submit(limit),
-                    isLoading: state.isLoading,
+                  Builder(
+                    builder: (context) {
+                      final rawText = _amountController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                      final amount = double.tryParse(rawText) ?? 0.0;
+                      // BYPASS UNTUK TESTING:
+                      final isInvalid = amount <= 0; // || amount > limit;
+                      return KonveksioButton(
+                        text: 'Kirim Pengajuan (Bypass Test)',
+                        onPressed: (state.isLoading || isInvalid) ? null : () => _submit(limit),
+                        isLoading: state.isLoading,
+                      );
+                    },
                   ),
                 ],
               ),

@@ -32,7 +32,7 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
     super.dispose();
   }
 
-  void _showTerimaBarangDialog(BuildContext context) {
+  void _showTerimaBarangDialog(BuildContext context, WidgetRef ref, IncomingTaskItem handover) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -44,14 +44,25 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
             child: const Text('Batal'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Berhasil menerima barang'),
-                  backgroundColor: AppTheme.success,
-                ),
-              );
+              try {
+                await ref.read(karyawanIncomingTasksControllerProvider.notifier).acceptHandover(
+                  handover.handoverId,
+                  handover.handoverSizes,
+                );
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Barang berhasil diterima dan tugas baru telah dibuat.')),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+                  );
+                }
+              }
             },
             child: const Text('Terima'),
           ),
@@ -176,7 +187,7 @@ class _KaryawanProduksiScreenState extends ConsumerState<KaryawanProduksiScreen>
                             flex: 2,
                             child: KonveksioButton(
                               text: 'TERIMA BARANG',
-                              onPressed: () => _showTerimaBarangDialog(context),
+                              onPressed: () => _showTerimaBarangDialog(context, ref, handover),
                             ),
                           ),
                         ],

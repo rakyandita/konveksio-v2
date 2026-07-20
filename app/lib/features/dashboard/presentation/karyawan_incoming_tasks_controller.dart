@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'karyawan_tasks_controller.dart';
 
 class IncomingTaskItem {
   final String handoverId;
@@ -46,38 +47,62 @@ class IncomingTaskItem {
   }
 }
 
-final karyawanIncomingTasksControllerProvider =
-    FutureProvider.autoDispose<List<IncomingTaskItem>>((ref) async {
-  final supabase = Supabase.instance.client;
-  final user = supabase.auth.currentUser;
+class KaryawanIncomingTasksController extends AsyncNotifier<List<IncomingTaskItem>> {
+  @override
+  Future<List<IncomingTaskItem>> build() async {
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
 
-  if (user == null) {
-    return [];
-  }
+    if (user == null) {
+      return [];
+    }
 
-  try {
-    final response = await supabase
-        .from('handovers')
-        .select('''
-          id,
-          status,
-          handover_sizes (size, qty_sent),
-          tasks!handovers_from_task_id_fkey (
-            division,
-            order_items (
-              id,
-              products (name),
-              orders (customer_name)
+    try {
+      final response = await supabase
+          .from('handovers')
+          .select('''
+            id,
+            status,
+            handover_sizes (size, qty_sent),
+            tasks!handovers_from_task_id_fkey (
+              division,
+              order_items (
+                id,
+                products (name),
+                orders (customer_name)
+              )
             )
-          )
-        ''')
-        .eq('to_user_id', user.id)
-        .eq('status', 'pending')
-        .order('created_at', ascending: false);
+          ''')
+          .eq('to_user_id', user.id)
+          .eq('status', 'pending')
+          .order('created_at', ascending: false);
 
-    final List<dynamic> data = response;
-    return data.map((json) => IncomingTaskItem.fromJson(json)).toList();
-  } catch (e) {
-    throw Exception('Gagal memuat tugas masuk: $e');
+      final List<dynamic> data = response;
+      return data.map((json) => IncomingTaskItem.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Gagal memuat tugas masuk: $e');
+    }
   }
-});
+
+  Future<void> acceptHandover(String handoverId, Map<String, int> actualSizes) async {
+    final supabase = Supabase.instance.client;
+    try {
+      await supabase.rpc(
+        'accept_handover',
+        params: {
+          'p_handover_id': handoverId,
+          'p_actual_sizes': actualSizes,
+        },
+      );
+      ref.invalidateSelf();
+      ref.invalidate(karyawanTasksControllerProvider);
+    } catch (e) {
+      throw Exception('Gagal menerima barang: $e');
+    }
+  }
+}
+
+final karyawanIncomingTasksControllerProvider =
+    AsyncNotifierProvider<KaryawanIncomingTasksController, List<IncomingTaskItem>>(
+  () => KaryawanIncomingTasksController(),
+);

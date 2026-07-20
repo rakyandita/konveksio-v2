@@ -48,22 +48,20 @@ class HandoverController extends Notifier<HandoverState> {
         throw Exception('Sesi tidak valid.');
       }
 
-      // Insert handover
-      final handoverRes = await supabase.from('handovers').insert({
-        'from_task_id': taskId,
-        'to_user_id': receiverId,
-        'status': 'pending',
-      }).select().single();
-      
-      final handoverId = handoverRes['id'];
-      
-      final sizeList = sizes.entries.map((e) => {
-        'handover_id': handoverId,
+      // Call RPC
+      final sizesPayload = sizes.entries.map((e) => {
         'size': e.key,
-        'qty_sent': e.value,
+        'qty': e.value,
       }).toList();
-      
-      await supabase.from('handover_sizes').insert(sizeList);
+
+      await supabase.rpc('submit_handover', params: {
+        'payload': {
+          'p_from_task_id': taskId,
+          'p_to_user_id': receiverId.startsWith('user_') ? null : receiverId, // Adjust logic as needed
+          'p_to_vendor_id': receiverId == 'user_vendor' ? receiverId : null,
+          'p_sizes': sizesPayload,
+        }
+      });
       
       state = state.copyWith(isLoading: false, isSuccess: true);
     } catch (e) {

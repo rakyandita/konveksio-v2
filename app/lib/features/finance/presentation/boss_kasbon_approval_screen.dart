@@ -216,7 +216,7 @@ class _KasbonCard extends ConsumerWidget {
                   Text('Keperluan', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.muted)),
                   const SizedBox(height: 4),
                   Text(
-                    request.reason,
+                    request.reason ?? '-',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                   ),
                 ],
