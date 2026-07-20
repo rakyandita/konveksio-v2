@@ -557,6 +557,7 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 - **Integrasi Payment Gateway:** Untuk pembuktian pembayaran DP via transfer bank.
 - **Manajemen Pengeluaran & Nota:** Upload foto nota pengeluaran operasional per cabang, dengan nominal, kategori, dan rekap bulanan.
 - **Vendor Mode Lengkap (V2):** Akun aplikasi untuk vendor, tracking per pcs, laporan pembayaran vendor, dan integrasi vendor ke slip gaji/keuangan.
+- **Riwayat Kasbon Boss (V2):** Fitur daftar riwayat seluruh pengajuan kasbon karyawan (disetujui/ditolak) yang dilengkapi dengan filter pencarian berdasarkan tanggal dan status.
 
 ---
 
