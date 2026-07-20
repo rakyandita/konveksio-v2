@@ -59,6 +59,11 @@ Konveksio V1 mencakup manajemen operasional internal bisnis konveksi multi-caban
 - Chain of Truth Methodology (github.com/kasfulk/chain-of-truth)
 - Konveksio Phase 1 Discovery (User Interview Logs, 2026-07-15)
 
+### 1.6 Phase 6 Definition of Done (Mock Bypass Policy)
+Dalam metodologi *Chain of Truth* untuk proyek ini, **Fase 6 (Implementation)** dinyatakan selesai ketika seluruh kerangka antarmuka pengguna (UI) dan logika klien telah dibangun dan divalidasi secara interaktif menggunakan **Mock Data Bypass**. 
+- Kode *bypass* ini (`mock_data.dart`) **wajib dipertahankan** di dalam repositori selama Fase 6 berlangsung.
+- Penghapusan *mock data* dan transisi ke integrasi *database* Supabase sesungguhnya hanya akan dilakukan ketika secara resmi memasuki **Fase 7 (Testing & Integration)**, berdasarkan instruksi eksplisit dari pengguna.
+
 ---
 
 ## 2. Product Overview
@@ -579,3 +584,5 @@ Konveksio adalah aplikasi Android *offline-first* berbasis SaaS untuk manajemen 
 | 2.9 | 2026-07-15 | Antigravity AI | Audit 5 Edge Cases: Tambah Batal/Re-route untuk Handover menggantung (FR-07.3); Handover Vendor di-route ke Kotak Masuk Admin/Boss (FR-07.3, FR-09.1); Wajib susulkan Discrepancy (BR-07.4); Tambah tombol TOLAK di Kotak Masuk (FR-10.3); Penegasan fungsi redistribusi Smart Bulk Assign (FR-07.1) |
 | 3.0 | 2026-07-16 | Antigravity AI | **Sinkronisasi Database Schema v2 (Fase 4 Hardened):** (1) Semua nilai enum di-update ke Bahasa Inggris — `order_status`: draft/confirmation/running/completed/shipped/done/cancelled; `task_status`: running/completed; `handover_status`: pending/accepted/rejected. (2) State machine BR-06.3 diperbarui dengan nilai enum database + catatan i18n mapping ke UI. (3) BR-09.2 update referensi status. (4) Section 4.2 dikonfirmasi `cash_advances` & `salary_records` kini memiliki `branch_id` langsung (denormalisasi). (5) Section 4.3 Hard Delete rules update enum. (6) Core Objects table diperbarui dengan nilai enum dan lifecycle yang benar. |
 | 3.1 | 2026-07-17 | Antigravity AI | Increment 1: Tambah `Adjustment Item` (FR-06.8) dan explicit `Mutation Queue` (AC F06 & Core Objects) sesuai audit remediasi fase 1-5. |
+| 3.2 | 2026-07-17 | Antigravity AI | Penambahan Mock Data Bypass (Fase 6) |
+| 3.3 | 2026-07-20 | Antigravity AI | Tambah Section 1.6 (Phase 6 Definition of Done - Mock Bypass Policy) untuk mengunci kriteria rilis Fase 6. |
