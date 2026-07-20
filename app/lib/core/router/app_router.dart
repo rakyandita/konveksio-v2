@@ -34,8 +34,11 @@ import '../../features/finance/presentation/karyawan_salary_screen.dart';
 import '../../features/finance/presentation/boss_salary_screen.dart';
 import '../../features/production/presentation/spk_viewer_screen.dart';
 
+import '../../features/dashboard/presentation/boss_inbox_screen.dart';
 import '../../features/master/presentation/master_vendors_screen.dart';
+import '../../features/master/presentation/master_vendors_detail_screen.dart';
 import '../../features/master/presentation/master_employees_screen.dart';
+import '../../features/master/presentation/master_employees_detail_screen.dart';
 import '../../features/master/presentation/master_products_screen.dart';
 import '../../features/master/presentation/master_customers_screen.dart';
 import '../../features/settings/presentation/settings_branch_screen.dart';
@@ -260,8 +263,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const MasterVendorsScreen(),
       ),
       GoRoute(
+        path: '/boss/master/vendors/:id',
+        builder: (context, state) => MasterVendorsDetailScreen(
+          vendorId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
         path: '/boss/master/employees',
         builder: (context, state) => const MasterEmployeesScreen(),
+      ),
+      GoRoute(
+        path: '/boss/master/employees/:id',
+        builder: (context, state) => MasterEmployeesDetailScreen(
+          employeeId: state.pathParameters['id']!,
+        ),
       ),
       GoRoute(
         path: '/boss/master/products',
@@ -278,6 +293,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/boss/settings/admin',
         builder: (context, state) => const SettingsAdminScreen(),
+      ),
+      GoRoute(
+        path: '/boss/inbox',
+        builder: (context, state) => const BossInboxScreen(),
       ),
       GoRoute(
         path: '/owner/branch/:id',
