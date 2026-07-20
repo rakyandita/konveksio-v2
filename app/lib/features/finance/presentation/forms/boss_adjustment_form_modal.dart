@@ -66,7 +66,7 @@ class _BossAdjustmentFormModalContent extends StatelessWidget {
             label: 'Nominal (Rp)',
             hintText: 'Contoh: 50.000',
             keyboardType: TextInputType.number,
-            prefixIcon: PhosphorIconsRegular.money,
+            prefixIcon: Icon(PhosphorIconsRegular.money),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(

@@ -67,13 +67,13 @@ class _BossPaymentFormModalContent extends StatelessWidget {
             label: 'Nominal Pembayaran (Rp)',
             hintText: 'Contoh: 500.000',
             keyboardType: TextInputType.number,
-            prefixIcon: PhosphorIconsRegular.money,
+            prefixIcon: Icon(PhosphorIconsRegular.money),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(
             label: 'Tanggal Transfer / Bayar',
             hintText: 'dd-mm-yyyy',
-            prefixIcon: PhosphorIconsRegular.calendar,
+            prefixIcon: Icon(PhosphorIconsRegular.calendar),
           ),
           const SizedBox(height: AppTheme.spacingXl),
           KonveksioButton(

@@ -50,7 +50,7 @@ class _MasterEmployeeFormModalContent extends StatelessWidget {
           const KonveksioTextField(
             label: 'Nama Lengkap',
             hintText: 'Contoh: Budi Susanto',
-            prefixIcon: PhosphorIconsRegular.user,
+            prefixIcon: Icon(PhosphorIconsRegular.user),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(
@@ -80,7 +80,7 @@ class _MasterEmployeeFormModalContent extends StatelessWidget {
             label: 'Ongkos Borongan per Pcs (Rp)',
             hintText: 'Contoh: 2.000',
             keyboardType: TextInputType.number,
-            prefixIcon: PhosphorIconsRegular.money,
+            prefixIcon: Icon(PhosphorIconsRegular.money),
           ),
           const SizedBox(height: AppTheme.spacingXl),
           KonveksioButton(

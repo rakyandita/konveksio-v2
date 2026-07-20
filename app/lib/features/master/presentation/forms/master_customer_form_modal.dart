@@ -50,21 +50,21 @@ class _MasterCustomerFormModalContent extends StatelessWidget {
           const KonveksioTextField(
             label: 'Nama Lengkap / Instansi',
             hintText: 'Contoh: PT. Bintang Sejahtera',
-            prefixIcon: PhosphorIconsRegular.user,
+            prefixIcon: Icon(PhosphorIconsRegular.user),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(
             label: 'Nomor WhatsApp',
             hintText: 'Contoh: 081234567890',
             keyboardType: TextInputType.phone,
-            prefixIcon: PhosphorIconsRegular.whatsappLogo,
+            prefixIcon: Icon(PhosphorIconsRegular.whatsappLogo),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(
             label: 'Alamat Pengiriman',
             hintText: 'Alamat lengkap dengan kodepos',
             maxLines: 3,
-            prefixIcon: PhosphorIconsRegular.mapPin,
+            prefixIcon: Icon(PhosphorIconsRegular.mapPin),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(

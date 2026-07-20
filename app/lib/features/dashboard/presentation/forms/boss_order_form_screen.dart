@@ -48,7 +48,7 @@ class _BossOrderFormScreenState extends State<BossOrderFormScreen> {
               controller: _customerController,
               label: 'Pilih Customer',
               hintText: 'Cari customer...',
-              prefixIcon: PhosphorIconsRegular.user,
+              prefixIcon: Icon(PhosphorIconsRegular.user),
             ),
             const SizedBox(height: AppTheme.spacingBase),
             
@@ -58,7 +58,7 @@ class _BossOrderFormScreenState extends State<BossOrderFormScreen> {
               controller: _deadlineController,
               label: 'Batas Waktu (Deadline)',
               hintText: 'dd-mm-yyyy',
-              prefixIcon: PhosphorIconsRegular.calendar,
+              prefixIcon: Icon(PhosphorIconsRegular.calendar),
             ),
             const SizedBox(height: AppTheme.spacingSm),
             KonveksioTextField(
@@ -101,7 +101,7 @@ class _BossOrderFormScreenState extends State<BossOrderFormScreen> {
                   KonveksioTextField(
                     hintText: 'Contoh: 100.000',
                     keyboardType: TextInputType.number,
-                    prefixIcon: PhosphorIconsRegular.money,
+                    prefixIcon: Icon(PhosphorIconsRegular.money),
                   ),
                   const SizedBox(height: 16),
                   const Text('Rincian Kuantitas (Size Group)', style: TextStyle(color: AppTheme.muted, fontSize: 13)),

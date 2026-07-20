@@ -51,7 +51,7 @@ class _SettingsKasbonLimitModalContent extends StatelessWidget {
             label: 'Persentase Potongan Kasbon Maksimal (%)',
             hintText: 'Contoh: 50',
             keyboardType: TextInputType.number,
-            prefixIcon: PhosphorIconsRegular.percent,
+            prefixIcon: Icon(PhosphorIconsRegular.percent),
           ),
           const SizedBox(height: 8),
           const Text(

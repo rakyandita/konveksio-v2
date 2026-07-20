@@ -50,7 +50,7 @@ class _MasterSizeGroupFormModalContent extends StatelessWidget {
           const KonveksioTextField(
             label: 'Nama Group Ukuran',
             hintText: 'Contoh: Baju Dewasa Internasional',
-            prefixIcon: PhosphorIconsRegular.tag,
+            prefixIcon: Icon(PhosphorIconsRegular.tag),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(

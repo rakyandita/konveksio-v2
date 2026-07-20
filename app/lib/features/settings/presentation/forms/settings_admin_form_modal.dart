@@ -59,7 +59,7 @@ class _SettingsAdminFormModalContentState extends State<_SettingsAdminFormModalC
           const KonveksioTextField(
             label: 'Nama Admin',
             hintText: 'Contoh: Rina',
-            prefixIcon: PhosphorIconsRegular.user,
+            prefixIcon: Icon(PhosphorIconsRegular.user),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(

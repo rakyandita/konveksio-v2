@@ -50,7 +50,7 @@ class _MasterVendorFormModalContent extends StatelessWidget {
           const KonveksioTextField(
             label: 'Nama Vendor / Badan Usaha',
             hintText: 'Contoh: Sablon Jaya Makmur',
-            prefixIcon: PhosphorIconsRegular.buildings,
+            prefixIcon: Icon(PhosphorIconsRegular.buildings),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(
@@ -62,7 +62,7 @@ class _MasterVendorFormModalContent extends StatelessWidget {
             label: 'Nomor WhatsApp (Kontak)',
             hintText: 'Contoh: 081234567890',
             keyboardType: TextInputType.phone,
-            prefixIcon: PhosphorIconsRegular.whatsappLogo,
+            prefixIcon: Icon(PhosphorIconsRegular.whatsappLogo),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(

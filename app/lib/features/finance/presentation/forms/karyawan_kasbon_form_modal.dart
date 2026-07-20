@@ -51,7 +51,7 @@ class _KaryawanKasbonFormModalContent extends StatelessWidget {
             label: 'Nominal Pinjaman (Rp)',
             hintText: 'Contoh: 100.000',
             keyboardType: TextInputType.number,
-            prefixIcon: PhosphorIconsRegular.money,
+            prefixIcon: Icon(PhosphorIconsRegular.money),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const Text('Alasan Pengajuan', style: TextStyle(color: AppTheme.muted, fontSize: 13)),

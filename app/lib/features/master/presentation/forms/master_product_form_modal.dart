@@ -50,7 +50,7 @@ class _MasterProductFormModalContent extends StatelessWidget {
           const KonveksioTextField(
             label: 'Nama Produk',
             hintText: 'Contoh: Kaos Polo Wangky',
-            prefixIcon: PhosphorIconsRegular.tShirt,
+            prefixIcon: Icon(PhosphorIconsRegular.tShirt),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const Text('Kategori', style: TextStyle(color: AppTheme.muted, fontSize: 13)),

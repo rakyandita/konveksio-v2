@@ -50,21 +50,21 @@ class _OwnerBranchFormModalContent extends StatelessWidget {
           const KonveksioTextField(
             label: 'Nama Cabang',
             hintText: 'Contoh: Cabang Serang 2',
-            prefixIcon: PhosphorIconsRegular.storefront,
+            prefixIcon: Icon(PhosphorIconsRegular.storefront),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(
             label: 'Alamat Cabang',
             hintText: 'Alamat lengkap lokasi workshop',
             maxLines: 2,
-            prefixIcon: PhosphorIconsRegular.mapPin,
+            prefixIcon: Icon(PhosphorIconsRegular.mapPin),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(
             label: 'Nomor Kontak (WhatsApp)',
             hintText: 'Contoh: 081234567890',
             keyboardType: TextInputType.phone,
-            prefixIcon: PhosphorIconsRegular.whatsappLogo,
+            prefixIcon: Icon(PhosphorIconsRegular.whatsappLogo),
           ),
           const SizedBox(height: AppTheme.spacingXl),
           KonveksioButton(
