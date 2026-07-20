@@ -75,17 +75,15 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
     }
   }
 
-  Future<void> approveRequest(String id) async {
-    state = state.copyWith(isLoading: true, error: null);
+  Future<void> approveRequest(String id, {double? amountApproved}) async {
     try {
-      // SOT UC-004: Approve logic
-      // supabase.from('cash_advances').update({ status: 'approved' }).eq('id', id)
-      await Future.delayed(const Duration(seconds: 1));
+      // Dummy logic for now. Replace with actual Supabase RPC/DB update.
+      // e.g. await supabase.from('cash_advances').update({'status': 'approved', 'amount_approved': amountApproved}).eq('id', id);
       
-      final updatedRequests = state.pendingRequests.where((r) => r.id != id).toList();
-      state = state.copyWith(isLoading: false, pendingRequests: updatedRequests);
+      final updatedRequests = state.pendingRequests.where((req) => req.id != id).toList();
+      state = state.copyWith(pendingRequests: updatedRequests);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(error: e.toString());
     }
   }
 

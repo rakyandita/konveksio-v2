@@ -41,8 +41,8 @@ sequenceDiagram
 - **Security:** RLS mengecek bahwa `employee_id` adalah `auth.uid()` itu sendiri.
 
 **Action 2: Menyetujui Kasbon (Boss)**
-- **Method:** `supabase.from('cash_advances').update({ status: 'approved' }).eq('id', 'uuid')`
-- **Security:** RLS memastikan hanya role `boss`/`owner` yang bisa update kolom `status`.
+- **Method:** `supabase.from('cash_advances').update({ status: 'approved', amount_approved: value }).eq('id', 'uuid')`
+- **Security:** RLS memastikan hanya role `boss`/`owner` yang bisa update kolom `status` dan `amount_approved`.
 
 ## 6. Data Mapping (UI ↔ API ↔ DB)
 | UI Field | API Field | DB Column | Data Type | Notes |

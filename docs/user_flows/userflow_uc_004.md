@@ -33,6 +33,12 @@
 - Admin menginput nominal dan menekan `[Simpan]`.
 - Kasbon langsung berstatus "Disetujui" (`approved`) tanpa perlu melewati proses status "Menunggu Persetujuan" (`pending`). Limit tetap dipotong.
 
+**3.3. Persetujuan Sebagian (Ubah Nominal) oleh Boss**
+- Pada langkah 10, Boss melihat bahwa nominal pengajuan terlalu besar dan memutuskan untuk menyetujui sebagian.
+- Boss mengubah input nominal yang ada menjadi angka yang lebih kecil.
+- Boss menekan `[SETUJUI SEBAGIAN]`.
+- Status kasbon menjadi "Disetujui" (`approved`), dengan `amount_approved` sesuai angka yang dimasukkan. Selisih sisa limit (dari yang diajukan dengan yang disetujui) dikembalikan/dibebaskan. Karyawan menerima notifikasi bahwa kasbon disetujui sebagian.
+
 ## 4. Exception Flows
 **4.1. Input Melebihi Limit**
 - Pada langkah 4, Karyawan menginput nominal berlebih.
