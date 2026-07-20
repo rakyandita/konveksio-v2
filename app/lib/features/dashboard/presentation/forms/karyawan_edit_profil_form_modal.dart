@@ -15,8 +15,27 @@ class KaryawanEditProfilFormModal {
   }
 }
 
-class _KaryawanEditProfilFormModalContent extends StatelessWidget {
+class _KaryawanEditProfilFormModalContent extends StatefulWidget {
   const _KaryawanEditProfilFormModalContent();
+
+  @override
+  State<_KaryawanEditProfilFormModalContent> createState() => _KaryawanEditProfilFormModalContentState();
+}
+
+class _KaryawanEditProfilFormModalContentState extends State<_KaryawanEditProfilFormModalContent> {
+  late final TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: 'Budi');
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +66,10 @@ class _KaryawanEditProfilFormModalContent extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppTheme.spacingBase),
-          const KonveksioTextField(
+          KonveksioTextField(
             label: 'Nama Lengkap',
-            initialValue: 'Budi',
-            prefixIcon: Icon(PhosphorIconsRegular.user),
+            controller: _nameController,
+            prefixIcon: const Icon(PhosphorIconsRegular.user),
           ),
           const SizedBox(height: AppTheme.spacingSm),
           const KonveksioTextField(

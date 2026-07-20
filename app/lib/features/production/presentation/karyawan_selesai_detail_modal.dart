@@ -31,7 +31,7 @@ class _KaryawanSelesaiDetailModalContent extends StatelessWidget {
         left: AppTheme.spacingBase,
         right: AppTheme.spacingBase,
         top: AppTheme.spacingBase,
-        bottom: AppTheme.spacingXxl,
+        bottom: AppTheme.spacingXl,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
