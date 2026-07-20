@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
@@ -94,7 +96,10 @@ class _KasbonCard extends ConsumerWidget {
   }
 
   void _showApproveDialog(BuildContext context, WidgetRef ref) {
-    final controller = TextEditingController(text: request.amountRequested.toInt().toString());
+    final formatter = NumberFormat.decimalPattern('id');
+    final initialText = formatter.format(request.amountRequested.toInt());
+    final controller = TextEditingController(text: initialText);
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -108,6 +113,10 @@ class _KasbonCard extends ConsumerWidget {
             TextField(
               controller: controller,
               keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                _CurrencyInputFormatter(),
+              ],
               decoration: const InputDecoration(
                 prefixText: 'Rp ',
                 border: OutlineInputBorder(),
@@ -235,3 +244,24 @@ class _KasbonCard extends ConsumerWidget {
     );
   }
 }
+
+class _CurrencyInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    }
+
+    final intValue = int.tryParse(newValue.text);
+    if (intValue == null) return oldValue;
+
+    final formatter = NumberFormat.decimalPattern('id');
+    final newText = formatter.format(intValue);
+
+    return newValue.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
+
