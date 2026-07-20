@@ -2,7 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../../core/utils/mock_data.dart';
-import '../domain/cash_advance.dart';
+import '../domain/cash_advance_model.dart';
+import '../data/finance_repository.dart';
 
 final kasbonLimitProvider = FutureProvider.autoDispose<double>((ref) async {
   final supabase = Supabase.instance.client;
@@ -10,20 +11,16 @@ final kasbonLimitProvider = FutureProvider.autoDispose<double>((ref) async {
   
   if (!authState.isAuthenticated || supabase.auth.currentUser == null) return 0.0;
   
-  try {
-    // Call RPC to get remaining limit
-    final response = await supabase.rpc('get_kasbon_limit', params: {
-      'p_user_id': supabase.auth.currentUser!.id,
-    });
-    
-    // Parse response
-    if (response != null) {
-      return (response as num).toDouble();
-    }
-    return 0.0;
-  } catch (e) {
-    throw Exception('Gagal memuat sisa limit kasbon: $e');
-  }
+  return ref.read(financeRepositoryProvider).getKasbonLimit(supabase.auth.currentUser!.id);
+});
+
+final kasbonHistoryProvider = FutureProvider.autoDispose<List<CashAdvanceModel>>((ref) async {
+  final supabase = Supabase.instance.client;
+  final authState = ref.watch(authControllerProvider);
+  
+  if (!authState.isAuthenticated || supabase.auth.currentUser == null) return [];
+  
+  return ref.read(financeRepositoryProvider).getCashAdvancesForUser(supabase.auth.currentUser!.id);
 });
 
 class KasbonState {
@@ -70,7 +67,7 @@ class KaryawanKasbonController extends Notifier<KasbonState> {
       // Jika login menggunakan mock (tanpa API key valid), currentUser akan null
       if (supabase.auth.currentUser == null) {
         MockData.cashAdvances.add(
-          CashAdvance(
+          CashAdvanceModel(
             id: 'mock-${DateTime.now().millisecondsSinceEpoch}',
             branchId: 'mock-branch',
             userId: 'Karyawan 08111',
@@ -95,24 +92,22 @@ class KaryawanKasbonController extends Notifier<KasbonState> {
         final branchData = await supabase.from('branches').select('id').limit(1).single();
         targetBranchId = branchData['id'] as String;
       }
-      
-      // Get current limit first to validate double submission
-      final limit = await ref.read(kasbonLimitProvider.future);
-      // BYPASS UNTUK TESTING:
-      // if (amount > limit) {
-      //   throw Exception('Nominal melebihi sisa limit Anda.');
-      // }
 
-      await supabase.from('cash_advances').insert({
-        'branch_id': targetBranchId,
-        'user_id': supabase.auth.currentUser!.id,
-        'amount_requested': amount,
-        'reason': reason,
-        'status': ApprovalStatus.pending.name,
-      });
+      await ref.read(financeRepositoryProvider).submitCashAdvance(
+        CashAdvanceModel(
+          id: '',
+          branchId: targetBranchId,
+          userId: supabase.auth.currentUser!.id,
+          amountRequested: amount,
+          reason: reason,
+          status: ApprovalStatus.pending,
+          createdAt: DateTime.now(),
+        )
+      );
 
-      // Invalidate the limit provider so it refreshes next time
+      // Invalidate providers
       ref.invalidate(kasbonLimitProvider);
+      ref.invalidate(kasbonHistoryProvider);
       
       state = state.copyWith(isLoading: false, isSuccess: true);
     } catch (e) {
@@ -124,3 +119,4 @@ class KaryawanKasbonController extends Notifier<KasbonState> {
 final karyawanKasbonControllerProvider = NotifierProvider<KaryawanKasbonController, KasbonState>(() {
   return KaryawanKasbonController();
 });
+

@@ -1,12 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/utils/mock_data.dart';
-import '../domain/cash_advance.dart';
+import '../domain/cash_advance_model.dart';
+import '../data/finance_repository.dart';
 
 class BossKasbonApprovalState {
   final bool isLoading;
   final String? error;
-  final List<CashAdvance> pendingRequests;
+  final List<CashAdvanceModel> pendingRequests;
 
   BossKasbonApprovalState({
     this.isLoading = false,
@@ -17,7 +18,7 @@ class BossKasbonApprovalState {
   BossKasbonApprovalState copyWith({
     bool? isLoading,
     String? error,
-    List<CashAdvance>? pendingRequests,
+    List<CashAdvanceModel>? pendingRequests,
   }) {
     return BossKasbonApprovalState(
       isLoading: isLoading ?? this.isLoading,
@@ -52,32 +53,7 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
         return;
       }
 
-      final response = await supabase
-          .from('cash_advances')
-          .select('*, profiles:user_id(full_name)')
-          .eq('status', 'pending')
-          .order('created_at', ascending: false);
-      
-      final List<dynamic> data = response;
-      final requests = data.map((json) {
-        final profile = json['profiles'] as Map<String, dynamic>?;
-        final name = profile != null ? profile['full_name'] as String? ?? 'Karyawan' : 'Karyawan';
-        return CashAdvance(
-          id: json['id'] as String,
-          branchId: json['branch_id'] as String,
-          userId: name, // We store the full_name here for UI display
-          amountRequested: (json['amount_requested'] as num).toDouble(),
-          amountApproved: json['amount_approved'] != null ? (json['amount_approved'] as num).toDouble() : null,
-          reason: json['reason'] as String?,
-          status: ApprovalStatus.values.firstWhere(
-            (e) => e.name == json['status'],
-            orElse: () => ApprovalStatus.pending,
-          ),
-          createdAt: DateTime.parse(json['created_at'].toString()),
-          approvedAt: json['approved_at'] != null ? DateTime.parse(json['approved_at'].toString()) : null,
-          rejectionReason: json['rejection_reason'] as String?,
-        );
-      }).toList();
+      final requests = await ref.read(financeRepositoryProvider).getCashAdvancesForApproval();
       
       state = state.copyWith(isLoading: false, pendingRequests: requests);
     } catch (e) {
@@ -95,7 +71,7 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
         final index = MockData.cashAdvances.indexWhere((e) => e.id == id);
         if (index != -1) {
           final old = MockData.cashAdvances[index];
-          MockData.cashAdvances[index] = CashAdvance(
+          MockData.cashAdvances[index] = CashAdvanceModel(
             id: old.id,
             branchId: old.branchId,
             userId: old.userId,
@@ -111,11 +87,11 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
         return;
       }
 
-      await supabase.from('cash_advances').update({
-        'status': 'approved',
-        'amount_approved': amountApproved,
-        'approved_at': DateTime.now().toIso8601String(),
-      }).eq('id', id);
+      await ref.read(financeRepositoryProvider).updateCashAdvanceStatus(
+        id: id,
+        status: ApprovalStatus.approved,
+        amountApproved: amountApproved,
+      );
       
       final updatedRequests = state.pendingRequests.where((req) => req.id != id).toList();
       state = state.copyWith(isLoading: false, pendingRequests: updatedRequests);
@@ -134,7 +110,7 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
         final index = MockData.cashAdvances.indexWhere((e) => e.id == id);
         if (index != -1) {
           final old = MockData.cashAdvances[index];
-          MockData.cashAdvances[index] = CashAdvance(
+          MockData.cashAdvances[index] = CashAdvanceModel(
             id: old.id,
             branchId: old.branchId,
             userId: old.userId,
@@ -149,10 +125,11 @@ class BossKasbonApprovalController extends Notifier<BossKasbonApprovalState> {
         return;
       }
 
-      await supabase.from('cash_advances').update({
-        'status': 'rejected',
-        'rejection_reason': rejectionReason,
-      }).eq('id', id);
+      await ref.read(financeRepositoryProvider).updateCashAdvanceStatus(
+        id: id,
+        status: ApprovalStatus.rejected,
+        rejectionReason: rejectionReason,
+      );
       
       final updatedRequests = state.pendingRequests.where((r) => r.id != id).toList();
       state = state.copyWith(isLoading: false, pendingRequests: updatedRequests);

@@ -8,8 +8,8 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/konveksio_button.dart';
 import '../../../core/widgets/konveksio_card.dart';
+import '../domain/cash_advance_model.dart';
 import 'boss_kasbon_approval_controller.dart';
-import '../domain/cash_advance.dart';
 
 class BossKasbonApprovalScreen extends ConsumerWidget {
   const BossKasbonApprovalScreen({super.key});
@@ -46,7 +46,7 @@ class BossKasbonApprovalScreen extends ConsumerWidget {
 }
 
 class _KasbonCard extends ConsumerWidget {
-  final CashAdvance request;
+  final CashAdvanceModel request;
 
   const _KasbonCard({required this.request});
 

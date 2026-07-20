@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import 'karyawan_salary_controller.dart';
+import '../domain/salary_record_model.dart';
 
 class KaryawanSalaryScreen extends ConsumerWidget {
   const KaryawanSalaryScreen({super.key});
@@ -10,6 +12,9 @@ class KaryawanSalaryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final salaryAsync = ref.watch(karyawanSalaryControllerProvider);
+    final currencyFormat = NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0);
+    final dateFormat = DateFormat('dd MMM yyyy', 'id');
+    final shortDateFormat = DateFormat('dd MMM', 'id');
 
     return Scaffold(
       backgroundColor: AppTheme.background,
@@ -34,7 +39,7 @@ class KaryawanSalaryScreen extends ConsumerWidget {
             itemCount: salaries.length,
             itemBuilder: (context, index) {
               final salary = salaries[index];
-              return _buildSalaryCard(context, salary);
+              return _buildSalaryCard(context, salary, currencyFormat, dateFormat, shortDateFormat);
             },
           );
         },
@@ -49,7 +54,9 @@ class KaryawanSalaryScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSalaryCard(BuildContext context, SalaryRecord salary) {
+  Widget _buildSalaryCard(BuildContext context, SalaryRecordModel salary, NumberFormat currencyFormat, DateFormat dateFormat, DateFormat shortDateFormat) {
+    final startDate = salary.periodEnd.subtract(const Duration(days: 6));
+    
     return Card(
       elevation: 0,
       color: AppTheme.surface,
@@ -75,14 +82,14 @@ class KaryawanSalaryScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Periode ${salary.periodStartDate} - ${salary.periodEndDate}',
+                        'Periode ${shortDateFormat.format(startDate)} - ${shortDateFormat.format(salary.periodEnd)}',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        salary.date,
+                        dateFormat.format(salary.createdAt),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: AppTheme.muted,
                             ),
@@ -91,7 +98,7 @@ class KaryawanSalaryScreen extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  'Rp ${salary.netPay}',
+                  currencyFormat.format(salary.netSalary),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppTheme.success,
@@ -100,12 +107,10 @@ class KaryawanSalaryScreen extends ConsumerWidget {
               ],
             ),
             const Divider(height: 24),
-            _buildDetailRow('Gaji Pokok', 'Rp ${salary.basePay}'),
-            const SizedBox(height: 8),
-            _buildDetailRow('Piece-rate (Borongan)', 'Rp ${salary.pieceRatePay}'),
-            if (salary.deductions > 0) ...[
+            _buildDetailRow('Penghasilan (Gross)', currencyFormat.format(salary.grossSalary)),
+            if (salary.cashAdvanceDeduction > 0) ...[
               const SizedBox(height: 8),
-              _buildDetailRow('Potongan (Kasbon dll)', '-Rp ${salary.deductions}', isDeduction: true),
+              _buildDetailRow('Potongan (Kasbon dll)', '-${currencyFormat.format(salary.cashAdvanceDeduction)}', isDeduction: true),
             ],
           ],
         ),

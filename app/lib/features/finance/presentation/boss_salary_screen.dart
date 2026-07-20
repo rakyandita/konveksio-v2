@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/konveksio_button.dart';
+import 'boss_salary_controller.dart';
 
-class BossSalaryScreen extends StatefulWidget {
+class BossSalaryScreen extends ConsumerStatefulWidget {
   const BossSalaryScreen({super.key});
 
   @override
-  State<BossSalaryScreen> createState() => _BossSalaryScreenState();
+  ConsumerState<BossSalaryScreen> createState() => _BossSalaryScreenState();
 }
 
-class _BossSalaryScreenState extends State<BossSalaryScreen> with SingleTickerProviderStateMixin {
+class _BossSalaryScreenState extends ConsumerState<BossSalaryScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -55,6 +58,8 @@ class _BossSalaryScreenState extends State<BossSalaryScreen> with SingleTickerPr
   }
 
   Widget _buildGenerateBaruTab(BuildContext context) {
+    final state = ref.watch(bossSalaryControllerProvider);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppTheme.spacingBase),
       child: Column(
@@ -95,10 +100,14 @@ class _BossSalaryScreenState extends State<BossSalaryScreen> with SingleTickerPr
           const SizedBox(height: AppTheme.spacingLg),
           KonveksioButton(
             text: 'GENERATE SLIP GAJI & SIMPAN',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Slip gaji berhasil dibuat untuk periode ini')),
-              );
+            isLoading: state.isLoading,
+            onPressed: () async {
+              await ref.read(bossSalaryControllerProvider.notifier).generateSalary();
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Slip gaji berhasil dibuat untuk periode ini')),
+                );
+              }
             },
           ),
         ],
@@ -107,12 +116,33 @@ class _BossSalaryScreenState extends State<BossSalaryScreen> with SingleTickerPr
   }
 
   Widget _buildRiwayatGajiTab(BuildContext context) {
-    return ListView(
+    final state = ref.watch(bossSalaryControllerProvider);
+    final currencyFormat = NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0);
+    final shortDateFormat = DateFormat('dd MMM yyyy', 'id');
+
+    if (state.isLoading && state.history.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.history.isEmpty) {
+      return const Center(
+        child: Text(
+          'Belum ada riwayat gaji.',
+          style: TextStyle(color: AppTheme.muted),
+        ),
+      );
+    }
+
+    return ListView.builder(
       padding: const EdgeInsets.all(AppTheme.spacingBase),
-      children: [
-        _buildHistoryCard(context, '03 Juli - 09 Juli 2026', 'Total: Rp 1.250.000 (4 Karyawan)'),
-        _buildHistoryCard(context, '26 Juni - 02 Juli 2026', 'Total: Rp 1.400.000 (5 Karyawan)'),
-      ],
+      itemCount: state.history.length,
+      itemBuilder: (context, index) {
+        final record = state.history[index];
+        final startDate = record.periodEnd.subtract(const Duration(days: 6));
+        final period = '${shortDateFormat.format(startDate)} - ${shortDateFormat.format(record.periodEnd)}';
+        
+        return _buildHistoryCard(context, period, 'Total: ${currencyFormat.format(record.netSalary)} (${record.userId})');
+      },
     );
   }
 

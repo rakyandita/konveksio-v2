@@ -2,8 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import '../domain/auth_state.dart';
 
+import '../../core/supabase/supabase_client_provider.dart';
+
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepository(Supabase.instance.client);
+  return AuthRepository(ref.watch(supabaseClientProvider));
 });
 
 class AuthRepository {
@@ -13,12 +15,6 @@ class AuthRepository {
 
   /// Sign in using phone and PIN (password)
   Future<AuthState> signIn(String phone, String pin) async {
-    // --- BYPASS MOCK UNTUK VISUAL REVIEW (OPSI A) ---
-    if (phone == '08111') return const AuthState(isAuthenticated: true, role: UserRole.employee);
-    if (phone == '08222') return const AuthState(isAuthenticated: true, role: UserRole.boss);
-    if (phone == '08333') return const AuthState(isAuthenticated: true, role: UserRole.owner);
-    // ------------------------------------------------
-
     try {
       // 1. Authenticate via Supabase Auth
       // Add fake email domain to phone number since Supabase expects email format

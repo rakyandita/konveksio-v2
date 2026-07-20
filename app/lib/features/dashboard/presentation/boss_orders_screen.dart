@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
-import 'boss_orders_controller.dart';
+import '../../production/presentation/providers/order_provider.dart';
+import '../../production/domain/order_model.dart';
 
 class BossOrdersScreen extends ConsumerStatefulWidget {
   const BossOrdersScreen({super.key});
@@ -38,7 +39,7 @@ class _BossOrdersScreenState extends ConsumerState<BossOrdersScreen> with Single
 
   @override
   Widget build(BuildContext context) {
-    final ordersAsync = ref.watch(bossOrdersControllerProvider);
+    final ordersAsync = ref.watch(orderListProvider);
 
     return Scaffold(
       backgroundColor: AppTheme.background,
@@ -76,7 +77,7 @@ class _BossOrdersScreenState extends ConsumerState<BossOrdersScreen> with Single
               }
 
               return RefreshIndicator(
-                onRefresh: () async => ref.invalidate(bossOrdersControllerProvider),
+                onRefresh: () async => ref.invalidate(orderListProvider),
                 child: ListView.builder(
                   padding: const EdgeInsets.all(AppTheme.spacingBase),
                   itemCount: filteredOrders.length,
@@ -97,12 +98,12 @@ class _BossOrdersScreenState extends ConsumerState<BossOrdersScreen> with Single
     );
   }
 
-  Widget _buildOrderCard(BuildContext context, Order order) {
+  Widget _buildOrderCard(BuildContext context, OrderModel order) {
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     final dateFormat = DateFormat('dd MMM yyyy');
     
     // Hitung status deadline
-    final daysToDeadline = order.deadlineDate.difference(DateTime.now()).inDays;
+    final daysToDeadline = (order.targetDate ?? DateTime.now()).difference(DateTime.now()).inDays;
     Color deadlineColor = AppTheme.muted;
     if (order.status == 'running' || order.status == 'confirmation') {
       if (daysToDeadline < 3 && daysToDeadline >= 0) {
@@ -146,7 +147,7 @@ class _BossOrdersScreenState extends ConsumerState<BossOrdersScreen> with Single
                       border: Border.all(color: AppTheme.border),
                     ),
                     child: Text(
-                      '${order.items.length} item',
+                      '${2} item',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
@@ -154,7 +155,7 @@ class _BossOrdersScreenState extends ConsumerState<BossOrdersScreen> with Single
               ),
               const SizedBox(height: AppTheme.spacingSm),
               Text(
-                order.customerName,
+                'Pelanggan ${order.customerId}',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -165,7 +166,7 @@ class _BossOrdersScreenState extends ConsumerState<BossOrdersScreen> with Single
                   Icon(PhosphorIconsRegular.calendarBlank, size: 16, color: deadlineColor),
                   const SizedBox(width: 4),
                   Text(
-                    'Deadline: ${dateFormat.format(order.deadlineDate)}',
+                    'Deadline: ${dateFormat.format(order.targetDate ?? DateTime.now())}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: deadlineColor,
                           fontWeight: deadlineColor != AppTheme.muted ? FontWeight.bold : FontWeight.normal,
@@ -179,7 +180,7 @@ class _BossOrdersScreenState extends ConsumerState<BossOrdersScreen> with Single
                   const Icon(PhosphorIconsRegular.money, size: 16, color: AppTheme.muted),
                   const SizedBox(width: 4),
                   Text(
-                    currencyFormat.format(order.totalPrice),
+                    currencyFormat.format(order.totalAmount),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.muted),
                   ),
                 ],

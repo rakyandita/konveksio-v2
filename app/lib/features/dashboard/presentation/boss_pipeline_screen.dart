@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../production/presentation/providers/task_provider.dart';
+import '../../production/domain/task_model.dart';
 
 class BossPipelineScreen extends ConsumerStatefulWidget {
   const BossPipelineScreen({super.key});
@@ -28,6 +30,8 @@ class _BossPipelineScreenState extends ConsumerState<BossPipelineScreen> with Si
 
   @override
   Widget build(BuildContext context) {
+    final tasksAsync = ref.watch(taskListProvider);
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -44,91 +48,104 @@ class _BossPipelineScreenState extends ConsumerState<BossPipelineScreen> with Si
           tabs: _divisions.map((div) => Tab(text: div)).toList(),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: _divisions.map((div) => _buildKanbanList(div)).toList(),
+      body: tasksAsync.when(
+        data: (tasks) {
+          return TabBarView(
+            controller: _tabController,
+            children: _divisions.map((div) {
+              final divisionTasks = tasks.where((t) => t.division == div).toList();
+              return _buildKanbanList(divisionTasks);
+            }).toList(),
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err', style: const TextStyle(color: AppTheme.destructive))),
       ),
     );
   }
 
-  Widget _buildKanbanList(String division) {
-    // Data mock
-    final items = [
-      {'order': 'ORD-001', 'item': 'Kemeja PDL', 'progress': 30, 'target': 50, 'status': 'running'},
-      {'order': 'ORD-002', 'item': 'Kaos Polo', 'progress': 100, 'target': 100, 'status': 'completed'},
-    ];
-
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppTheme.spacingBase),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final data = items[index];
-        final progress = data['progress'] as int;
-        final target = data['target'] as int;
-        final progressValue = progress / target;
-
-        return Card(
-          elevation: 0,
-          color: AppTheme.surface,
-          margin: const EdgeInsets.only(bottom: AppTheme.spacingBase),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-            side: const BorderSide(color: AppTheme.border),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(AppTheme.spacingBase),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${data['order']} - ${data['item']}',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    Icon(
-                      data['status'] == 'completed' ? PhosphorIconsRegular.checkCircle : PhosphorIconsRegular.clock,
-                      color: data['status'] == 'completed' ? AppTheme.success : AppTheme.warning,
-                      size: 20,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppTheme.spacingSm),
-                Text(
-                  'Dikerjakan oleh: Budi (Karyawan)',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.muted),
-                ),
-                const SizedBox(height: AppTheme.spacingBase),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Progres',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    Text(
-                      '$progress / $target pcs',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.primary,
-                          ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: progressValue,
-                  backgroundColor: AppTheme.border,
-                  color: data['status'] == 'completed' ? AppTheme.success : AppTheme.primary,
-                ),
-              ],
+  Widget _buildKanbanList(List<TaskModel> items) {
+    if (items.isEmpty) {
+      return const Center(
+        child: Text('Tidak ada task aktif', style: TextStyle(color: AppTheme.muted)),
+      );
+    }
+    return RefreshIndicator(
+      onRefresh: () async => ref.invalidate(taskListProvider),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(AppTheme.spacingBase),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final data = items[index];
+          // For now, these are dummy target/completed since we might need to fetch task_sizes
+          // To fetch sizes, we'd ideally have it in the task object via a JOIN or separate provider
+          final progress = 0;
+          final target = 100;
+          final progressValue = progress / target;
+  
+          return Card(
+            elevation: 0,
+            color: AppTheme.surface,
+            margin: const EdgeInsets.only(bottom: AppTheme.spacingBase),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppTheme.radiusLg),
+              side: const BorderSide(color: AppTheme.border),
             ),
-          ),
-        );
-      },
+            child: Padding(
+              padding: const EdgeInsets.all(AppTheme.spacingBase),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        data.id,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      Icon(
+                        data.status == 'completed' ? PhosphorIconsRegular.checkCircle : PhosphorIconsRegular.clock,
+                        color: data.status == 'completed' ? AppTheme.success : AppTheme.warning,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppTheme.spacingSm),
+                  Text(
+                    'Item: ${data.orderItemId}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.muted),
+                  ),
+                  const SizedBox(height: AppTheme.spacingBase),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Progres (Mock)',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      Text(
+                        '$progress / $target pcs',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primary,
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  LinearProgressIndicator(
+                    value: progressValue,
+                    backgroundColor: AppTheme.border,
+                    color: data.status == 'completed' ? AppTheme.success : AppTheme.primary,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
