@@ -35,7 +35,7 @@ class HandoverController extends Notifier<HandoverState> {
   Future<void> submitHandover({
     required String taskId,
     required String receiverId,
-    required int quantity,
+    required Map<String, int> sizes,
     String? notes,
   }) async {
     state = state.copyWith(isLoading: true, error: null);
@@ -48,14 +48,22 @@ class HandoverController extends Notifier<HandoverState> {
         throw Exception('Sesi tidak valid.');
       }
 
-      await supabase.from('handovers').insert({
-        'task_id': taskId,
-        'sender_id': supabase.auth.currentUser!.id,
-        'receiver_id': receiverId,
-        'quantity': quantity,
-        'notes': notes,
+      // Insert handover
+      final handoverRes = await supabase.from('handovers').insert({
+        'from_task_id': taskId,
+        'to_user_id': receiverId,
         'status': 'pending',
-      });
+      }).select().single();
+      
+      final handoverId = handoverRes['id'];
+      
+      final sizeList = sizes.entries.map((e) => {
+        'handover_id': handoverId,
+        'size': e.key,
+        'qty_sent': e.value,
+      }).toList();
+      
+      await supabase.from('handover_sizes').insert(sizeList);
       
       state = state.copyWith(isLoading: false, isSuccess: true);
     } catch (e) {

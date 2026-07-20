@@ -72,6 +72,13 @@ Jarak antar elemen mematuhi sistem *grid* kelipatan 8:
 - Tinggi minimum `48dp` untuk mempermudah tap.
 - Latar belakang abu-abu terang (`#F1F5F9`) dengan indikator garis bawah warna Primary saat aktif (fokus).
 
+#### 5.3.1. Form Kuantitas Size (Size Quantity Input)
+- Digunakan khusus untuk input kuantitas berbasis ukuran (misal: S, M, L, XL).
+- **Desain Floating Label:** Wajib menggunakan input *outlined* (`OutlineInputBorder`). Huruf *size* berfungsi sebagai *floating label* (contoh: "S"). Saat form kosong, label berada di tengah. Saat diisi angka, label melayang ke atas menimpa garis *border*.
+- **Grid Layout:** Disusun sejajar menyamping dalam format grid *4 kolom* agar *compact*.
+- **Lebar Kolom:** Lebar form dibatasi secukupnya untuk menampung maksimal 4 digit angka (sekitar 25% lebar *container*).
+- **Teks Input:** Teks angka diratakan ke kiri atau tengah (*center-aligned*) dengan spasi padding secukupnya.
+
 ### 5.4. Navigation Components (DS-04)
 - **Bottom Navigation Bar (Karyawan):** Latar putih `#FFFFFF`, ikon aktif berwarna Primary `#0D9488`, ikon non-aktif berwarna Muted `#64748B`. Menggunakan label di bawah ikon (ukuran `12sp`).
 - **Side Drawer (Boss/Admin):** Lebar 75% layar, header menggunakan background Primary. Item menu menggunakan ikon di sebelah kiri teks.

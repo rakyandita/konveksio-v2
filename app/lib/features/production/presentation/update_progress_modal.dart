@@ -3,21 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/konveksio_button.dart';
 import '../../../core/widgets/konveksio_size_input.dart';
-import '../../../core/widgets/konveksio_text_field.dart';
-import 'handover_controller.dart';
+import 'update_progress_controller.dart';
 
-class HandoverModal extends ConsumerStatefulWidget {
+class UpdateProgressModal extends ConsumerStatefulWidget {
   final String taskId;
-  final List<String> availableSizes;
-  
-  const HandoverModal({
+  final Map<String, int> targets;
+
+  const UpdateProgressModal({
     super.key,
     required this.taskId,
-    required this.availableSizes,
+    required this.targets,
   });
 
-  static void show(BuildContext context, String taskId, {List<String>? sizes}) {
-    final availableSizes = sizes ?? ['S', 'M', 'L'];
+  static void show(BuildContext context, String taskId, Map<String, int> targets) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -29,56 +27,46 @@ class HandoverModal extends ConsumerStatefulWidget {
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: HandoverModal(taskId: taskId, availableSizes: availableSizes),
+        child: UpdateProgressModal(taskId: taskId, targets: targets),
       ),
     );
   }
 
   @override
-  ConsumerState<HandoverModal> createState() => _HandoverModalState();
+  ConsumerState<UpdateProgressModal> createState() => _UpdateProgressModalState();
 }
 
-class _HandoverModalState extends ConsumerState<HandoverModal> {
+class _UpdateProgressModalState extends ConsumerState<UpdateProgressModal> {
   late final Map<String, TextEditingController> _sizeControllers;
-  
+
   @override
   void initState() {
     super.initState();
     _sizeControllers = {
-      for (var size in widget.availableSizes) size: TextEditingController()
+      for (var size in widget.targets.keys) size: TextEditingController()
     };
   }
-
-  final _notesController = TextEditingController();
-  String _selectedReceiver = 'user_siti'; // Dummy default
-  
-  // In a real app, this would be fetched from Supabase
-  final List<Map<String, String>> _receivers = [
-    {'id': 'user_siti', 'name': 'Siti (Jahit)'},
-    {'id': 'user_anto', 'name': 'Anto (Sablon)'},
-    {'id': 'user_vendor', 'name': 'Vendor Eksternal'},
-  ];
 
   @override
   void dispose() {
     for (var controller in _sizeControllers.values) {
       controller.dispose();
     }
-    _notesController.dispose();
     super.dispose();
   }
 
   void _submit() {
-    final Map<String, int> sizes = {};
+    final Map<String, int> inputs = {};
     for (var entry in _sizeControllers.entries) {
       final qtyStr = entry.value.text.replaceAll(RegExp(r'[^0-9]'), '');
       final qty = int.tryParse(qtyStr) ?? 0;
       if (qty > 0) {
-        sizes[entry.key] = qty;
+        inputs[entry.key] = qty;
       }
     }
     
-    if (sizes.isEmpty) {
+    // We do quick frontend check for empty inputs before hitting controller to show snackbar quickly
+    if (inputs.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Masukkan setidaknya 1 qty pada ukuran'),
@@ -88,24 +76,23 @@ class _HandoverModalState extends ConsumerState<HandoverModal> {
       return;
     }
 
-    ref.read(handoverControllerProvider.notifier).submitHandover(
-      taskId: widget.taskId,
-      receiverId: _selectedReceiver,
-      sizes: sizes,
-      notes: _notesController.text.isNotEmpty ? _notesController.text : null,
+    ref.read(updateProgressControllerProvider.notifier).submitProgress(
+      widget.taskId,
+      inputs,
+      widget.targets,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(handoverControllerProvider);
-    
-    ref.listen(handoverControllerProvider, (previous, next) {
+    final state = ref.watch(updateProgressControllerProvider);
+
+    ref.listen(updateProgressControllerProvider, (previous, next) {
       if (next.isSuccess) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Berhasil menyerahkan tugas'),
+            content: Text('Berhasil menyimpan progres'),
             backgroundColor: AppTheme.success,
           ),
         );
@@ -122,7 +109,7 @@ class _HandoverModalState extends ConsumerState<HandoverModal> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Serah Terima Tugas',
+                'Update Progres',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               IconButton(
@@ -131,38 +118,13 @@ class _HandoverModalState extends ConsumerState<HandoverModal> {
               ),
             ],
           ),
+          const SizedBox(height: 16),
+          const Text(
+            'Masukkan jumlah pcs yang telah diselesaikan. Tidak boleh melebihi sisa target.',
+            style: TextStyle(color: AppTheme.muted),
+          ),
           const SizedBox(height: 24),
           
-          Text('Penerima', style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppTheme.border),
-              borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _selectedReceiver,
-                isExpanded: true,
-                items: _receivers.map((r) {
-                  return DropdownMenuItem<String>(
-                    value: r['id']!,
-                    child: Text(r['name']!),
-                  );
-                }).toList(),
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() => _selectedReceiver = val);
-                  }
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          
-          Text('Kuantitas (Pcs)', style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -171,17 +133,35 @@ class _HandoverModalState extends ConsumerState<HandoverModal> {
             ),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // 4 kolom, 3 jarak @ 12px = 36px total spasi horizontal
+                // 4 columns
                 final itemWidth = (constraints.maxWidth - 36) / 4 - 0.1;
                 return Wrap(
                   spacing: 12,
                   runSpacing: 16,
                   children: _sizeControllers.entries.map((entry) {
+                    final size = entry.key;
+                    final target = widget.targets[size] ?? 0;
                     return SizedBox(
                       width: itemWidth,
-                      child: KonveksioSizeInput(
-                        sizeLabel: entry.key,
-                        controller: entry.value,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Sisa: $target',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppTheme.muted,
+                              fontSize: 11,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          KonveksioSizeInput(
+                            sizeLabel: size,
+                            controller: entry.value,
+                          ),
+                        ],
                       ),
                     );
                   }).toList(),
@@ -189,30 +169,22 @@ class _HandoverModalState extends ConsumerState<HandoverModal> {
               },
             ),
           ),
+          
           const SizedBox(height: 16),
           
-          KonveksioTextField(
-            label: 'Catatan (Opsional)',
-            controller: _notesController,
-            maxLines: 3,
-            hintText: 'Tambahkan keterangan kondisi barang...',
-          ),
-          
           if (state.error != null) ...[
-            const SizedBox(height: 16),
             Text(
-              state.error!,
+              state.error!.replaceAll('Exception: ', ''),
               style: const TextStyle(color: AppTheme.destructive),
             ),
+            const SizedBox(height: 16),
           ],
           
-          const SizedBox(height: 24),
           KonveksioButton(
-            text: 'SERAHKAN TUGAS',
+            text: 'SIMPAN PROGRES',
             onPressed: state.isLoading ? null : _submit,
             isLoading: state.isLoading,
           ),
-          // Give some padding at the bottom for safety
           const SizedBox(height: 16),
         ],
       ),

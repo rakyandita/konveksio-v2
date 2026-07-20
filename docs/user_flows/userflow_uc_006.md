@@ -9,15 +9,14 @@
 
 ## 2. Main Flow (Skenario Utama)
 1. Actor membuka halaman **Tugas Aktif** (`PAGE-010`).
-2. Actor memilih tugas yang sedang dikerjakan. Sistem membuka **Detail Tugas** (`PAGE-011`).
-3. Actor melihat sisa target Qty per size yang harus dikerjakan.
-4. Actor menekan tombol `[Update Progres]`.
-5. Sistem menampilkan form input Qty Aktual per Size.
-6. Actor memasukkan angka Qty yang telah selesai (misal S=5, M=5).
-7. Actor menekan tombol `[Simpan Progres]`.
-8. Sistem memvalidasi bahwa Qty input ≤ sisa target.
-9. Sistem menyimpan entitas *Progress Log* (append-only) dan memperbarui field `completed_qty` pada *Task Size*. Sisa target berkurang.
-10. Sistem menampilkan *snackbar* sukses.
+2. Actor menekan tombol `[UPDATE PROGRES]` pada kartu tugas yang sedang dikerjakan.
+3. Sistem memunculkan *Bottom Sheet Modal* form input Qty Aktual per Size.
+4. Actor melihat informasi "Sisa Target" per size di atas setiap kolom input form.
+5. Actor memasukkan angka Qty yang telah selesai (misal S=5, M=5).
+6. Actor menekan tombol `[Simpan Progres]`.
+7. Sistem memvalidasi bahwa Qty input ≤ sisa target.
+8. Sistem menyimpan entitas *Progress Log* (append-only) dan memperbarui field `completed_qty` pada *Task Size*. Sisa target berkurang.
+9. Sistem menutup *Bottom Sheet* dan menampilkan *snackbar* sukses.
 
 ## 3. Alternative Flows
 **3.1. Progres Penuh (Selesai)**
@@ -35,7 +34,7 @@
 
 ## 6. Related Pages
 - `PAGE-010`: `/karyawan/tasks`
-- `PAGE-011`: `/karyawan/tasks/:id`
+- `MODAL-003`: `N/A` (Bottom Sheet Update Progress)
 - `PAGE-008`: `/karyawan/home`
 
 ## 7. Acceptance Criteria

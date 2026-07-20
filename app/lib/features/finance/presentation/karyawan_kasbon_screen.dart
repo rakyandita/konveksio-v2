@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/konveksio_button.dart';
 import 'karyawan_kasbon_controller.dart';
 
 class KaryawanKasbonScreen extends ConsumerStatefulWidget {
@@ -205,27 +206,10 @@ class _KaryawanKasbonScreenState extends ConsumerState<KaryawanKasbonScreen> {
                   ),
                   const SizedBox(height: AppTheme.spacingXl),
 
-                  ElevatedButton(
-                    onPressed: (state.isLoading || limit <= 0) ? null : () => _submit(limit),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.all(AppTheme.spacingBase),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusLg),
-                      ),
-                      disabledBackgroundColor: AppTheme.muted,
-                    ),
-                    child: state.isLoading
-                        ? const SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          )
-                        : const Text(
-                            'Kirim Pengajuan',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
+                  KonveksioButton(
+                    text: 'Kirim Pengajuan',
+                    onPressed: state.isLoading ? null : () => _submit(limit),
+                    isLoading: state.isLoading,
                   ),
                 ],
               ),

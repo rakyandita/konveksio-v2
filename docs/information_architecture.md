@@ -121,9 +121,9 @@ Setiap layar krusial dipetakan dengan Identifier ID (Route Name). Mapping ini ak
 | PAGE-008 | `/karyawan/home` | Dashboard Karyawan | - | Karyawan | PAGE-000 | F10 |
 | PAGE-009 | `/karyawan/inbox` | Kotak Masuk Handover | - | Karyawan | PAGE-008 (Tab 2) | F07 |
 | PAGE-010 | `/karyawan/tasks` | Daftar Tugas Aktif | - | Karyawan | PAGE-008 (Tab 3) | F07 |
-| PAGE-011 | `/karyawan/tasks/:id`| Detail Tugas & Update | `task_id` | Karyawan | PAGE-010 | F07 |
-| PAGE-012 | `/karyawan/spk/:id` | SPK Viewer (Offline Support)| `item_id` | Karyawan | PAGE-011 | F11 |
-| PAGE-013 | `/karyawan/handover` | Form Buat Handover | `task_id` | Karyawan | PAGE-011 | F07 |
+| MODAL-003| `N/A`                 | Update Progress (Bottom Sheet)| `task_id` | Karyawan | PAGE-010 | F07 |
+| PAGE-012 | `/karyawan/spk/:id` | SPK Viewer (Offline Support)| `item_id` | Karyawan | PAGE-010 | F11 |
+| MODAL-004| `N/A`               | Form Buat Handover (Bottom Sheet) | `task_id` | Karyawan | PAGE-010 | F07 |
 | PAGE-014 | `/settings` | Pengaturan & Logout | - | Semua | Beranda/Tab 4 | F02 |
 | PAGE-016 | `/boss/vendors` | Daftar Vendor Eksternal | - | Boss, Owner* | PAGE-002, PAGE-015 | F12 |
 | PAGE-017 | `/boss/vendors/:id` | Detail / Edit Vendor | `vendor_id` | Boss, Owner* | PAGE-016 | F12 |
